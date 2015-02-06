@@ -1,0 +1,5 @@
+include 'ad-android', 'ad-ios', 'ad-desktop', 'ad-core'
+project(':ad-android').projectDir = new File(settingsDir, 'ad/android')
+project(':ad-ios').projectDir = new File(settingsDir, 'ad/ios')
+project(':ad-desktop').projectDir = new File(settingsDir, 'ad/desktop')
+project(':ad-core').projectDir = new File(settingsDir, 'ad/core')

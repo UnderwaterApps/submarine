@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Net;
 import com.badlogic.gdx.net.HttpParametersUtils;
 import com.badlogic.gdx.utils.Json;
+import com.badlogic.gdx.utils.async.AsyncExecutor;
 import com.badlogic.gdx.utils.async.AsyncTask;
 import com.submarine.statsreporter.vo.StatsRequestVO;
 import com.submarine.statsreporter.vo.StatsResponseVO;
@@ -62,6 +63,16 @@ public abstract class StatsReporter<U extends StatsRequestVO, V extends StatsRes
     }
 
     protected abstract U crateStatsRequestVO() throws IllegalAccessException, InstantiationException;
+
+    public void report() {
+        try {
+            AsyncExecutor asyncExecutor = new AsyncExecutor(1);
+            asyncExecutor.submit(this);
+            asyncExecutor.dispose();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     public static interface StatsReporterResponseListener<T extends StatsResponseVO> {
         public void succeed(T statsResponseVO);

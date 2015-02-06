@@ -4,7 +4,7 @@ apply plugin: "robovm"
 configurations { natives }
 
 dependencies {
-    compile project(":submarine-ad-core")
+    compile project(":submarine-stats-reporter-core")
     compile "org.robovm:robovm-rt:${roboVMVersion}"
     compile "org.robovm:robovm-cocoatouch:${roboVMVersion}"
     compile "com.badlogicgames.gdx:gdx-backend-robovm:$gdxVersion"
@@ -17,5 +17,5 @@ sourceSets.main.java.srcDirs = ["src/"]
 
 
 eclipse.project {
-    name = "submarine-ad-ios"
+    name = "submarine-stats-reporter-ios"
 }

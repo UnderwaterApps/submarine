@@ -7,11 +7,11 @@ sourceSets.main.java.srcDirs = [ "src/" ]
 
 
 dependencies {
-    compile project(":submarine-ad-core")
+    compile project(":submarine-stats-reporter-core")
     compile "com.badlogicgames.gdx:gdx-backend-lwjgl:$gdxVersion"
     compile "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
 }
 
 eclipse.project {
-    name = "submarine-ad-desktop"
+    name = "submarine-stats-reporter-desktop"
 }

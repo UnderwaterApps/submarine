@@ -1,5 +1,13 @@
-include 'ad-android', 'ad-ios', 'ad-desktop', 'ad-core'
-project(':ad-android').projectDir = new File(settingsDir, 'ad/android')
-project(':ad-ios').projectDir = new File(settingsDir, 'ad/ios')
-project(':ad-desktop').projectDir = new File(settingsDir, 'ad/desktop')
-project(':ad-core').projectDir = new File(settingsDir, 'ad/core')
+include 'submarine-ad-android', 'submarine-ad-ios', 'submarine-ad-desktop', 'submarine-ad-core'
+
+project(':submarine-ad-android').projectDir = new File(settingsDir, 'ad/android')
+project(':submarine-ad-ios').projectDir = new File(settingsDir, 'ad/ios')
+project(':submarine-ad-desktop').projectDir = new File(settingsDir, 'ad/desktop')
+project(':submarine-ad-core').projectDir = new File(settingsDir, 'ad/core')
+
+include 'submarine-stats-reporter-android', 'submarine-stats-reporter-ios', 'submarine-stats-reporter-desktop', 'submarine-stats-reporter-core'
+
+project(':submarine-stats-reporter-android').projectDir = new File(settingsDir, 'stats-reporter/android')
+project(':submarine-stats-reporter-ios').projectDir = new File(settingsDir, 'stats-reporter/ios')
+project(':submarine-stats-reporter-desktop').projectDir = new File(settingsDir, 'stats-reporter/desktop')
+project(':submarine-stats-reporter-core').projectDir = new File(settingsDir, 'stats-reporter/core')

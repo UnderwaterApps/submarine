@@ -5,8 +5,7 @@
           package="com.submarine.statsreporter">
 
     <uses-sdk
-            android:minSdkVersion="9"
-            android:maxSdkVersion="21"/>
+            android:minSdkVersion="8"/>
 
     <application/>
 </manifest>

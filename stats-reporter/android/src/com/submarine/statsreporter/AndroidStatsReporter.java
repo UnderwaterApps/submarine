@@ -15,6 +15,13 @@ public class AndroidStatsReporter<U extends StatsRequestVO, V extends StatsRespo
     private final Context context;
 
     @SuppressWarnings("unchecked")
+    public AndroidStatsReporter(Context context, int appId) throws InstantiationException, IllegalAccessException {
+        super(appId, StatsRequestVO.class, StatsResponseVO.class);
+        this.context = context;
+
+    }
+
+    @SuppressWarnings("unchecked")
     public AndroidStatsReporter(Context context, int appId, Class<U> requestType, Class<V> responseType) throws InstantiationException, IllegalAccessException {
         super(appId, requestType, responseType);
         this.context = context;

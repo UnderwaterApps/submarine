@@ -74,6 +74,12 @@ public abstract class StatsReporter<U extends StatsRequestVO, V extends StatsRes
         }
     }
 
+    protected void handelResponse(String resultAsString) {
+        Json json = new Json();
+        responseVO = json.fromJson(responseType, resultAsString);
+    }
+
+
     public static interface StatsReporterResponseListener<T extends StatsResponseVO> {
         public void succeed(T statsResponseVO);
 
@@ -82,16 +88,14 @@ public abstract class StatsReporter<U extends StatsRequestVO, V extends StatsRes
         public void cancelled();
     }
 
-
     private class StatsReporterHttpResponseListener implements Net.HttpResponseListener {
         private static final String TAG = "com.submarine.statsreporter.StatsReporter.StatsReporterHttpResponseListener";
 
         @Override
         public void handleHttpResponse(Net.HttpResponse httpResponse) {
-            String responseStr = httpResponse.getResultAsString();
-            Json json = new Json();
+
             try {
-                responseVO = json.fromJson(responseType, responseStr);
+                handelResponse(httpResponse.getResultAsString());
                 if (statsReporterResponseListener != null) {
                     statsReporterResponseListener.succeed(responseVO);
                 }

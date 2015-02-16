@@ -6,6 +6,7 @@ import com.anjlab.android.iab.v3.BillingProcessor;
 import com.anjlab.android.iab.v3.SkuDetails;
 import com.anjlab.android.iab.v3.TransactionDetails;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.utils.Array;
 import com.submarine.billing.product.Product;
 
 import java.util.HashMap;
@@ -37,6 +38,14 @@ public class AndroidStore implements Store, BillingProcessor.IBillingHandler {
         this.productIds = productIds;
         billingProcessor = new BillingProcessor(activity, licenseKey, this);
         //billingProcessor.getPurchaseListingDetails("YOUR PRODUCT ID FROM GOOGLE PLAY CONSOLE HERE");
+    }
+
+    @Override
+    public void requestProducts(Array<Product> productList) {
+        for (Product product : productList) {
+            products.put(product.id, product);
+        }
+        requestProducts(products.keySet().toArray(new String[products.size()]));
     }
 
     @Override
@@ -73,6 +82,7 @@ public class AndroidStore implements Store, BillingProcessor.IBillingHandler {
     public void removeListener(StoreListener storeListener) {
         storeListeners.remove(storeListener);
     }
+
 
     @Override
     public void onProductPurchased(String s, TransactionDetails transactionDetails) {

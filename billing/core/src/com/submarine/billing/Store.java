@@ -1,6 +1,7 @@
 package com.submarine.billing;
 
 
+import com.badlogic.gdx.utils.Array;
 import com.submarine.billing.product.Product;
 
 /**
@@ -23,4 +24,6 @@ public interface Store {
     void addListener(StoreListener storeListener);
 
     void removeListener(StoreListener storeListener);
+
+    void requestProducts(Array<Product> productList);
 }

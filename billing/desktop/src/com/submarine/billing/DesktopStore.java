@@ -1,6 +1,7 @@
 package com.submarine.billing;
 
 
+import com.badlogic.gdx.utils.Array;
 import com.submarine.billing.product.Product;
 
 import java.util.HashMap;
@@ -29,6 +30,13 @@ public class DesktopStore implements Store {
             product.price = price;
             products.put(productId, product);
             price += 1f;
+        }
+    }
+
+    @Override
+    public void requestProducts(Array<Product> productList) {
+        for (Product product : productList) {
+            products.put(product.id, product);
         }
     }
 
@@ -85,4 +93,6 @@ public class DesktopStore implements Store {
     public void removeListener(StoreListener storeListener) {
         storeListeners.remove(storeListener);
     }
+
+
 }

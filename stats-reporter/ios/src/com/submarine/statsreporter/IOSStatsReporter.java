@@ -10,6 +10,12 @@ import org.robovm.apple.uikit.UIDevice;
  */
 public class IOSStatsReporter<U extends StatsRequestVO, V extends StatsResponseVO> extends StatsReporter {
     @SuppressWarnings("unchecked")
+    public IOSStatsReporter(int appId) throws InstantiationException, IllegalAccessException {
+        super(appId, StatsRequestVO.class, StatsResponseVO.class);
+
+    }
+
+    @SuppressWarnings("unchecked")
     public IOSStatsReporter(int appId, Class<U> requestType, Class<V> responseType) throws IllegalAccessException, InstantiationException {
         super(appId, requestType, responseType);
     }

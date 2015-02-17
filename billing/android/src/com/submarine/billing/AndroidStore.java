@@ -37,6 +37,7 @@ public class AndroidStore implements Store, BillingProcessor.IBillingHandler {
     public void requestProducts(String[] productIds) {
         this.productIds = productIds;
         billingProcessor = new BillingProcessor(activity, licenseKey, this);
+        billingProcessor.loadOwnedPurchasesFromGoogle();
         //billingProcessor.getPurchaseListingDetails("YOUR PRODUCT ID FROM GOOGLE PLAY CONSOLE HERE");
     }
 
@@ -65,7 +66,6 @@ public class AndroidStore implements Store, BillingProcessor.IBillingHandler {
 
     @Override
     public void initialize() {
-
     }
 
     @Override
@@ -95,9 +95,13 @@ public class AndroidStore implements Store, BillingProcessor.IBillingHandler {
     @Override
     public void onPurchaseHistoryRestored() {
         Gdx.app.log(TAG, "onPurchaseHistoryRestored");
-//        bp.getPurchaseListingDetails("YOUR PRODUCT ID FROM GOOGLE PLAY CONSOLE HERE");
-        for (StoreListener storeListener : storeListeners) {
-            storeListener.transactionRestored(null);
+        for (String productId : productIds) {
+            TransactionDetails transactionDetails = billingProcessor.getPurchaseTransactionDetails(productId);
+            if (transactionDetails != null) {
+                for (StoreListener storeListener : storeListeners) {
+                    storeListener.transactionRestored(productId);
+                }
+            }
         }
     }
 

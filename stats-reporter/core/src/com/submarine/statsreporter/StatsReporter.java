@@ -93,7 +93,6 @@ public abstract class StatsReporter<U extends StatsRequestVO, V extends StatsRes
 
         @Override
         public void handleHttpResponse(Net.HttpResponse httpResponse) {
-
             try {
                 handelResponse(httpResponse.getResultAsString());
                 if (statsReporterResponseListener != null) {

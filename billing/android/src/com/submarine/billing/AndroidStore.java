@@ -16,7 +16,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 /**
  * Created by sargis on 10/31/14.
  */
-public class AndroidStore implements Store, BillingProcessor.IBillingHandler {
+public class AndroidStore implements Store {
 
     private static final String TAG = "com.submarine.billing.AndroidStore";
     private final Activity activity;
@@ -36,9 +36,11 @@ public class AndroidStore implements Store, BillingProcessor.IBillingHandler {
     @Override
     public void requestProducts(String[] productIds) {
         this.productIds = productIds;
-        billingProcessor = new BillingProcessor(activity, licenseKey, this);
+        if (billingProcessor != null) {
+            return;
+        }
+        billingProcessor = new BillingProcessor(activity, licenseKey, new BillingHandler());
         billingProcessor.loadOwnedPurchasesFromGoogle();
-        //billingProcessor.getPurchaseListingDetails("YOUR PRODUCT ID FROM GOOGLE PLAY CONSOLE HERE");
     }
 
     @Override
@@ -84,58 +86,63 @@ public class AndroidStore implements Store, BillingProcessor.IBillingHandler {
     }
 
 
-    @Override
-    public void onProductPurchased(String s, TransactionDetails transactionDetails) {
-        Gdx.app.log(TAG, "onProductPurchased : " + transactionDetails.orderId);
-        for (StoreListener storeListener : storeListeners) {
-            storeListener.transactionCompleted(transactionDetails.productId);
-        }
-    }
-
-    @Override
-    public void onPurchaseHistoryRestored() {
-        Gdx.app.log(TAG, "onPurchaseHistoryRestored");
-        for (String productId : productIds) {
-            TransactionDetails transactionDetails = billingProcessor.getPurchaseTransactionDetails(productId);
-            if (transactionDetails != null) {
-                for (StoreListener storeListener : storeListeners) {
-                    storeListener.transactionRestored(productId);
-                }
-            }
-        }
-    }
-
-    @Override
-    public void onBillingError(int i, Throwable throwable) {
-        Gdx.app.log(TAG, "onBillingError : " + i);
-        for (StoreListener storeListener : storeListeners) {
-            storeListener.transactionFailed(new Error(String.valueOf(i)));
-        }
-    }
-
-    @Override
-    public void onBillingInitialized() {
-        Gdx.app.log(TAG, "onBillingInitialized");
-        for (String productId : productIds) {
-            SkuDetails skuDetails = billingProcessor.getPurchaseListingDetails(productId);
-            if (skuDetails != null) {
-                Product product = new Product();
-                product.currency = skuDetails.currency;
-                product.price = skuDetails.priceValue.floatValue();
-                product.id = productId;
-                products.put(product.id, product);
-            }
-        }
-        for (StoreListener storeListener : storeListeners) {
-            storeListener.productsReceived();
-        }
-    }
-
     public boolean handleActivityResult(int requestCode, int resultCode, Intent data) {
         return billingProcessor.handleActivityResult(requestCode, resultCode, data);
     }
 
     public void release() {
         billingProcessor.release();
+    }
+
+
+    private class BillingHandler implements BillingProcessor.IBillingHandler {
+
+        @Override
+        public void onProductPurchased(String s, TransactionDetails transactionDetails) {
+            Gdx.app.log(TAG, "onProductPurchased : " + transactionDetails.orderId);
+            for (StoreListener storeListener : storeListeners) {
+                storeListener.transactionCompleted(transactionDetails.productId);
+            }
+        }
+
+        @Override
+        public void onPurchaseHistoryRestored() {
+            Gdx.app.log(TAG, "onPurchaseHistoryRestored");
+            for (String productId : productIds) {
+                TransactionDetails transactionDetails = billingProcessor.getPurchaseTransactionDetails(productId);
+                if (transactionDetails != null) {
+                    for (StoreListener storeListener : storeListeners) {
+                        storeListener.transactionRestored(productId);
+                    }
+                }
+            }
+        }
+
+        @Override
+        public void onBillingError(int i, Throwable throwable) {
+            Gdx.app.log(TAG, "onBillingError : " + i);
+            for (StoreListener storeListener : storeListeners) {
+                storeListener.transactionFailed(new Error(String.valueOf(i)));
+            }
+        }
+
+        @Override
+        public void onBillingInitialized() {
+            Gdx.app.log(TAG, "onBillingInitialized");
+            for (String productId : productIds) {
+                SkuDetails skuDetails = billingProcessor.getPurchaseListingDetails(productId);
+                if (skuDetails != null) {
+                    Product product = new Product();
+                    product.currency = skuDetails.currency;
+                    product.price = skuDetails.priceValue.floatValue();
+                    product.id = productId;
+                    products.put(product.id, product);
+                }
+            }
+            for (StoreListener storeListener : storeListeners) {
+                storeListener.productsReceived();
+            }
+        }
+
     }
 }

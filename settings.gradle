@@ -1,0 +1,20 @@
+include 'submarine-ad-android', 'submarine-ad-ios', 'submarine-ad-desktop', 'submarine-ad-core'
+
+project(':submarine-ad-android').projectDir = new File(settingsDir, 'ad/android')
+project(':submarine-ad-ios').projectDir = new File(settingsDir, 'ad/ios')
+project(':submarine-ad-desktop').projectDir = new File(settingsDir, 'ad/desktop')
+project(':submarine-ad-core').projectDir = new File(settingsDir, 'ad/core')
+
+include 'submarine-stats-reporter-android', 'submarine-stats-reporter-ios', 'submarine-stats-reporter-desktop', 'submarine-stats-reporter-core'
+
+project(':submarine-stats-reporter-android').projectDir = new File(settingsDir, 'stats-reporter/android')
+project(':submarine-stats-reporter-ios').projectDir = new File(settingsDir, 'stats-reporter/ios')
+project(':submarine-stats-reporter-desktop').projectDir = new File(settingsDir, 'stats-reporter/desktop')
+project(':submarine-stats-reporter-core').projectDir = new File(settingsDir, 'stats-reporter/core')
+
+include 'submarine-billing-android', 'submarine-billing-ios', 'submarine-billing-desktop', 'submarine-billing-core'
+
+project(':submarine-billing-android').projectDir = new File(settingsDir, 'billing/android')
+project(':submarine-billing-ios').projectDir = new File(settingsDir, 'billing/ios')
+project(':submarine-billing-desktop').projectDir = new File(settingsDir, 'billing/desktop')
+project(':submarine-billing-core').projectDir = new File(settingsDir, 'billing/core')

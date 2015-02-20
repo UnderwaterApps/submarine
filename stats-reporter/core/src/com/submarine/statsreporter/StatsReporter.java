@@ -13,16 +13,17 @@ import java.util.HashMap;
 import java.util.Map;
 
 public abstract class StatsReporter<U extends StatsRequestVO, V extends StatsResponseVO> implements AsyncTask<Void> {
-    private static final String URL = "http://kiki-fish.com/ios/event.php";
     private static final String TAG = "com.submarine.statsreporter.StatsReporter";
     protected final Class<U> requestType;
     protected final Class<V> responseType;
     private final int appId;
+    private final String url;
     public V responseVO;
     protected U statsReporterVO;
     private StatsReporterResponseListener<V> statsReporterResponseListener;
 
-    public StatsReporter(int appId, Class<U> requestType, Class<V> responseType) throws IllegalAccessException, InstantiationException {
+    public StatsReporter(String url, int appId, Class<U> requestType, Class<V> responseType) throws IllegalAccessException, InstantiationException {
+        this.url = url;
         this.appId = appId;
         this.requestType = requestType;
         this.responseType = responseType;
@@ -38,7 +39,7 @@ public abstract class StatsReporter<U extends StatsRequestVO, V extends StatsRes
         statsReporterVO = crateStatsRequestVO();
         try {
             Net.HttpRequest httpRequest = new Net.HttpRequest(Net.HttpMethods.GET);
-            httpRequest.setUrl(URL);
+            httpRequest.setUrl(url);
             httpRequest.setContent(HttpParametersUtils.convertHttpParameters(getParameters()));
             Gdx.net.sendHttpRequest(httpRequest, new StatsReporterHttpResponseListener());
             Gdx.app.debug(TAG, "httpRequest : " + httpRequest.getUrl());

@@ -18,3 +18,11 @@ project(':submarine-billing-android').projectDir = new File(settingsDir, 'billin
 project(':submarine-billing-ios').projectDir = new File(settingsDir, 'billing/ios')
 project(':submarine-billing-desktop').projectDir = new File(settingsDir, 'billing/desktop')
 project(':submarine-billing-core').projectDir = new File(settingsDir, 'billing/core')
+
+
+include 'submarine-game-services-android', 'submarine-game-services-ios', 'submarine-game-services-desktop', 'submarine-game-services-core'
+
+project(':submarine-game-services-android').projectDir = new File(settingsDir, 'game-services/android')
+project(':submarine-game-services-ios').projectDir = new File(settingsDir, 'game-services/ios')
+project(':submarine-game-services-desktop').projectDir = new File(settingsDir, 'game-services/desktop')
+project(':submarine-game-services-core').projectDir = new File(settingsDir, 'game-services/core')

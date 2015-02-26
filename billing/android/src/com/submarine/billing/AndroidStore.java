@@ -129,6 +129,9 @@ public class AndroidStore implements Store {
         @Override
         public void onBillingInitialized() {
             Gdx.app.log(TAG, "onBillingInitialized");
+            if (billingProcessor == null) {
+                return;
+            }
             for (String productId : productIds) {
                 SkuDetails skuDetails = billingProcessor.getPurchaseListingDetails(productId);
                 if (skuDetails != null) {

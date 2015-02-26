@@ -20,14 +20,6 @@ public class AndroidGameServices implements GameHelper.GameHelperListener, GameS
 
     }
 
-    public void onStart() {
-        mHelper.onStart(activity);
-    }
-
-    public void onStop() {
-        mHelper.onStop();
-    }
-
     public void onActivityResult(int request, int response, Intent data) {
         mHelper.onActivityResult(request, response, data);
     }
@@ -46,13 +38,28 @@ public class AndroidGameServices implements GameHelper.GameHelperListener, GameS
         Gdx.app.log(TAG, "Sign in success");
     }
 
+    // // ************** END GOOGLE PART ***************\\\\\\\
+
     @Override
     public boolean isSignedIn() {
         return mHelper.isSignedIn();
     }
 
     @Override
-    public void submitScore(final long score, final String leaderBoardId) {
+    public void login() {
+        if (mHelper.isConnecting()) {
+            return;
+        }
+        mHelper.onStart(activity);
+    }
+
+    @Override
+    public void logout() {
+        mHelper.onStop();
+    }
+
+    @Override
+    public void submitScore(final String leaderBoardId, final long score) {
         if (isSignedIn()) {
             activity.runOnUiThread(new Runnable() {
                 @Override

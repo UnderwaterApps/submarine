@@ -1,9 +1,13 @@
 package com.submarine.gameservices;
 
 public interface GameServices {
-    void submitScore(long score, final String leaderBoardId);
+    void login();
 
-    void showLeaderBoard(String string);
+    void logout();
+
+    void submitScore(String leaderBoardId, long score);
+
+    void showLeaderBoard(String identifier);
 
     boolean isSignedIn();
 }

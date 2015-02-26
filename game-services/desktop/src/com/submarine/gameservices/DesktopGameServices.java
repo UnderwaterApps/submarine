@@ -5,7 +5,7 @@ package com.submarine.gameservices;
  */
 public class DesktopGameServices implements GameServices {
     @Override
-    public void submitScore(long score) {
+    public void submitScore(long score, final String leaderBoardId) {
 
     }
 

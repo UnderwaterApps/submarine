@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import com.badlogic.gdx.Gdx;
 import com.google.android.gms.games.Games;
+import com.google.example.games.basegameutils.GameHelper;
 
 public class AndroidGameServices implements GameHelper.GameHelperListener, GameServices {
     private static final String TAG = "com.submarine.gameservices.AndroidGameServices";
@@ -51,12 +52,12 @@ public class AndroidGameServices implements GameHelper.GameHelperListener, GameS
     }
 
     @Override
-    public void submitScore(final long score) {
+    public void submitScore(final long score, final String leaderBoardId) {
         if (isSignedIn()) {
             activity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    Games.Leaderboards.submitScore(mHelper.getApiClient(), activity.getString(R.string.leaderboard), score);
+                    Games.Leaderboards.submitScore(mHelper.getApiClient(), leaderBoardId, score);
                 }
             });
         }

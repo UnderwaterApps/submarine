@@ -9,5 +9,9 @@ public interface GameServices {
 
     void showLeaderBoard(String identifier);
 
+    void unlockStandardAchievement(String achievementId);
+
+    void showAchievements();
+
     boolean isSignedIn();
 }

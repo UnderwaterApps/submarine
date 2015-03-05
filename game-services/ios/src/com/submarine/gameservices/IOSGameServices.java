@@ -50,6 +50,16 @@ public class IOSGameServices implements GameServices, GameCenterListener {
     }
 
     @Override
+    public void unlockStandardAchievement(String achievementId) {
+
+    }
+
+    @Override
+    public void showAchievements() {
+
+    }
+
+    @Override
     public boolean isSignedIn() {
         return isSignedIn;
     }

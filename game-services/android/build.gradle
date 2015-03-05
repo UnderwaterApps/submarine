@@ -5,7 +5,6 @@ configurations { natives }
 dependencies {
     compile project(":submarine-game-services-core")
     compile project(":BaseGameUtils")
-    compile 'com.google.android.gms:play-services:6.5.87'
     compile "com.badlogicgames.gdx:gdx-backend-android:$gdxVersion"
     natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-armeabi"
     natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-armeabi-v7a"

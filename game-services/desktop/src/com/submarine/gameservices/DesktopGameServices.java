@@ -25,6 +25,16 @@ public class DesktopGameServices implements GameServices {
     }
 
     @Override
+    public void unlockStandardAchievement(String achievementId) {
+
+    }
+
+    @Override
+    public void showAchievements() {
+
+    }
+
+    @Override
     public boolean isSignedIn() {
         return false;
     }

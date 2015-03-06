@@ -9,7 +9,9 @@ public interface GameServices {
 
     void showLeaderBoard(String identifier);
 
-    void unlockStandardAchievement(String achievementId);
+    void unlockAchievement(String achievementId);
+
+    void incrementAchievement(String achievementId, int incrementAmount);
 
     void showAchievements();
 

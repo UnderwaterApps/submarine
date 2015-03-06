@@ -14,4 +14,8 @@ public interface GameServices {
     void showAchievements();
 
     boolean isSignedIn();
+
+    void savedGamesLoad(String snapshotName, boolean createIfMissing);
+
+    void savedGamesUpdate(final String snapshotName, final byte[] data, final boolean createIfMissing);
 }

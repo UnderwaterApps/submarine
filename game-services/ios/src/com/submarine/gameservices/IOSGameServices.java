@@ -65,6 +65,16 @@ public class IOSGameServices implements GameServices, GameCenterListener {
     }
 
     @Override
+    public void savedGamesLoad(String snapshotName, boolean createIfMissing) {
+        
+    }
+
+    @Override
+    public void savedGamesUpdate(String snapshotName, byte[] data, boolean createIfMissing) {
+
+    }
+
+    @Override
     public void playerLoginCompleted() {
         Gdx.app.log(TAG, "Sing in success");
         isSignedIn = true;

@@ -1,9 +1,9 @@
-include 'submarine-ad-android', 'submarine-ad-ios', 'submarine-ad-desktop', 'submarine-ad-core'
+include 'submarine-adMob-android', 'submarine-adMob-ios', 'submarine-adMob-desktop', 'submarine-adMob-core'
 
-project(':submarine-ad-android').projectDir = new File(settingsDir, 'ad/android')
-project(':submarine-ad-ios').projectDir = new File(settingsDir, 'ad/ios')
-project(':submarine-ad-desktop').projectDir = new File(settingsDir, 'ad/desktop')
-project(':submarine-ad-core').projectDir = new File(settingsDir, 'ad/core')
+project(':submarine-adMob-android').projectDir = new File(settingsDir, 'adMob/android')
+project(':submarine-adMob-ios').projectDir = new File(settingsDir, 'adMob/ios')
+project(':submarine-adMob-desktop').projectDir = new File(settingsDir, 'adMob/desktop')
+project(':submarine-adMob-core').projectDir = new File(settingsDir, 'adMob/core')
 
 include 'submarine-stats-reporter-android', 'submarine-stats-reporter-ios', 'submarine-stats-reporter-desktop', 'submarine-stats-reporter-core'
 

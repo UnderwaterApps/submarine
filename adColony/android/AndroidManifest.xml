@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+          android:versionCode="1"
+          android:versionName="1.0"
+          package="com.submarine.ad">
+
+    <uses-sdk
+            android:minSdkVersion="10"/>
+    <!-- Include required permissions for AdColony to run-->
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.VIBRATE"/>
+
+    <application
+            android:hardwareAccelerated="true">
+
+        <activity android:name="com.jirbo.adcolony.AdColonyOverlay"
+                  android:configChanges="keyboardHidden|orientation|screenSize"
+                  android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen"/>
+
+        <activity android:name="com.jirbo.adcolony.AdColonyFullscreen"
+                  android:configChanges="keyboardHidden|orientation|screenSize"
+                  android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen"/>
+
+        <activity android:name="com.jirbo.adcolony.AdColonyBrowser"
+                  android:configChanges="keyboardHidden|orientation|screenSize"
+                  android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen"/>
+    </application>
+
+</manifest>
+

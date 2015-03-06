@@ -5,6 +5,13 @@ project(':submarine-adMob-ios').projectDir = new File(settingsDir, 'adMob/ios')
 project(':submarine-adMob-desktop').projectDir = new File(settingsDir, 'adMob/desktop')
 project(':submarine-adMob-core').projectDir = new File(settingsDir, 'adMob/core')
 
+include 'submarine-adColony-android', 'submarine-adColony-ios', 'submarine-adColony-desktop', 'submarine-adColony-core'
+
+project(':submarine-adColony-android').projectDir = new File(settingsDir, 'adColony/android')
+project(':submarine-adColony-ios').projectDir = new File(settingsDir, 'adColony/ios')
+project(':submarine-adColony-desktop').projectDir = new File(settingsDir, 'adColony/desktop')
+project(':submarine-adColony-core').projectDir = new File(settingsDir, 'adColony/core')
+
 include 'submarine-stats-reporter-android', 'submarine-stats-reporter-ios', 'submarine-stats-reporter-desktop', 'submarine-stats-reporter-core'
 
 project(':submarine-stats-reporter-android').projectDir = new File(settingsDir, 'stats-reporter/android')

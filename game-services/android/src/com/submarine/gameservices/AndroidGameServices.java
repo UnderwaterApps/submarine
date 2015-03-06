@@ -2,12 +2,18 @@ package com.submarine.gameservices;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.AsyncTask;
+import android.util.Log;
 import com.badlogic.gdx.Gdx;
-import com.google.android.gms.appstate.AppStateManager;
 import com.google.android.gms.common.api.PendingResult;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.games.Games;
+import com.google.android.gms.games.snapshot.Snapshot;
+import com.google.android.gms.games.snapshot.SnapshotMetadataChange;
+import com.google.android.gms.games.snapshot.Snapshots;
 import com.google.example.games.basegameutils.GameHelper;
+
+import java.io.IOException;
 
 public class AndroidGameServices implements GameHelper.GameHelperListener, GameServices {
     // The AppState slot we are editing.  For simplicity this sample only manipulates a single
@@ -94,47 +100,80 @@ public class AndroidGameServices implements GameHelper.GameHelperListener, GameS
 
 
     /**
-     * Async load AppState from Cloud Save.  This will load using stateKey APP_STATE_KEY.  After load,
-     * the AppState data and metadata will be displayed.
+     * Load a Snapshot from the Saved Games service based on its unique name.  After load, the UI
+     * will update to display the Snapshot data and SnapshotMetadata.
+     *
+     * @param snapshotName the unique name of the Snapshot.
      */
-    private void cloudSaveLoad() {
-        PendingResult<AppStateManager.StateResult> pendingResult = AppStateManager.load(mHelper.getApiClient(), APP_STATE_KEY);
-        ResultCallback<AppStateManager.StateResult> callback =
-                new ResultCallback<AppStateManager.StateResult>() {
-                    @Override
-                    public void onResult(AppStateManager.StateResult stateResult) {
-                        if (stateResult.getStatus().isSuccess()) {
-                            // Successfully loaded data from App State
-                            byte[] data = stateResult.getLoadedResult().getLocalData();
-                        } else {
-                            // Failed to load data from App State
-                        }
+    @Override
+    public void savedGamesLoad(String snapshotName, boolean createIfMissing) {
+        PendingResult<Snapshots.OpenSnapshotResult> pendingResult = Games.Snapshots.open(
+                mHelper.getApiClient(), snapshotName, createIfMissing);
 
+        ResultCallback<Snapshots.OpenSnapshotResult> callback =
+                new ResultCallback<Snapshots.OpenSnapshotResult>() {
+                    @Override
+                    public void onResult(Snapshots.OpenSnapshotResult openSnapshotResult) {
+                        if (openSnapshotResult.getStatus().isSuccess()) {
+                            byte[] data = new byte[0];
+                            try {
+                                data = openSnapshotResult.getSnapshot().getSnapshotContents().readFully();
+                            } catch (IOException e) {
+                            }
+                        } else {
+                        }
                     }
                 };
         pendingResult.setResultCallback(callback);
     }
 
-    /**
-     * Async update AppState data in Cloud Save.  This will use stateKey APP_STATE_KEY. After save,
-     * the UI will be cleared and the data will be available to load from Cloud Save.
-     */
-    private void cloudSaveUpdate(byte[] data) {
-        // Use updateImmediate to update the AppState data.  This is used for diagnostic purposes
-        // so that the app can display the result of the update, however it is generally recommended
-        // to use AppStateManager.update(...) in order to reduce performance and battery impact.
-        PendingResult<AppStateManager.StateResult> pendingResult = AppStateManager.updateImmediate(
-                mHelper.getApiClient(), APP_STATE_KEY, data);
 
-        ResultCallback<AppStateManager.StateResult> callback =
-                new ResultCallback<AppStateManager.StateResult>() {
-                    @Override
-                    public void onResult(AppStateManager.StateResult stateResult) {
-                        if (stateResult.getStatus().isSuccess()) {
-                        } else {
-                        }
-                    }
-                };
-        pendingResult.setResultCallback(callback);
+    /**
+     * Update the Snapshot in the Saved Games service with new data.  Metadata is not affected,
+     * however for your own application you will likely want to update metadata such as cover image,
+     * played time, and description with each Snapshot update.  After update, the UI will
+     * be cleared.
+     */
+    @Override
+    public void savedGamesUpdate(final String snapshotName, final byte[] data, final boolean createIfMissing) {
+        AsyncTask<Void, Void, Boolean> updateTask = new AsyncTask<Void, Void, Boolean>() {
+            @Override
+            protected void onPreExecute() {
+
+            }
+
+            @Override
+            protected Boolean doInBackground(Void... params) {
+                Snapshots.OpenSnapshotResult open = Games.Snapshots.open(
+                        mHelper.getApiClient(), snapshotName, createIfMissing).await();
+
+                if (!open.getStatus().isSuccess()) {
+                    Log.w(TAG, "Could not open Snapshot for update.");
+                    return false;
+                }
+
+                // Change data but leave existing metadata
+                Snapshot snapshot = open.getSnapshot();
+                snapshot.getSnapshotContents().writeBytes(data);
+
+                Snapshots.CommitSnapshotResult commit = Games.Snapshots.commitAndClose(
+                        mHelper.getApiClient(), snapshot, SnapshotMetadataChange.EMPTY_CHANGE).await();
+
+                if (!commit.getStatus().isSuccess()) {
+                    Log.w(TAG, "Failed to commit Snapshot.");
+                    return false;
+                }
+                // No failures
+                return true;
+            }
+
+            @Override
+            protected void onPostExecute(Boolean result) {
+                if (result) {
+                } else {
+                }
+            }
+        };
+        updateTask.execute();
     }
 }

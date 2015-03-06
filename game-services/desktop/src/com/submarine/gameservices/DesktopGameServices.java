@@ -28,4 +28,14 @@ public class DesktopGameServices implements GameServices {
     public boolean isSignedIn() {
         return false;
     }
+
+    @Override
+    public void savedGamesLoad(String snapshotName, boolean createIfMissing) {
+
+    }
+
+    @Override
+    public void savedGamesUpdate(String snapshotName, byte[] data, boolean createIfMissing) {
+
+    }
 }

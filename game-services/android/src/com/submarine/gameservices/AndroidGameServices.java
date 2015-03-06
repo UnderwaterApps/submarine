@@ -148,7 +148,7 @@ public class AndroidGameServices implements GameHelper.GameHelperListener, GameS
                         mHelper.getApiClient(), snapshotName, createIfMissing).await();
 
                 if (!open.getStatus().isSuccess()) {
-                    Log.w(TAG, "Could not open Snapshot for update.");
+                    Gdx.app.log(TAG, "Could not open Snapshot for update.");
                     return false;
                 }
 
@@ -160,7 +160,7 @@ public class AndroidGameServices implements GameHelper.GameHelperListener, GameS
                         mHelper.getApiClient(), snapshot, SnapshotMetadataChange.EMPTY_CHANGE).await();
 
                 if (!commit.getStatus().isSuccess()) {
-                    Log.w(TAG, "Failed to commit Snapshot.");
+                    Gdx.app.log(TAG, "Failed to commit Snapshot.");
                     return false;
                 }
                 // No failures

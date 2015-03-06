@@ -50,7 +50,12 @@ public class IOSGameServices implements GameServices, GameCenterListener {
     }
 
     @Override
-    public void unlockStandardAchievement(String achievementId) {
+    public void unlockAchievement(String achievementId) {
+
+    }
+
+    @Override
+    public void incrementAchievement(String achievementId, int incrementAmount) {
 
     }
 

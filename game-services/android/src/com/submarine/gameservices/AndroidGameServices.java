@@ -178,12 +178,24 @@ public class AndroidGameServices implements GameHelper.GameHelperListener, GameS
     }
 
     @Override
-    public void unlockStandardAchievement(final String achievementId) {
+    public void unlockAchievement(final String achievementId) {
         if (isSignedIn()) {
             activity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
                     Games.Achievements.unlock(mHelper.getApiClient(), achievementId);
+                }
+            });
+        }
+    }
+
+    @Override
+    public void incrementAchievement(final String achievementId, final int incrementAmount) {
+        if (isSignedIn()) {
+            activity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Games.Achievements.increment(mHelper.getApiClient(), achievementId, incrementAmount);
                 }
             });
         }

@@ -19,5 +19,7 @@ public interface GameServices {
 
     void savedGamesLoad(String snapshotName, boolean createIfMissing);
 
-    void savedGamesUpdate(final String snapshotName, final byte[] data, final boolean createIfMissing);
+    void savedGamesUpdate(String snapshotName, byte[] data, boolean createIfMissing);
+
+    void setListener(GameServicesListener gameServicesListener);
 }

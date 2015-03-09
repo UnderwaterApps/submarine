@@ -53,4 +53,9 @@ public class DesktopGameServices implements GameServices {
     public void savedGamesUpdate(String snapshotName, byte[] data, boolean createIfMissing) {
 
     }
+
+    @Override
+    public void setListener(GameServicesListener gameServicesListener) {
+
+    }
 }

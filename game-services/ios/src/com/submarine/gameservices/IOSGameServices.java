@@ -17,6 +17,7 @@ public class IOSGameServices implements GameServices, GameCenterListener {
     private static final String TAG = "com.submarine.gameservices.IOSGameServices";
     private GameCenterManager gcManager;
     private boolean isSignedIn;
+    private GameServicesListener gameServicesListener;
 
     public IOSGameServices() {
         isSignedIn = false;
@@ -71,7 +72,7 @@ public class IOSGameServices implements GameServices, GameCenterListener {
 
     @Override
     public void savedGamesLoad(String snapshotName, boolean createIfMissing) {
-        
+
     }
 
     @Override
@@ -80,15 +81,26 @@ public class IOSGameServices implements GameServices, GameCenterListener {
     }
 
     @Override
+    public void setListener(GameServicesListener gameServicesListener) {
+        this.gameServicesListener = gameServicesListener;
+    }
+
+    @Override
     public void playerLoginCompleted() {
         Gdx.app.log(TAG, "Sing in success");
         isSignedIn = true;
+        if (gameServicesListener != null) {
+            gameServicesListener.onSignInSucceeded();
+        }
     }
 
     @Override
     public void playerLoginFailed(NSError nsError) {
         Gdx.app.log(TAG, "Sing in Fail");
         isSignedIn = false;
+        if (gameServicesListener != null) {
+            gameServicesListener.onSignInFailed();
+        }
     }
 
     @Override

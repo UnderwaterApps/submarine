@@ -1,4 +1,4 @@
-package com.submarine.ad;
+package com.submarine.adMob;
 
 /**
  * Created by sargis on 1/30/15.

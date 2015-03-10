@@ -3,7 +3,7 @@ package com.submarine.adcolony;
 /**
  * Created by mariam on 3/9/15.
  */
-public class AdColonyIosNetwork implements AdColonyNetwork {
+public class IOSAdColonyNetwork implements AdColonyNetwork {
     @Override
     public void showVideoAd() {
 

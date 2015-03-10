@@ -6,21 +6,21 @@ import com.jirbo.adcolony.*;
 /**
  * Created by mariam on 3/9/15.
  */
-public class AdColonyAndroidNetwork implements AdColonyNetwork {
+public class AndroidAdColonyNetwork implements AdColonyNetwork {
 
     private final AndroidApplication androidApplication;
     private String clientOptions;
     private String appId;
     private String[] zoneIds;
-    private AdColonyHandler handler;
+    private AdColonyListener listener;
 
 
-    public AdColonyAndroidNetwork(AndroidApplication androidApplication, String clientOptions, String appId, String[] zoneIds, AdColonyHandler handler) {
+    public AndroidAdColonyNetwork(AndroidApplication androidApplication, String clientOptions, String appId, String[] zoneIds, AdColonyListener listener) {
         this.androidApplication = androidApplication;
         this.clientOptions = clientOptions;
         this.appId = appId;
         this.zoneIds = zoneIds;
-        this.handler = handler;
+        this.listener = listener;
 
         configureAdColony();
     }
@@ -32,18 +32,18 @@ public class AdColonyAndroidNetwork implements AdColonyNetwork {
         AdColonyV4VCListener listener = new AdColonyV4VCListener() {
             public void onAdColonyV4VCReward(AdColonyV4VCReward reward) {
                 if (reward.success()) {
-                    handler.reward();
+                    AndroidAdColonyNetwork.this.listener.reward();
                 }
             }
         };
         AdColony.addV4VCListener(listener);
     }
 
-    public void pauseAdColony() {
+    public void pause() {
         AdColony.pause();
     }
 
-    public void resumeAdColony() {
+    public void resume() {
         AdColony.resume(androidApplication);
     }
 

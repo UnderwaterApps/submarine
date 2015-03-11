@@ -30,6 +30,7 @@ public class AndroidGameServices implements GameHelper.GameHelperListener, GameS
     private Activity activity;
     private GameHelper gameHelper;
     private GameServicesListener<Snapshots.OpenSnapshotResult> gameServicesListener;
+    private boolean isSavedGamesLoadDone;
 
 
     public AndroidGameServices(Activity activity, int clientsToUse) {
@@ -37,6 +38,7 @@ public class AndroidGameServices implements GameHelper.GameHelperListener, GameS
         gameHelper = new GameHelper(this.activity, clientsToUse);
         gameHelper.setup(this);
         gameHelper.enableDebugLog(true);
+        isSavedGamesLoadDone = false;
     }
 
     public GoogleApiClient getApiClient() {
@@ -125,7 +127,7 @@ public class AndroidGameServices implements GameHelper.GameHelperListener, GameS
     public void savedGamesLoad(String snapshotName, boolean createIfMissing) {
         PendingResult<Snapshots.OpenSnapshotResult> pendingResult = Games.Snapshots.open(
                 gameHelper.getApiClient(), snapshotName, createIfMissing);
-
+        isSavedGamesLoadDone = false;
         ResultCallback<Snapshots.OpenSnapshotResult> callback =
                 new ResultCallback<Snapshots.OpenSnapshotResult>() {
                     @Override
@@ -143,6 +145,7 @@ public class AndroidGameServices implements GameHelper.GameHelperListener, GameS
                                 gameServicesListener.savedGamesLoadFailed(openSnapshotResult);
                                 break;
                         }
+                        isSavedGamesLoadDone = true;
                     }
                 };
         pendingResult.setResultCallback(callback);
@@ -197,6 +200,11 @@ public class AndroidGameServices implements GameHelper.GameHelperListener, GameS
     @Override
     public void setListener(GameServicesListener gameServicesListener) {
         this.gameServicesListener = gameServicesListener;
+    }
+
+    @Override
+    public boolean isSavedGamesLoadDone() {
+        return isSavedGamesLoadDone;
     }
 
     @Override

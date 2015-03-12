@@ -22,4 +22,6 @@ public interface GameServices {
     void savedGamesUpdate(String snapshotName, byte[] data, boolean createIfMissing);
 
     void setListener(GameServicesListener gameServicesListener);
+
+    boolean isSavedGamesLoadDone();
 }

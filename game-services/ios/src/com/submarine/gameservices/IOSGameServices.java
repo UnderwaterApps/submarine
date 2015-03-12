@@ -86,6 +86,11 @@ public class IOSGameServices implements GameServices, GameCenterListener {
     }
 
     @Override
+    public boolean isSavedGamesLoadDone() {
+        return false;
+    }
+
+    @Override
     public void playerLoginCompleted() {
         Gdx.app.log(TAG, "Sing in success");
         isSignedIn = true;

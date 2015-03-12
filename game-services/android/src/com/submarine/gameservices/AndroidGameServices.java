@@ -15,6 +15,14 @@ import com.google.android.gms.games.snapshot.Snapshots;
 import com.google.example.games.basegameutils.GameHelper;
 
 public class AndroidGameServices implements GameHelper.GameHelperListener, GameServices {
+    // Client request flags
+    public final static int CLIENT_NONE = GameHelper.CLIENT_NONE;
+    public final static int CLIENT_GAMES = GameHelper.CLIENT_GAMES;
+    public final static int CLIENT_PLUS = GameHelper.CLIENT_PLUS;
+    public final static int CLIENT_APPSTATE = GameHelper.CLIENT_APPSTATE;
+    public final static int CLIENT_SNAPSHOT = GameHelper.CLIENT_SNAPSHOT;
+    public final static int CLIENT_ALL = CLIENT_GAMES | CLIENT_PLUS
+            | CLIENT_APPSTATE | CLIENT_SNAPSHOT;
     // The AppState slot we are editing.  For simplicity this sample only manipulates a single
     // Cloud Save slot and a corresponding Snapshot entry,  This could be changed to any integer
     // 0-3 without changing functionality (Cloud Save has four slots, numbered 0-3).
@@ -22,13 +30,15 @@ public class AndroidGameServices implements GameHelper.GameHelperListener, GameS
     private Activity activity;
     private GameHelper gameHelper;
     private GameServicesListener<Snapshots.OpenSnapshotResult> gameServicesListener;
+    private boolean isSavedGamesLoadDone;
 
 
-    public AndroidGameServices(Activity activity) {
+    public AndroidGameServices(Activity activity, int clientsToUse) {
         this.activity = activity;
-        gameHelper = new GameHelper(this.activity, (GameHelper.CLIENT_GAMES | GameHelper.CLIENT_SNAPSHOT));
+        gameHelper = new GameHelper(this.activity, clientsToUse);
         gameHelper.setup(this);
         gameHelper.enableDebugLog(true);
+        isSavedGamesLoadDone = false;
     }
 
     public GoogleApiClient getApiClient() {
@@ -117,7 +127,7 @@ public class AndroidGameServices implements GameHelper.GameHelperListener, GameS
     public void savedGamesLoad(String snapshotName, boolean createIfMissing) {
         PendingResult<Snapshots.OpenSnapshotResult> pendingResult = Games.Snapshots.open(
                 gameHelper.getApiClient(), snapshotName, createIfMissing);
-
+        isSavedGamesLoadDone = false;
         ResultCallback<Snapshots.OpenSnapshotResult> callback =
                 new ResultCallback<Snapshots.OpenSnapshotResult>() {
                     @Override
@@ -135,6 +145,7 @@ public class AndroidGameServices implements GameHelper.GameHelperListener, GameS
                                 gameServicesListener.savedGamesLoadFailed(openSnapshotResult);
                                 break;
                         }
+                        isSavedGamesLoadDone = true;
                     }
                 };
         pendingResult.setResultCallback(callback);
@@ -189,6 +200,11 @@ public class AndroidGameServices implements GameHelper.GameHelperListener, GameS
     @Override
     public void setListener(GameServicesListener gameServicesListener) {
         this.gameServicesListener = gameServicesListener;
+    }
+
+    @Override
+    public boolean isSavedGamesLoadDone() {
+        return isSavedGamesLoadDone;
     }
 
     @Override

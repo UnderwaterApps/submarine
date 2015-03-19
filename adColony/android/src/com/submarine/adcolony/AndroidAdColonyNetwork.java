@@ -9,34 +9,20 @@ import com.jirbo.adcolony.*;
 public class AndroidAdColonyNetwork implements AdColonyNetwork {
 
     private final AndroidApplication androidApplication;
-    private String clientOptions;
-    private String appId;
-    private String[] zoneIds;
-    private AdColonyListener listener;
+    private final AdColonyListener adColonyListener;
+    private final AndroidAdColonyAdListener internalAdColonyAdListener;
 
 
-    public AndroidAdColonyNetwork(AndroidApplication androidApplication, String clientOptions, String appId, String[] zoneIds, AdColonyListener listener) {
+    public AndroidAdColonyNetwork(AndroidApplication androidApplication, String clientOptions, String appId, String[] zoneIds, AdColonyListener adColonyListener) {
         this.androidApplication = androidApplication;
-        this.clientOptions = clientOptions;
-        this.appId = appId;
-        this.zoneIds = zoneIds;
-        this.listener = listener;
-
-        configureAdColony();
+        this.adColonyListener = adColonyListener;
+        this.internalAdColonyAdListener = new AndroidAdColonyAdListener();
+        configure(clientOptions, appId, zoneIds);
     }
 
-    private void configureAdColony() {
+    private void configure(String clientOptions, String appId, String[] zoneIds) {
         AdColony.configure(androidApplication, clientOptions, appId, zoneIds);
-
-
-        AdColonyV4VCListener listener = new AdColonyV4VCListener() {
-            public void onAdColonyV4VCReward(AdColonyV4VCReward reward) {
-                if (reward.success()) {
-                    AndroidAdColonyNetwork.this.listener.reward();
-                }
-            }
-        };
-        AdColony.addV4VCListener(listener);
+        AdColony.addV4VCListener(new AndroidAdColonyV4VCListener());
     }
 
     public void pause() {
@@ -72,20 +58,78 @@ public class AndroidAdColonyNetwork implements AdColonyNetwork {
     }
 
     @Override
-    public void showPrePopups(String v4vcZoneId) {
-        AdColonyV4VCAd ad = new AdColonyV4VCAd(v4vcZoneId).withConfirmationDialog();
+    public void showV4VCAd(String zoneId, AdColonyAdListener adColonyAdListener) {
+        AdColonyV4VCAd ad = new AdColonyV4VCAd(zoneId);
+        internalAdColonyAdListener.adColonyAdListener = adColonyAdListener;
+        ad.withListener(internalAdColonyAdListener);
         ad.show();
     }
 
     @Override
-    public void showPostPopups(String v4vcZoneId) {
-        AdColonyV4VCAd ad = new AdColonyV4VCAd(v4vcZoneId).withResultsDialog();
+    public void showV4VCAd(String zoneId, boolean showPrePopup, boolean showPostPopup) {
+        AdColonyV4VCAd ad = new AdColonyV4VCAd(zoneId);
+        if (showPrePopup) {
+            ad.withConfirmationDialog();
+        }
+        if (showPostPopup) {
+            ad.withResultsDialog();
+        }
         ad.show();
     }
 
     @Override
-    public void showBothPopups(String v4vcZoneId) {
-        AdColonyV4VCAd ad = new AdColonyV4VCAd(v4vcZoneId).withConfirmationDialog().withResultsDialog();
+    public void showV4VCAd(String zoneId, boolean showPrePopup, boolean showPostPopup, AdColonyAdListener adColonyAdListener) {
+        AdColonyV4VCAd ad = new AdColonyV4VCAd(zoneId);
+        if (showPrePopup) {
+            ad.withConfirmationDialog();
+        }
+        if (showPostPopup) {
+            ad.withResultsDialog();
+        }
+        internalAdColonyAdListener.adColonyAdListener = adColonyAdListener;
+        ad.withListener(internalAdColonyAdListener);
         ad.show();
+    }
+
+    @Override
+    public void showV4VCAd(String zoneId, boolean showPrePopup) {
+        AdColonyV4VCAd ad = new AdColonyV4VCAd(zoneId);
+        if (showPrePopup) {
+            ad.withConfirmationDialog();
+        }
+        ad.show();
+    }
+
+    @Override
+    public void showV4VCAd(String zoneId, boolean showPrePopup, AdColonyAdListener adColonyAdListener) {
+        AdColonyV4VCAd ad = new AdColonyV4VCAd(zoneId);
+        if (showPrePopup) {
+            ad.withConfirmationDialog();
+        }
+        internalAdColonyAdListener.adColonyAdListener = adColonyAdListener;
+        ad.withListener(internalAdColonyAdListener);
+        ad.show();
+    }
+
+    private class AndroidAdColonyV4VCListener implements AdColonyV4VCListener {
+        @Override
+        public void onAdColonyV4VCReward(AdColonyV4VCReward adColonyV4VCReward) {
+            adColonyListener.reward(adColonyV4VCReward.success(), adColonyV4VCReward.name(), adColonyV4VCReward.amount());
+        }
+    }
+
+    private class AndroidAdColonyAdListener implements com.jirbo.adcolony.AdColonyAdListener {
+
+        private AdColonyAdListener adColonyAdListener;
+
+        @Override
+        public void onAdColonyAdAttemptFinished(AdColonyAd adColonyAd) {
+            adColonyAdListener.onAdAttemptFinished(adColonyAd.shown(), null);
+        }
+
+        @Override
+        public void onAdColonyAdStarted(AdColonyAd adColonyAd) {
+            adColonyAdListener.onAdStarted(null);
+        }
     }
 }

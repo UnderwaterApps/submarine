@@ -193,8 +193,23 @@ public class AndroidGameServices implements GameHelper.GameHelperListener, GameS
         updateTask.execute();
     }
 
-    public Snapshots.OpenSnapshotResult resolveSavedGamesConflict(String conflictId, Snapshot resolvedSnapshot) {
-        return Games.Snapshots.resolveConflict(gameHelper.getApiClient(), conflictId, resolvedSnapshot).await();
+    public void resolveSavedGamesConflict(final String conflictId, final Snapshot resolvedSnapshot, final int retryCount, final int maxSnapshotResolveRetries) {
+        AsyncTask<Void, Void, Boolean> updateTask = new AsyncTask<Void, Void, Boolean>() {
+            @Override
+            protected Boolean doInBackground(Void... params) {
+                Snapshots.OpenSnapshotResult resolveResult = Games.Snapshots.resolveConflict(gameHelper.getApiClient(), conflictId, resolvedSnapshot).await();
+                if (retryCount < maxSnapshotResolveRetries) {
+                    // Recursively attempt again
+                    gameServicesListener.savedGamesLoadConflicted(resolveResult, retryCount + 1);
+                } else {
+                    // Failed, log error and show Toast to the user
+                    String message = "Could not resolve snapshot conflicts";
+                    Gdx.app.error(TAG, message);
+                }
+                return true;
+            }
+        };
+        updateTask.execute();
     }
 
     @Override

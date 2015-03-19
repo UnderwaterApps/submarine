@@ -13,9 +13,14 @@ public interface AdColonyNetwork {
 
     void showV4VCAd(String zoneId);
 
-    void showPrePopups(String v4vcZoneId);
+    void showV4VCAd(String zoneId, AdColonyAdListener adColonyAdListener);
 
-    void showPostPopups(String v4vcZoneId);
+    void showV4VCAd(String zoneId, boolean showPrePopup, boolean showPostPopup);
 
-    void showBothPopups(String v4vcZoneId);
+    void showV4VCAd(String zoneId, boolean showPrePopup, boolean showPostPopup, AdColonyAdListener adColonyAdListener);
+
+    void showV4VCAd(String zoneId, boolean showPrePopup);
+
+    void showV4VCAd(String zoneId, boolean showPrePopup, AdColonyAdListener adColonyAdListener);
+
 }

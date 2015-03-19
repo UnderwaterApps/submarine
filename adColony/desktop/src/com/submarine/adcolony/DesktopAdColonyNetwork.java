@@ -25,17 +25,29 @@ public class DesktopAdColonyNetwork implements AdColonyNetwork {
     }
 
     @Override
-    public void showPrePopups(String v4vcZoneId) {
+    public void showV4VCAd(String zoneId, AdColonyAdListener adColonyAdListener) {
 
     }
 
     @Override
-    public void showPostPopups(String v4vcZoneId) {
+    public void showV4VCAd(String zoneId, boolean showPrePopup, boolean showPostPopup) {
 
     }
 
     @Override
-    public void showBothPopups(String v4vcZoneId) {
+    public void showV4VCAd(String zoneId, boolean showPrePopup, boolean showPostPopup, AdColonyAdListener adColonyAdListener) {
 
     }
+
+    @Override
+    public void showV4VCAd(String zoneId, boolean showPrePopup) {
+
+    }
+
+    @Override
+    public void showV4VCAd(String zoneId, boolean showPrePopup, AdColonyAdListener adColonyAdListener) {
+
+    }
+
+
 }

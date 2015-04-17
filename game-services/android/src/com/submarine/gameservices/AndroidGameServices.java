@@ -151,6 +151,13 @@ public class AndroidGameServices implements GameHelper.GameHelperListener, GameS
         pendingResult.setResultCallback(callback);
     }
 
+    private void showSavedGamesUI() {
+        int maxNumberOfSavedGamesToShow = 5;
+        Intent savedGamesIntent = Games.Snapshots.getSelectSnapshotIntent(gameHelper.getApiClient(),
+                "See My Saves", true, true, maxNumberOfSavedGamesToShow);
+        activity.startActivityForResult(savedGamesIntent, 9009);
+    }
+
 
     /**
      * Update the Snapshot in the Saved Games service with new data.  Metadata is not affected,

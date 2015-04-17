@@ -31,6 +31,9 @@ public class AndroidGameServices implements GameHelper.GameHelperListener, GameS
     private GameHelper gameHelper;
     private GameServicesListener<Snapshots.OpenSnapshotResult> gameServicesListener;
     private boolean isSavedGamesLoadDone;
+    private boolean waitingToShowAchievements;
+    private boolean waitingToShowLeaderboard;
+    private String waitingToShowLeaderboardId;
 
 
     public AndroidGameServices(Activity activity, int clientsToUse) {
@@ -47,6 +50,10 @@ public class AndroidGameServices implements GameHelper.GameHelperListener, GameS
 
     public void onActivityResult(int request, int response, Intent data) {
         gameHelper.onActivityResult(request, response, data);
+        if (response == 10001) {
+            gameHelper.disconnect();
+        }
+
     }
 
 
@@ -55,6 +62,8 @@ public class AndroidGameServices implements GameHelper.GameHelperListener, GameS
     @Override
     public void onSignInFailed() {
         Gdx.app.log(TAG, "Sing in Fail");
+        waitingToShowLeaderboard = false;
+        waitingToShowAchievements = false;
         gameHelper.showFailureDialog();
         if (gameServicesListener != null) {
             gameServicesListener.onSignInFailed();
@@ -66,6 +75,12 @@ public class AndroidGameServices implements GameHelper.GameHelperListener, GameS
         Gdx.app.log(TAG, "Sign in success");
         if (gameServicesListener != null) {
             gameServicesListener.onSignInSucceeded();
+        }
+        if (waitingToShowLeaderboard) {
+            showLeaderBoard(waitingToShowLeaderboardId);
+        }
+        if (waitingToShowAchievements) {
+            showAchievements();
         }
     }
 
@@ -110,10 +125,16 @@ public class AndroidGameServices implements GameHelper.GameHelperListener, GameS
                 @Override
                 public void run() {
                     Gdx.app.log(TAG, "Show Leaderboard");
+                    waitingToShowLeaderboard = false;
                     activity.startActivityForResult(Games.Leaderboards.getLeaderboardIntent(gameHelper.getApiClient(), leaderBoardId), 2);
                 }
             });
+        } else {
+            gameHelper.beginUserInitiatedSignIn();
+            waitingToShowLeaderboard = true;
+            waitingToShowLeaderboardId = leaderBoardId;
         }
+
     }
 
 
@@ -262,9 +283,13 @@ public class AndroidGameServices implements GameHelper.GameHelperListener, GameS
                 @Override
                 public void run() {
                     Gdx.app.log(TAG, "Show Achievements");
+                    waitingToShowAchievements = false;
                     activity.startActivityForResult(Games.Achievements.getAchievementsIntent(gameHelper.getApiClient()), 1);
                 }
             });
+        } else {
+            waitingToShowAchievements = true;
+            gameHelper.beginUserInitiatedSignIn();
         }
     }
 }

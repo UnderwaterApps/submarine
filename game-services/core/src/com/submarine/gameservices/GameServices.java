@@ -1,5 +1,7 @@
 package com.submarine.gameservices;
 
+import com.submarine.gameservices.events.LoadedEventListener;
+
 public interface GameServices {
     void login();
 
@@ -16,6 +18,10 @@ public interface GameServices {
     void incrementAchievement(String achievementId, int incrementAmount);
 
     void showAchievements();
+
+    void submitEvent(String eventId, int incrementAmount);
+
+    void loadEvents(LoadedEventListener listener);
 
     boolean isSignedIn();
 

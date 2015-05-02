@@ -1,6 +1,7 @@
 package com.submarine.gameservices;
 
 import com.badlogic.gdx.math.MathUtils;
+import com.submarine.gameservices.events.LoadedEventListener;
 
 /**
  * Created by sargis on 2/25/15.
@@ -50,6 +51,16 @@ public class DesktopGameServices implements GameServices {
 
     @Override
     public void showAchievements() {
+
+    }
+
+    @Override
+    public void submitEvent(String eventId, int incrementAmount) {
+
+    }
+
+    @Override
+    public void loadEvents(LoadedEventListener listener) {
 
     }
 

@@ -1,6 +1,7 @@
 package com.submarine.gameservices;
 
 import com.badlogic.gdx.Gdx;
+import com.submarine.gameservices.events.LoadedEventListener;
 import org.robovm.apple.foundation.NSError;
 import org.robovm.apple.gamekit.GKAchievement;
 import org.robovm.apple.gamekit.GKLeaderboard;
@@ -67,6 +68,16 @@ public class IOSGameServices implements GameServices, GameCenterListener {
 
     @Override
     public void showAchievements() {
+
+    }
+
+    @Override
+    public void submitEvent(String eventId, int incrementAmount) {
+
+    }
+
+    @Override
+    public void loadEvents(LoadedEventListener listener) {
 
     }
 

@@ -6,13 +6,18 @@ import android.os.AsyncTask;
 import com.badlogic.gdx.Gdx;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
+import com.google.android.gms.common.api.Result;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.games.Games;
 import com.google.android.gms.games.GamesStatusCodes;
+import com.google.android.gms.games.event.Event;
+import com.google.android.gms.games.event.EventBuffer;
+import com.google.android.gms.games.event.Events;
 import com.google.android.gms.games.snapshot.Snapshot;
 import com.google.android.gms.games.snapshot.SnapshotMetadataChange;
 import com.google.android.gms.games.snapshot.Snapshots;
 import com.google.example.games.basegameutils.GameHelper;
+import com.submarine.gameservices.events.LoadedEventListener;
 
 public class AndroidGameServices implements GameHelper.GameHelperListener, GameServices {
     // Client request flags
@@ -35,6 +40,8 @@ public class AndroidGameServices implements GameHelper.GameHelperListener, GameS
     private boolean waitingToShowLeaderboard;
     private boolean waitingToShowLeaderboards;
     private String waitingToShowLeaderboardId;
+
+    private LoadedEventListener eventListener;
 
 
     public AndroidGameServices(Activity activity, int clientsToUse) {
@@ -314,6 +321,45 @@ public class AndroidGameServices implements GameHelper.GameHelperListener, GameS
         } else {
             waitingToShowAchievements = true;
             gameHelper.beginUserInitiatedSignIn();
+        }
+    }
+
+    @Override
+    public void submitEvent(final String eventId, final int incrementAmount) {
+        if (isSignedIn()) {
+            activity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Games.Events.increment(gameHelper.getApiClient(), eventId, incrementAmount);
+                }
+            });
+        }
+    }
+
+    @Override
+    public void loadEvents(LoadedEventListener listener) {
+        this.eventListener = listener;
+
+        EventCallback ec = new EventCallback();
+
+        // Load all events tracked for your game
+        PendingResult<Events.LoadEventsResult> pr = Games.Events.load(gameHelper.getApiClient(), true);
+        pr.setResultCallback(ec);
+    }
+
+
+    private class EventCallback implements ResultCallback {
+
+        // Handle the results from the events load call
+        public void onResult(Result result) {
+            Events.LoadEventsResult r = (Events.LoadEventsResult) result;
+            EventBuffer eb = r.getEvents();
+
+            for (int i = 0; i < eb.getCount(); i++) {
+                Event event = eb.get(i);
+                eventListener.info(event.getName(), event.getDescription());
+            }
+            eb.close();
         }
     }
 }

@@ -23,6 +23,8 @@ public interface GameServices {
 
     void loadEvents(LoadedEventListener listener);
 
+    void loadEventsByIds(LoadedEventListener listener, String... eventIds);
+
     boolean isSignedIn();
 
     void savedGamesLoad(String snapshotName, boolean createIfMissing);

@@ -347,6 +347,17 @@ public class AndroidGameServices implements GameHelper.GameHelperListener, GameS
         pr.setResultCallback(ec);
     }
 
+    @Override
+    public void loadEventsByIds(LoadedEventListener listener, String... eventIds) {
+        this.eventListener = listener;
+
+        EventCallback ec = new EventCallback();
+
+        // Load all events tracked for your game
+        PendingResult<Events.LoadEventsResult> pr = Games.Events.loadByIds(gameHelper.getApiClient(), true, eventIds);
+        pr.setResultCallback(ec);
+    }
+
 
     private class EventCallback implements ResultCallback {
 

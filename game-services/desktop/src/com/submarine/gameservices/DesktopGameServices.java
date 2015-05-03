@@ -65,6 +65,11 @@ public class DesktopGameServices implements GameServices {
     }
 
     @Override
+    public void loadEventsByIds(LoadedEventListener listener, String... eventIds) {
+
+    }
+
+    @Override
     public boolean isSignedIn() {
         return false;
     }

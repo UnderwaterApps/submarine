@@ -82,6 +82,11 @@ public class IOSGameServices implements GameServices, GameCenterListener {
     }
 
     @Override
+    public void loadEventsByIds(LoadedEventListener listener, String... eventIds) {
+
+    }
+
+    @Override
     public boolean isSignedIn() {
         return isSignedIn;
     }

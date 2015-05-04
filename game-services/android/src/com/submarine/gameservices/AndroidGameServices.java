@@ -146,30 +146,40 @@ public class AndroidGameServices implements GameHelper.GameHelperListener, GameS
      */
     @Override
     public void savedGamesLoad(String snapshotName, boolean createIfMissing) {
+        final int retryCount = 0;
         PendingResult<Snapshots.OpenSnapshotResult> pendingResult = Games.Snapshots.open(
                 gameHelper.getApiClient(), snapshotName, createIfMissing);
-        isSavedGamesLoadDone = false;
+            isSavedGamesLoadDone = false;
         ResultCallback<Snapshots.OpenSnapshotResult> callback =
                 new ResultCallback<Snapshots.OpenSnapshotResult>() {
                     @Override
                     public void onResult(Snapshots.OpenSnapshotResult openSnapshotResult) {
-                        int status = openSnapshotResult.getStatus().getStatusCode();
-                        switch (status) {
-                            case GamesStatusCodes.STATUS_OK:
-                            case GamesStatusCodes.STATUS_SNAPSHOT_CONTENTS_UNAVAILABLE:
-                                gameServicesListener.savedGamesLoadSucceeded(openSnapshotResult);
-                                break;
-                            case GamesStatusCodes.STATUS_SNAPSHOT_CONFLICT:
-                                gameServicesListener.savedGamesLoadConflicted(openSnapshotResult, 0);
-                                break;
-                            default:
-                                gameServicesListener.savedGamesLoadFailed(openSnapshotResult);
-                                break;
-                        }
-                        isSavedGamesLoadDone = true;
+                        processSnapshotOpenResult(openSnapshotResult, retryCount);
                     }
                 };
         pendingResult.setResultCallback(callback);
+    }
+
+    private void processSnapshotOpenResult(Snapshots.OpenSnapshotResult openSnapshotResult, int retryCount) {
+        Gdx.app.log(TAG, "conflictId after resolve= " + openSnapshotResult.getConflictId() );
+        int status = openSnapshotResult.getStatus().getStatusCode();
+        switch (status) {
+            case GamesStatusCodes.STATUS_OK:
+            case GamesStatusCodes.STATUS_SNAPSHOT_CONTENTS_UNAVAILABLE:
+                gameServicesListener.savedGamesLoadSucceeded(openSnapshotResult);
+                break;
+            case GamesStatusCodes.STATUS_SNAPSHOT_CONFLICT:
+                gameServicesListener.savedGamesLoadConflicted(openSnapshotResult, retryCount);
+                break;
+            default:
+                gameServicesListener.savedGamesLoadFailed(openSnapshotResult);
+                break;
+        }
+        if (status == GamesStatusCodes.STATUS_OK || status == GamesStatusCodes.STATUS_SNAPSHOT_CONTENTS_UNAVAILABLE) {
+            gameServicesListener.savedGamesLoadDone();
+            isSavedGamesLoadDone = true;
+
+        }
     }
 
     private void showSavedGamesUI() {
@@ -191,8 +201,7 @@ public class AndroidGameServices implements GameHelper.GameHelperListener, GameS
         AsyncTask<Void, Void, Boolean> updateTask = new AsyncTask<Void, Void, Boolean>() {
             @Override
             protected Boolean doInBackground(Void... params) {
-                Snapshots.OpenSnapshotResult open = Games.Snapshots.open(
-                        gameHelper.getApiClient(), snapshotName, createIfMissing).await();
+                Snapshots.OpenSnapshotResult open = Games.Snapshots.open(gameHelper.getApiClient(), snapshotName, createIfMissing).await();
 
                 if (!open.getStatus().isSuccess()) {
                     Gdx.app.log(TAG, "Could not open Snapshot for update.");
@@ -221,14 +230,21 @@ public class AndroidGameServices implements GameHelper.GameHelperListener, GameS
         updateTask.execute();
     }
 
-    public void resolveSavedGamesConflict(final String conflictId, final Snapshot resolvedSnapshot, final int retryCount, final int maxSnapshotResolveRetries) {
+    public void resolveSavedGamesConflict(Snapshots.OpenSnapshotResult openResult, final Snapshot resolvedSnapshot, final int retryCount, final int maxSnapshotResolveRetries) {
+        final String conflictId = openResult.getConflictId();
+        Gdx.app.log(TAG, "conflictId before resolve= " + conflictId );
+        //System.out.println(TAG + "resolvedSnapshot pre resolve " + resolvedSnapshot.toString());
         AsyncTask<Void, Void, Boolean> updateTask = new AsyncTask<Void, Void, Boolean>() {
             @Override
             protected Boolean doInBackground(Void... params) {
                 Snapshots.OpenSnapshotResult resolveResult = Games.Snapshots.resolveConflict(gameHelper.getApiClient(), conflictId, resolvedSnapshot).await();
+                //System.out.println(TAG + "snapshot post resolve " + resolveResult.getSnapshot().toString());
+                //System.out.println(TAG + "conflict snapshot post resolve " + resolveResult.getConflictingSnapshot().toString());
                 if (retryCount < maxSnapshotResolveRetries) {
                     // Recursively attempt again
-                    gameServicesListener.savedGamesLoadConflicted(resolveResult, retryCount + 1);
+                    //gameServicesListener.savedGamesLoadConflicted(resolveResult, retryCount + 1);
+                    processSnapshotOpenResult(resolveResult, retryCount + 1);
+
                 } else {
                     // Failed, log error and show Toast to the user
                     String message = "Could not resolve snapshot conflicts";

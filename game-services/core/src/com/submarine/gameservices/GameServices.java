@@ -9,6 +9,8 @@ public interface GameServices {
 
     void showLeaderBoard(String identifier);
 
+    void showLeaderBoards();
+
     void unlockAchievement(String achievementId);
 
     void incrementAchievement(String achievementId, int incrementAmount);

@@ -33,6 +33,7 @@ public class AndroidGameServices implements GameHelper.GameHelperListener, GameS
     private boolean isSavedGamesLoadDone;
     private boolean waitingToShowAchievements;
     private boolean waitingToShowLeaderboard;
+    private boolean waitingToShowLeaderboards;
     private String waitingToShowLeaderboardId;
 
 
@@ -63,6 +64,7 @@ public class AndroidGameServices implements GameHelper.GameHelperListener, GameS
     public void onSignInFailed() {
         Gdx.app.log(TAG, "Sing in Fail");
         waitingToShowLeaderboard = false;
+        waitingToShowLeaderboards = false;
         waitingToShowAchievements = false;
         gameHelper.showFailureDialog();
         if (gameServicesListener != null) {
@@ -78,6 +80,9 @@ public class AndroidGameServices implements GameHelper.GameHelperListener, GameS
         }
         if (waitingToShowLeaderboard) {
             showLeaderBoard(waitingToShowLeaderboardId);
+        }
+        if (waitingToShowLeaderboards) {
+            showLeaderBoards();
         }
         if (waitingToShowAchievements) {
             showAchievements();
@@ -135,6 +140,25 @@ public class AndroidGameServices implements GameHelper.GameHelperListener, GameS
             waitingToShowLeaderboardId = leaderBoardId;
         }
 
+    }
+
+    @Override
+    public void showLeaderBoards() {
+        Gdx.app.log(TAG, "Show Multiple Leaderboards : " + isSignedIn());
+        if (isSignedIn()) {
+            activity.runOnUiThread(new Runnable() {
+
+                @Override
+                public void run() {
+                    Gdx.app.log(TAG, "Show Multiple Leaderboards");
+                    waitingToShowLeaderboards = false;
+                    activity.startActivityForResult(Games.Leaderboards.getAllLeaderboardsIntent(gameHelper.getApiClient()), 3);
+                }
+            });
+        } else {
+            gameHelper.beginUserInitiatedSignIn();
+            waitingToShowLeaderboards = true;
+        }
     }
 
 

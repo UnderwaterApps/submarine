@@ -13,11 +13,19 @@ import com.google.android.gms.games.GamesStatusCodes;
 import com.google.android.gms.games.event.Event;
 import com.google.android.gms.games.event.EventBuffer;
 import com.google.android.gms.games.event.Events;
+import com.google.android.gms.games.quest.Quest;
+import com.google.android.gms.games.quest.QuestBuffer;
+import com.google.android.gms.games.quest.QuestUpdateListener;
+import com.google.android.gms.games.quest.Quests;
 import com.google.android.gms.games.snapshot.Snapshot;
 import com.google.android.gms.games.snapshot.SnapshotMetadataChange;
 import com.google.android.gms.games.snapshot.Snapshots;
 import com.google.example.games.basegameutils.GameHelper;
 import com.submarine.gameservices.events.LoadedEventListener;
+import com.submarine.gameservices.quests.LoadedQuestListener;
+import com.submarine.gameservices.quests.QuestRewardListener;
+
+import java.nio.charset.Charset;
 
 public class AndroidGameServices implements GameHelper.GameHelperListener, GameServices {
     // Client request flags
@@ -41,7 +49,13 @@ public class AndroidGameServices implements GameHelper.GameHelperListener, GameS
     private boolean waitingToShowLeaderboards;
     private String waitingToShowLeaderboardId;
 
+    private boolean waitingToLoadEvents;
+    private boolean waitingToShowQuests;
+    private boolean waitingToLoadQuests;
+    private boolean waitingToUpdateQuests;
     private LoadedEventListener eventListener;
+    private LoadedQuestListener questListener;
+    private QuestRewardListener questRewardListener;
 
 
     public AndroidGameServices(Activity activity, int clientsToUse) {
@@ -73,6 +87,9 @@ public class AndroidGameServices implements GameHelper.GameHelperListener, GameS
         waitingToShowLeaderboard = false;
         waitingToShowLeaderboards = false;
         waitingToShowAchievements = false;
+        waitingToLoadEvents = false;
+        waitingToShowQuests = false;
+        waitingToLoadQuests = false;
         gameHelper.showFailureDialog();
         if (gameServicesListener != null) {
             gameServicesListener.onSignInFailed();
@@ -94,6 +111,16 @@ public class AndroidGameServices implements GameHelper.GameHelperListener, GameS
         if (waitingToShowAchievements) {
             showAchievements();
         }
+        if (waitingToLoadEvents) {
+            loadEvents(eventListener);
+        }
+        if (waitingToShowQuests) {
+            showQuests();
+        }
+        if (waitingToLoadQuests) {
+            loadQuests(questListener);
+        }
+
     }
 
     // // ************** END GOOGLE PART ***************\\\\\\\
@@ -340,24 +367,150 @@ public class AndroidGameServices implements GameHelper.GameHelperListener, GameS
     public void loadEvents(LoadedEventListener listener) {
         this.eventListener = listener;
 
-        EventCallback ec = new EventCallback();
+        Gdx.app.log(TAG, "Load Events : " + isSignedIn());
+        if (isSignedIn()) {
+            activity.runOnUiThread(new Runnable() {
 
-        // Load all events tracked for your game
-        PendingResult<Events.LoadEventsResult> pr = Games.Events.load(gameHelper.getApiClient(), true);
-        pr.setResultCallback(ec);
+                @Override
+                public void run() {
+                    Gdx.app.log(TAG, "Load Events");
+                    waitingToLoadEvents = false;
+                    EventCallback ec = new EventCallback();
+
+                    // Load all events tracked for your game
+                    PendingResult<Events.LoadEventsResult> pr = Games.Events.load(gameHelper.getApiClient(), true);
+                    pr.setResultCallback(ec);
+                }
+            });
+        } else {
+            waitingToLoadEvents = true;
+            gameHelper.beginUserInitiatedSignIn();
+        }
     }
 
     @Override
-    public void loadEventsByIds(LoadedEventListener listener, String... eventIds) {
+    public void loadEventsByIds(LoadedEventListener listener, final String... eventIds) {
         this.eventListener = listener;
 
-        EventCallback ec = new EventCallback();
+        Gdx.app.log(TAG, "Load Events : " + isSignedIn());
+        if (isSignedIn()) {
+            activity.runOnUiThread(new Runnable() {
 
-        // Load all events tracked for your game
-        PendingResult<Events.LoadEventsResult> pr = Games.Events.loadByIds(gameHelper.getApiClient(), true, eventIds);
-        pr.setResultCallback(ec);
+                @Override
+                public void run() {
+                    Gdx.app.log(TAG, "Load Events" + eventIds);
+                    waitingToLoadEvents = false;
+                    EventCallback ec = new EventCallback();
+
+                    // Load all events tracked for your game
+                    PendingResult<Events.LoadEventsResult> pr = Games.Events.loadByIds(gameHelper.getApiClient(), true, eventIds);
+                    pr.setResultCallback(ec);
+                }
+            });
+        } else {
+            waitingToLoadEvents = true;
+            gameHelper.beginUserInitiatedSignIn();
+        }
+
     }
 
+    @Override
+    public void showQuests() {
+        Gdx.app.log(TAG, "Show Quests : " + isSignedIn());
+        if (isSignedIn()) {
+            activity.runOnUiThread(new Runnable() {
+
+                @Override
+                public void run() {
+                    Gdx.app.log(TAG, "Show Quests");
+                    waitingToShowQuests = false;
+                    //filter the shown quests if necessary
+                    Intent questsIntent = Games.Quests.getQuestsIntent(gameHelper.getApiClient(), Quests.SELECT_ALL_QUESTS);
+                    activity.startActivityForResult(questsIntent, 5);
+                }
+            });
+        } else {
+            waitingToShowQuests = true;
+            gameHelper.beginUserInitiatedSignIn();
+        }
+    }
+
+    @Override
+    public void loadQuests(LoadedQuestListener listener) {
+        this.questListener = listener;
+
+        Gdx.app.log(TAG, "Load Quests : " + isSignedIn());
+        if (isSignedIn()) {
+            activity.runOnUiThread(new Runnable() {
+
+                @Override
+                public void run() {
+                    Gdx.app.log(TAG, "Load quest data");
+                    waitingToLoadQuests = false;
+
+                    QuestCallBack qc = new QuestCallBack();
+
+                    // Load all quests
+                    // can be sorted by recently updated first
+                    PendingResult<Quests.LoadQuestsResult> pr = Games.Quests.load(gameHelper.getApiClient(),
+                            Quests.SELECT_ALL_QUESTS, Quests.SORT_ORDER_ENDING_SOON_FIRST, true);
+                    pr.setResultCallback(qc);
+                }
+            });
+        } else {
+            waitingToLoadQuests = true;
+            gameHelper.beginUserInitiatedSignIn();
+        }
+    }
+
+    @Override
+    public void loadQuestsByIds(LoadedQuestListener listener, final String... questIds) {
+        this.questListener = listener;
+
+        Gdx.app.log(TAG, "Load Quests : " + isSignedIn());
+        if (isSignedIn()) {
+            activity.runOnUiThread(new Runnable() {
+
+                @Override
+                public void run() {
+                    Gdx.app.log(TAG, "Load quest data");
+                    waitingToLoadQuests = false;
+
+                    QuestCallBack qc = new QuestCallBack();
+
+                    // Load quests with current ids
+                    PendingResult<Quests.LoadQuestsResult> pr = Games.Quests.loadByIds(gameHelper.getApiClient(), true, questIds);
+                    pr.setResultCallback(qc);
+                }
+            });
+        } else {
+            waitingToLoadQuests = true;
+            gameHelper.beginUserInitiatedSignIn();
+        }
+    }
+
+    @Override
+    public void registerQuestUpdate(final QuestRewardListener listener) {
+        questRewardListener = listener;
+
+
+        // Start the quest listener.
+        Games.Quests.registerQuestUpdateListener(gameHelper.getApiClient(), new QuestUpdateListener() {
+            @Override
+            public void onQuestCompleted(Quest quest) {
+                // Claim the quest reward.
+                Games.Quests.claim(gameHelper.getApiClient(), quest.getQuestId(),
+                        quest.getCurrentMilestone().getMilestoneId());
+
+                // Process the RewardData to provision a specific reward.
+                String reward = new
+                        String(quest.getCurrentMilestone().getCompletionRewardData(),
+                        Charset.forName("UTF-8"));
+
+                listener.reward(reward);
+            }
+        });
+    }
 
     private class EventCallback implements ResultCallback {
 
@@ -371,6 +524,21 @@ public class AndroidGameServices implements GameHelper.GameHelperListener, GameS
                 eventListener.info(event.getName(), event.getDescription());
             }
             eb.close();
+        }
+    }
+
+    private class QuestCallBack implements ResultCallback {
+
+        // Handle the results from the quests load call
+        public void onResult(Result result) {
+            Quests.LoadQuestsResult r = (Quests.LoadQuestsResult) result;
+            QuestBuffer qb = r.getQuests();
+
+            for (int i = 0; i < qb.getCount(); i++) {
+                Quest quest = qb.get(i);
+                questListener.info(quest.getName(), quest.getDescription());
+            }
+            qb.close();
         }
     }
 }

@@ -99,7 +99,7 @@ public class IOSGameServices implements GameServices, GameCenterListener {
     }
 
     @Override
-    public void loadQuestsByIds(LoadedQuestListener listener, String... eventIds) {
+    public void loadQuestsByIds(LoadedQuestListener listener, String... questIds) {
 
     }
 

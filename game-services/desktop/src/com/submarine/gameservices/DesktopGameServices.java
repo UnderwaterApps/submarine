@@ -82,7 +82,7 @@ public class DesktopGameServices implements GameServices {
     }
 
     @Override
-    public void loadQuestsByIds(LoadedQuestListener listener, String... eventIds) {
+    public void loadQuestsByIds(LoadedQuestListener listener, String... questIds) {
 
     }
 

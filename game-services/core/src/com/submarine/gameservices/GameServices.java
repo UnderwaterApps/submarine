@@ -31,7 +31,7 @@ public interface GameServices {
 
     void loadQuests(LoadedQuestListener listener);
 
-    void loadQuestsByIds(LoadedQuestListener listener, String... eventIds);
+    void loadQuestsByIds(LoadedQuestListener listener, String... questIds);
 
     void registerQuestUpdate(QuestRewardListener listener);
 

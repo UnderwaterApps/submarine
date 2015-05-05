@@ -2,6 +2,8 @@ package com.submarine.gameservices;
 
 import com.badlogic.gdx.Gdx;
 import com.submarine.gameservices.events.LoadedEventListener;
+import com.submarine.gameservices.quests.LoadedQuestListener;
+import com.submarine.gameservices.quests.QuestRewardListener;
 import org.robovm.apple.foundation.NSError;
 import org.robovm.apple.gamekit.GKAchievement;
 import org.robovm.apple.gamekit.GKLeaderboard;
@@ -83,6 +85,26 @@ public class IOSGameServices implements GameServices, GameCenterListener {
 
     @Override
     public void loadEventsByIds(LoadedEventListener listener, String... eventIds) {
+
+    }
+
+    @Override
+    public void showQuests() {
+
+    }
+
+    @Override
+    public void loadQuests(LoadedQuestListener listener) {
+
+    }
+
+    @Override
+    public void loadQuestsByIds(LoadedQuestListener listener, String... eventIds) {
+
+    }
+
+    @Override
+    public void registerQuestUpdate(QuestRewardListener listener) {
 
     }
 

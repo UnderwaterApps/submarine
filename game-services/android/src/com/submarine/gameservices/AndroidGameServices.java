@@ -90,6 +90,7 @@ public class AndroidGameServices implements GameHelper.GameHelperListener, GameS
         waitingToLoadEvents = false;
         waitingToShowQuests = false;
         waitingToLoadQuests = false;
+        waitingToUpdateQuests = false;
         gameHelper.showFailureDialog();
         if (gameServicesListener != null) {
             gameServicesListener.onSignInFailed();
@@ -120,7 +121,9 @@ public class AndroidGameServices implements GameHelper.GameHelperListener, GameS
         if (waitingToLoadQuests) {
             loadQuests(questListener);
         }
-
+        if (waitingToUpdateQuests) {
+            registerQuestUpdate(questRewardListener);
+        }
     }
 
     // // ************** END GOOGLE PART ***************\\\\\\\
@@ -491,25 +494,39 @@ public class AndroidGameServices implements GameHelper.GameHelperListener, GameS
 
     @Override
     public void registerQuestUpdate(final QuestRewardListener listener) {
-        questRewardListener = listener;
+        this.questRewardListener = listener;
 
+        Gdx.app.log(TAG, "Register Quests : " + isSignedIn());
+        if (isSignedIn()) {
+            activity.runOnUiThread(new Runnable() {
 
-        // Start the quest listener.
-        Games.Quests.registerQuestUpdateListener(gameHelper.getApiClient(), new QuestUpdateListener() {
-            @Override
-            public void onQuestCompleted(Quest quest) {
-                // Claim the quest reward.
-                Games.Quests.claim(gameHelper.getApiClient(), quest.getQuestId(),
-                        quest.getCurrentMilestone().getMilestoneId());
+                @Override
+                public void run() {
+                    Gdx.app.log(TAG, "Register quest");
+                    waitingToUpdateQuests = false;
 
-                // Process the RewardData to provision a specific reward.
-                String reward = new
-                        String(quest.getCurrentMilestone().getCompletionRewardData(),
-                        Charset.forName("UTF-8"));
+                    // Start the quest listener.
+                    Games.Quests.registerQuestUpdateListener(gameHelper.getApiClient(), new QuestUpdateListener() {
+                        @Override
+                        public void onQuestCompleted(Quest quest) {
+                            // Claim the quest reward.
+                            Games.Quests.claim(gameHelper.getApiClient(), quest.getQuestId(),
+                                    quest.getCurrentMilestone().getMilestoneId());
 
-                listener.reward(reward);
-            }
-        });
+                            // Process the RewardData to provision a specific reward.
+                            String reward = new
+                                    String(quest.getCurrentMilestone().getCompletionRewardData(),
+                                    Charset.forName("UTF-8"));
+
+                            questRewardListener.reward(reward);
+                        }
+                    });
+                }
+            });
+        } else {
+            waitingToUpdateQuests = true;
+            gameHelper.beginUserInitiatedSignIn();
+        }
     }
 
     private class EventCallback implements ResultCallback {

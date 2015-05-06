@@ -12,6 +12,8 @@ import com.google.android.gms.games.GamesStatusCodes;
 import com.google.android.gms.games.snapshot.Snapshot;
 import com.google.android.gms.games.snapshot.SnapshotMetadataChange;
 import com.google.android.gms.games.snapshot.Snapshots;
+import com.google.android.gms.plus.Plus;
+import com.google.android.gms.plus.model.people.Person;
 import com.google.example.games.basegameutils.GameHelper;
 
 public class AndroidGameServices implements GameHelper.GameHelperListener, GameServices {
@@ -35,6 +37,8 @@ public class AndroidGameServices implements GameHelper.GameHelperListener, GameS
     private boolean waitingToShowLeaderboard;
     private boolean waitingToShowLeaderboards;
     private String waitingToShowLeaderboardId;
+
+    private boolean waitingToGetPlayerInfo;
 
 
     public AndroidGameServices(Activity activity, int clientsToUse) {
@@ -66,6 +70,7 @@ public class AndroidGameServices implements GameHelper.GameHelperListener, GameS
         waitingToShowLeaderboard = false;
         waitingToShowLeaderboards = false;
         waitingToShowAchievements = false;
+        waitingToGetPlayerInfo = false;
         gameHelper.showFailureDialog();
         if (gameServicesListener != null) {
             gameServicesListener.onSignInFailed();
@@ -86,6 +91,9 @@ public class AndroidGameServices implements GameHelper.GameHelperListener, GameS
         }
         if (waitingToShowAchievements) {
             showAchievements();
+        }
+        if (waitingToGetPlayerInfo) {
+            loadUserInfo();
         }
     }
 
@@ -288,6 +296,19 @@ public class AndroidGameServices implements GameHelper.GameHelperListener, GameS
     @Override
     public boolean isSavedGamesLoadDone() {
         return isSavedGamesLoadDone;
+    }
+
+    @Override
+    public void loadUserInfo() {
+        Gdx.app.log(TAG, "Get Player Info : " + isSignedIn());
+        if (isSignedIn()) {
+            waitingToGetPlayerInfo = false;
+            Person person = Plus.PeopleApi.getCurrentPerson(gameHelper.getApiClient());
+            CurrentUser.getInstance().init(person.getDisplayName(), person.getImage().getUrl());
+        } else {
+            waitingToGetPlayerInfo = true;
+            gameHelper.beginUserInitiatedSignIn();
+        }
     }
 
     @Override

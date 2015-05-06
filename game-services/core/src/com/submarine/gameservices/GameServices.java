@@ -26,4 +26,6 @@ public interface GameServices {
     void setListener(GameServicesListener gameServicesListener);
 
     boolean isSavedGamesLoadDone();
+
+    void loadUserInfo();
 }

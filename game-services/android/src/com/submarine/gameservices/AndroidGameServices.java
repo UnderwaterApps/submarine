@@ -80,6 +80,9 @@ public class AndroidGameServices implements GameHelper.GameHelperListener, GameS
     @Override
     public void onSignInSucceeded() {
         Gdx.app.log(TAG, "Sign in success");
+        if (waitingToGetPlayerInfo) {
+            loadUserInfo();
+        }
         if (gameServicesListener != null) {
             gameServicesListener.onSignInSucceeded();
         }
@@ -91,9 +94,6 @@ public class AndroidGameServices implements GameHelper.GameHelperListener, GameS
         }
         if (waitingToShowAchievements) {
             showAchievements();
-        }
-        if (waitingToGetPlayerInfo) {
-            loadUserInfo();
         }
     }
 

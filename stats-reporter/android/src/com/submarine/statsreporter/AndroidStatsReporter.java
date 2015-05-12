@@ -1,8 +1,10 @@
 package com.submarine.statsreporter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Build;
 import android.provider.Settings;
 import com.submarine.statsreporter.vo.StatsRequestVO;
@@ -42,5 +44,12 @@ public class AndroidStatsReporter<U extends StatsRequestVO, V extends StatsRespo
         statsReporterVO.model = Build.MODEL;
         statsReporterVO.version = Integer.toString(versionNumber);
         return statsReporterVO;
+    }
+
+    @Override
+    public void showApp(String packageName) {
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setData(Uri.parse("market://details?id=" + packageName));
+        context.startActivity(intent);
     }
 }

@@ -9,12 +9,12 @@ import org.robovm.bindings.adcolony.AdColonyDelegateAdapter;
  * Created by mariam on 3/9/15.
  */
 public class IOSAdColonyNetwork implements AdColonyNetwork {
-    private final AdColonyListener adColonyListener;
+    private final AdColonyRewardListener adColonyRewardListener;
     private final IOSAdColonyDelegate adColonyDelegate;
     private final IOSAdColonyAdDelegate adColonyAdDelegate;
 
-    public IOSAdColonyNetwork(String appId, String[] zoneIds, AdColonyListener adColonyListener) {
-        this.adColonyListener = adColonyListener;
+    public IOSAdColonyNetwork(String appId, String[] zoneIds, AdColonyRewardListener adColonyRewardListener) {
+        this.adColonyRewardListener = adColonyRewardListener;
         adColonyDelegate = new IOSAdColonyDelegate();
         adColonyAdDelegate = new IOSAdColonyAdDelegate();
         configure(appId, zoneIds);
@@ -72,6 +72,11 @@ public class IOSAdColonyNetwork implements AdColonyNetwork {
         AdColony.playVideoAd(zoneId, adColonyAdDelegate, showPrePopup, false);
     }
 
+    @Override
+    public void setAdColonyRewardListener(AdColonyRewardListener adColonyRewardListener) {
+
+    }
+
     private class IOSAdColonyDelegate extends AdColonyDelegateAdapter {
 
         @Override
@@ -81,7 +86,7 @@ public class IOSAdColonyNetwork implements AdColonyNetwork {
 
         @Override
         public void onV4VCReward(boolean success, String currencyName, int amount, String zoneID) {
-            adColonyListener.reward(success, currencyName, amount);
+            adColonyRewardListener.reward(success, currencyName, amount);
         }
     }
 

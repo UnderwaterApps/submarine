@@ -9,13 +9,12 @@ import com.jirbo.adcolony.*;
 public class AndroidAdColonyNetwork implements AdColonyNetwork {
 
     private final AndroidApplication androidApplication;
-    private final AdColonyListener adColonyListener;
+    private AdColonyRewardListener adColonyRewardListener;
     private final AndroidAdColonyAdListener internalAdColonyAdListener;
 
 
-    public AndroidAdColonyNetwork(AndroidApplication androidApplication, String clientOptions, String appId, String[] zoneIds, AdColonyListener adColonyListener) {
+    public AndroidAdColonyNetwork(AndroidApplication androidApplication, String clientOptions, String appId, String[] zoneIds) {
         this.androidApplication = androidApplication;
-        this.adColonyListener = adColonyListener;
         this.internalAdColonyAdListener = new AndroidAdColonyAdListener();
         configure(clientOptions, appId, zoneIds);
     }
@@ -111,10 +110,16 @@ public class AndroidAdColonyNetwork implements AdColonyNetwork {
         ad.show();
     }
 
+    @Override
+    public void setAdColonyRewardListener(AdColonyRewardListener adColonyRewardListener) {
+        this.adColonyRewardListener = adColonyRewardListener;
+    }
+
+
     private class AndroidAdColonyV4VCListener implements AdColonyV4VCListener {
         @Override
         public void onAdColonyV4VCReward(AdColonyV4VCReward adColonyV4VCReward) {
-            adColonyListener.reward(adColonyV4VCReward.success(), adColonyV4VCReward.name(), adColonyV4VCReward.amount());
+            adColonyRewardListener.reward(adColonyV4VCReward.success(), adColonyV4VCReward.name(), adColonyV4VCReward.amount());
         }
     }
 

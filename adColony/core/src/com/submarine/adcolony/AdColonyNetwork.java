@@ -23,4 +23,6 @@ public interface AdColonyNetwork {
 
     void showV4VCAd(String zoneId, boolean showPrePopup, AdColonyAdListener adColonyAdListener);
 
+    void setAdColonyRewardListener(AdColonyRewardListener adColonyRewardListener);
+
 }

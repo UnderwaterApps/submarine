@@ -90,4 +90,9 @@ public class DesktopGameServices implements GameServices {
     public boolean isSavedGamesLoadDone() {
         return isSavedGamesLoadDone;
     }
+
+    @Override
+    public void loadUserInfo() {
+
+    }
 }

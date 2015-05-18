@@ -77,6 +77,11 @@ public class IOSAdColonyNetwork implements AdColonyNetwork {
 
     }
 
+    @Override
+    public void setAdColonyLoadingListener(AdColonyAdLoadingListener adColonyAdLoadingListener) {
+
+    }
+
     private class IOSAdColonyDelegate extends AdColonyDelegateAdapter {
 
         @Override

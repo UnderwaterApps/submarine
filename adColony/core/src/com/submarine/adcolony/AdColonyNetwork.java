@@ -25,4 +25,5 @@ public interface AdColonyNetwork {
 
     void setAdColonyRewardListener(AdColonyRewardListener adColonyRewardListener);
 
+    void setAdColonyLoadingListener(AdColonyAdLoadingListener adColonyAdLoadingListener);
 }

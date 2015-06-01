@@ -128,7 +128,14 @@ public class AndroidGameServices implements GameHelper.GameHelperListener, GameS
             });
         }
     }
+    @Override
+    public void submitEvent(String eventId, int count) {
+        // eventId is taken from the developer console
+        String myEventId = eventId;
 
+        // increment the event counter
+        Games.Events.increment(getApiClient(), myEventId, count);
+    }
     @Override
     public void showLeaderBoard(final String leaderBoardId) {
         Gdx.app.log(TAG, "Show Leaderboard : " + isSignedIn());

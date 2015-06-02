@@ -23,15 +23,15 @@ public class DesktopGameServices implements GameServices {
 
     }
 
-    @Override
-    public void submitEvent(String eventId, int count) {
-
-    }
-
-    @Override
-    public void showEvents() {
-
-    }
+//    @Override
+//    public void submitEvent(String eventId, int count) {
+//
+//    }
+//
+//    @Override
+//    public void showEvents() {
+//
+//    }
 
     @Override
     public void submitScore(String leaderBoardId, long score) {

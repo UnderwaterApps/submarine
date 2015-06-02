@@ -18,4 +18,9 @@ public class DesktopAdNetwork implements AdNetwork {
     public void showInterstitial() {
 
     }
+
+    @Override
+    public void takeToApp(String packageName) {
+
+    }
 }

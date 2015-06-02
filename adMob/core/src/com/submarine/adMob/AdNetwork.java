@@ -9,4 +9,6 @@ public interface AdNetwork {
     void hideBanner();
 
     void showInterstitial();
+
+    void takeToApp(String packageName);
 }

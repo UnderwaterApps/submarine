@@ -9,6 +9,7 @@ import com.google.android.gms.common.api.PendingResult;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.games.Games;
 import com.google.android.gms.games.GamesStatusCodes;
+import com.google.android.gms.games.event.Events;
 import com.google.android.gms.games.snapshot.Snapshot;
 import com.google.android.gms.games.snapshot.SnapshotMetadataChange;
 import com.google.android.gms.games.snapshot.Snapshots;
@@ -135,6 +136,30 @@ public class AndroidGameServices implements GameHelper.GameHelperListener, GameS
 
         // increment the event counter
         Games.Events.increment(getApiClient(), myEventId, count);
+    }
+    @Override
+    public void showEvents(){
+        // EventCallback is a subclass of ResultCallback; use this to handle the
+        // query results
+        EventCallback ec = new EventCallback();
+
+        // Load all events tracked for your game
+        com.google.android.gms.common.api.PendingResult<Events.LoadEventsResult>
+                pr = Games.Events.load(getApiClient(), true);
+        pr.setResultCallback(ec);
+    }
+    class EventCallback implements ResultCallback {
+        // Handle the results from the events load call
+        public void onResult(com.google.android.gms.common.api.Result result) {
+            Events.LoadEventsResult r = (Events.LoadEventsResult)result;
+            com.google.android.gms.games.event.EventBuffer eb = r.getEvents();
+
+            for (int i=0; i < eb.getCount(); i++) {
+                // do something with the events retrieved
+                System.out.println(">>>>>>>>>>>>>>>>>"+eb.get(i).getValue());
+            }
+            eb.close();
+        }
     }
     @Override
     public void showLeaderBoard(final String leaderBoardId) {

@@ -29,6 +29,11 @@ public class DesktopGameServices implements GameServices {
     }
 
     @Override
+    public void showEvents() {
+
+    }
+
+    @Override
     public void submitScore(String leaderBoardId, long score) {
 
     }

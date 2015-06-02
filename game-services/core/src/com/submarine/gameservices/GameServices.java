@@ -7,6 +7,8 @@ public interface GameServices {
 
     void submitEvent(String eventId, int count);
 
+    void showEvents();
+
     void submitScore(String leaderBoardId, long score);
 
     void showLeaderBoard(String identifier);

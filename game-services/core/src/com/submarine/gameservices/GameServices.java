@@ -5,9 +5,9 @@ public interface GameServices {
 
     void logout();
 
- //   void submitEvent(String eventId, int count);
+    void submitEvent(String eventId, int count);
 
-   // void showEvents();
+    void showEvents();
 
     void submitScore(String leaderBoardId, long score);
 

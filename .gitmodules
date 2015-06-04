@@ -1,0 +1,3 @@
+[submodule "game-services/andrid-basic-samples"]
+	path = game-services/andrid-basic-samples
+	url = https://github.com/playgameservices/android-basic-samples.git

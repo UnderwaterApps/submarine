@@ -70,12 +70,13 @@ public abstract class StatsReporter<U extends StatsRequestVO, V extends StatsRes
             AsyncExecutor asyncExecutor = new AsyncExecutor(1);
             asyncExecutor.submit(this);
             asyncExecutor.dispose();
+            asyncExecutor.dispose();
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    protected void handelResponse(String resultAsString) {
+    protected void handleResponse(String resultAsString) {
         Json json = new Json();
         responseVO = json.fromJson(responseType, resultAsString);
     }
@@ -95,7 +96,7 @@ public abstract class StatsReporter<U extends StatsRequestVO, V extends StatsRes
         @Override
         public void handleHttpResponse(Net.HttpResponse httpResponse) {
             try {
-                handelResponse(httpResponse.getResultAsString());
+                handleResponse(httpResponse.getResultAsString());
                 if (statsReporterResponseListener != null) {
                     statsReporterResponseListener.succeed(responseVO);
                 }

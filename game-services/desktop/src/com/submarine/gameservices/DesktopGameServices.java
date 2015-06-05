@@ -77,11 +77,6 @@ public class DesktopGameServices implements GameServices {
     }
 
     @Override
-    public void submitEvent(String eventId, int incrementAmount) {
-
-    }
-
-    @Override
     public void loadEvents(LoadedEventListener listener) {
 
     }

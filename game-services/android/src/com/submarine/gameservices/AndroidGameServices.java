@@ -10,6 +10,7 @@ import com.google.android.gms.common.api.Result;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.games.Games;
 import com.google.android.gms.games.GamesStatusCodes;
+import com.google.android.gms.games.event.Events;
 import com.google.android.gms.games.event.Event;
 import com.google.android.gms.games.event.EventBuffer;
 import com.google.android.gms.games.event.Events;
@@ -20,6 +21,8 @@ import com.google.android.gms.games.quest.Quests;
 import com.google.android.gms.games.snapshot.Snapshot;
 import com.google.android.gms.games.snapshot.SnapshotMetadataChange;
 import com.google.android.gms.games.snapshot.Snapshots;
+import com.google.android.gms.plus.Plus;
+import com.google.android.gms.plus.model.people.Person;
 import com.google.example.games.basegameutils.GameHelper;
 import com.submarine.gameservices.events.LoadedEventListener;
 import com.submarine.gameservices.quests.LoadedQuestListener;
@@ -56,6 +59,7 @@ public class AndroidGameServices implements GameHelper.GameHelperListener, GameS
     private LoadedEventListener eventListener;
     private LoadedQuestListener questListener;
     private QuestRewardListener questRewardListener;
+    private boolean waitingToGetPlayerInfo;
 
 
     public AndroidGameServices(Activity activity, int clientsToUse) {
@@ -87,6 +91,7 @@ public class AndroidGameServices implements GameHelper.GameHelperListener, GameS
         waitingToShowLeaderboard = false;
         waitingToShowLeaderboards = false;
         waitingToShowAchievements = false;
+        waitingToGetPlayerInfo = false;
         waitingToLoadEvents = false;
         waitingToShowQuests = false;
         waitingToLoadQuests = false;
@@ -100,6 +105,9 @@ public class AndroidGameServices implements GameHelper.GameHelperListener, GameS
     @Override
     public void onSignInSucceeded() {
         Gdx.app.log(TAG, "Sign in success");
+        if (waitingToGetPlayerInfo) {
+            loadUserInfo();
+        }
         if (gameServicesListener != null) {
             gameServicesListener.onSignInSucceeded();
         }
@@ -157,7 +165,35 @@ public class AndroidGameServices implements GameHelper.GameHelperListener, GameS
             });
         }
     }
+    @Override
+    public void submitEvent(String eventId, int count) {
+        String myEventId = eventId;
+        Games.Events.increment(getApiClient(), myEventId, count);
+    }
+    @Override
+    public void showEvents(){
+        // EventCallback is a subclass of ResultCallback; use this to handle the
+        // query results
+        EventCallback ec = new EventCallback();
 
+        // Load all events tracked for your game
+        com.google.android.gms.common.api.PendingResult<Events.LoadEventsResult>
+                pr = Games.Events.load(getApiClient(), true);
+        pr.setResultCallback(ec);
+    }
+    class EventCallback implements ResultCallback {
+        // Handle the results from the events load call
+        public void onResult(com.google.android.gms.common.api.Result result) {
+            Events.LoadEventsResult r = (Events.LoadEventsResult)result;
+            com.google.android.gms.games.event.EventBuffer eb = r.getEvents();
+
+            for (int i=0; i < eb.getCount(); i++) {
+                // do something with the events retrieved
+                System.out.println(">>>>>>>>>>>>>>>>>"+eb.get(i).getValue());
+            }
+            eb.close();
+        }
+    }
     @Override
     public void showLeaderBoard(final String leaderBoardId) {
         Gdx.app.log(TAG, "Show Leaderboard : " + isSignedIn());
@@ -207,30 +243,40 @@ public class AndroidGameServices implements GameHelper.GameHelperListener, GameS
      */
     @Override
     public void savedGamesLoad(String snapshotName, boolean createIfMissing) {
+        final int retryCount = 0;
         PendingResult<Snapshots.OpenSnapshotResult> pendingResult = Games.Snapshots.open(
                 gameHelper.getApiClient(), snapshotName, createIfMissing);
-        isSavedGamesLoadDone = false;
+            isSavedGamesLoadDone = false;
         ResultCallback<Snapshots.OpenSnapshotResult> callback =
                 new ResultCallback<Snapshots.OpenSnapshotResult>() {
                     @Override
                     public void onResult(Snapshots.OpenSnapshotResult openSnapshotResult) {
-                        int status = openSnapshotResult.getStatus().getStatusCode();
-                        switch (status) {
-                            case GamesStatusCodes.STATUS_OK:
-                            case GamesStatusCodes.STATUS_SNAPSHOT_CONTENTS_UNAVAILABLE:
-                                gameServicesListener.savedGamesLoadSucceeded(openSnapshotResult);
-                                break;
-                            case GamesStatusCodes.STATUS_SNAPSHOT_CONFLICT:
-                                gameServicesListener.savedGamesLoadConflicted(openSnapshotResult, 0);
-                                break;
-                            default:
-                                gameServicesListener.savedGamesLoadFailed(openSnapshotResult);
-                                break;
-                        }
-                        isSavedGamesLoadDone = true;
+                        processSnapshotOpenResult(openSnapshotResult, retryCount);
                     }
                 };
         pendingResult.setResultCallback(callback);
+    }
+
+    private void processSnapshotOpenResult(Snapshots.OpenSnapshotResult openSnapshotResult, int retryCount) {
+        Gdx.app.log(TAG, "conflictId after resolve= " + openSnapshotResult.getConflictId() );
+        int status = openSnapshotResult.getStatus().getStatusCode();
+        switch (status) {
+            case GamesStatusCodes.STATUS_OK:
+            case GamesStatusCodes.STATUS_SNAPSHOT_CONTENTS_UNAVAILABLE:
+                gameServicesListener.savedGamesLoadSucceeded(openSnapshotResult);
+                break;
+            case GamesStatusCodes.STATUS_SNAPSHOT_CONFLICT:
+                gameServicesListener.savedGamesLoadConflicted(openSnapshotResult, retryCount);
+                break;
+            default:
+                gameServicesListener.savedGamesLoadFailed(openSnapshotResult);
+                break;
+        }
+        if (status == GamesStatusCodes.STATUS_OK || status == GamesStatusCodes.STATUS_SNAPSHOT_CONTENTS_UNAVAILABLE) {
+            gameServicesListener.savedGamesLoadDone();
+            isSavedGamesLoadDone = true;
+
+        }
     }
 
     private void showSavedGamesUI() {
@@ -252,8 +298,7 @@ public class AndroidGameServices implements GameHelper.GameHelperListener, GameS
         AsyncTask<Void, Void, Boolean> updateTask = new AsyncTask<Void, Void, Boolean>() {
             @Override
             protected Boolean doInBackground(Void... params) {
-                Snapshots.OpenSnapshotResult open = Games.Snapshots.open(
-                        gameHelper.getApiClient(), snapshotName, createIfMissing).await();
+                Snapshots.OpenSnapshotResult open = Games.Snapshots.open(gameHelper.getApiClient(), snapshotName, createIfMissing).await();
 
                 if (!open.getStatus().isSuccess()) {
                     Gdx.app.log(TAG, "Could not open Snapshot for update.");
@@ -282,14 +327,21 @@ public class AndroidGameServices implements GameHelper.GameHelperListener, GameS
         updateTask.execute();
     }
 
-    public void resolveSavedGamesConflict(final String conflictId, final Snapshot resolvedSnapshot, final int retryCount, final int maxSnapshotResolveRetries) {
+    public void resolveSavedGamesConflict(Snapshots.OpenSnapshotResult openResult, final Snapshot resolvedSnapshot, final int retryCount, final int maxSnapshotResolveRetries) {
+        final String conflictId = openResult.getConflictId();
+        Gdx.app.log(TAG, "conflictId before resolve= " + conflictId );
+        //System.out.println(TAG + "resolvedSnapshot pre resolve " + resolvedSnapshot.toString());
         AsyncTask<Void, Void, Boolean> updateTask = new AsyncTask<Void, Void, Boolean>() {
             @Override
             protected Boolean doInBackground(Void... params) {
                 Snapshots.OpenSnapshotResult resolveResult = Games.Snapshots.resolveConflict(gameHelper.getApiClient(), conflictId, resolvedSnapshot).await();
+                //System.out.println(TAG + "snapshot post resolve " + resolveResult.getSnapshot().toString());
+                //System.out.println(TAG + "conflict snapshot post resolve " + resolveResult.getConflictingSnapshot().toString());
                 if (retryCount < maxSnapshotResolveRetries) {
                     // Recursively attempt again
-                    gameServicesListener.savedGamesLoadConflicted(resolveResult, retryCount + 1);
+                    //gameServicesListener.savedGamesLoadConflicted(resolveResult, retryCount + 1);
+                    processSnapshotOpenResult(resolveResult, retryCount + 1);
+
                 } else {
                     // Failed, log error and show Toast to the user
                     String message = "Could not resolve snapshot conflicts";
@@ -309,6 +361,19 @@ public class AndroidGameServices implements GameHelper.GameHelperListener, GameS
     @Override
     public boolean isSavedGamesLoadDone() {
         return isSavedGamesLoadDone;
+    }
+
+    @Override
+    public void loadUserInfo() {
+        Gdx.app.log(TAG, "Get Player Info : " + isSignedIn());
+        if (isSignedIn()) {
+            waitingToGetPlayerInfo = false;
+            Person person = Plus.PeopleApi.getCurrentPerson(gameHelper.getApiClient());
+            CurrentUser.getInstance().init(person.getDisplayName(), person.getImage().getUrl());
+        } else {
+            waitingToGetPlayerInfo = true;
+            gameHelper.beginUserInitiatedSignIn();
+        }
     }
 
     @Override

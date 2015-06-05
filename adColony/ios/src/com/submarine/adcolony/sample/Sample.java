@@ -1,11 +1,10 @@
 package com.submarine.adcolony.sample;
 
 import com.submarine.adcolony.AdColonyAdListener;
-import com.submarine.adcolony.AdColonyListener;
+import com.submarine.adcolony.AdColonyRewardListener;
 import com.submarine.adcolony.IOSAdColonyNetwork;
 import org.robovm.apple.coregraphics.CGRect;
 import org.robovm.apple.foundation.NSAutoreleasePool;
-import org.robovm.apple.uikit.*;
 
 /**
  * Sample usage of the AdColony SDK.
@@ -75,7 +74,7 @@ public class Sample extends UIApplicationDelegateAdapter {
         window = new UIWindow(UIScreen.getMainScreen().getBounds());
         window.setRootViewController(viewController);
         window.makeKeyAndVisible();
-        adColonyNetwork = new IOSAdColonyNetwork(APP_ID, new String[]{INTERSTITIAL_ZONE_ID, V4VC_ZONE_ID}, new AdColonyListener() {
+        adColonyNetwork = new IOSAdColonyNetwork(APP_ID, new String[]{INTERSTITIAL_ZONE_ID, V4VC_ZONE_ID}, new AdColonyRewardListener() {
             @Override
             public void reward(boolean success, String currencyName, int amount) {
                 System.out.println("com.submarine.adcolony.sample.Sample : reward");

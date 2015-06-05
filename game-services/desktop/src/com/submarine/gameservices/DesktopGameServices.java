@@ -27,6 +27,26 @@ public class DesktopGameServices implements GameServices {
     }
 
     @Override
+    public void submitEvent(String eventId, int count) {
+
+    }
+
+    @Override
+    public void showEvents() {
+
+    }
+
+//    @Override
+//    public void submitEvent(String eventId, int count) {
+//
+//    }
+//
+//    @Override
+//    public void showEvents() {
+//
+//    }
+
+    @Override
     public void submitScore(String leaderBoardId, long score) {
 
     }
@@ -127,5 +147,10 @@ public class DesktopGameServices implements GameServices {
     @Override
     public boolean isSavedGamesLoadDone() {
         return isSavedGamesLoadDone;
+    }
+
+    @Override
+    public void loadUserInfo() {
+
     }
 }

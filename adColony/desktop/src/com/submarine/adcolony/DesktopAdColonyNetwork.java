@@ -49,5 +49,15 @@ public class DesktopAdColonyNetwork implements AdColonyNetwork {
 
     }
 
+    @Override
+    public void setAdColonyRewardListener(AdColonyRewardListener adColonyRewardListener) {
+
+    }
+
+    @Override
+    public void setAdColonyLoadingListener(AdColonyAdLoadingListener adColonyAdLoadingListener) {
+
+    }
+
 
 }

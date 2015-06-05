@@ -9,6 +9,10 @@ public interface GameServices {
 
     void logout();
 
+    void submitEvent(String eventId, int count);
+
+    void showEvents();
+
     void submitScore(String leaderBoardId, long score);
 
     void showLeaderBoard(String identifier);
@@ -44,4 +48,6 @@ public interface GameServices {
     void setListener(GameServicesListener gameServicesListener);
 
     boolean isSavedGamesLoadDone();
+
+    void loadUserInfo();
 }

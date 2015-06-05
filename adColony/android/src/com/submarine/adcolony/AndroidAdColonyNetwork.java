@@ -9,14 +9,20 @@ import com.jirbo.adcolony.*;
 public class AndroidAdColonyNetwork implements AdColonyNetwork {
 
     private final AndroidApplication androidApplication;
-    private final AdColonyListener adColonyListener;
+    private AdColonyRewardListener adColonyRewardListener;
     private final AndroidAdColonyAdListener internalAdColonyAdListener;
+    private AdColonyAdLoadingListener adLoadingListener;
 
 
-    public AndroidAdColonyNetwork(AndroidApplication androidApplication, String clientOptions, String appId, String[] zoneIds, AdColonyListener adColonyListener) {
+    public AndroidAdColonyNetwork(AndroidApplication androidApplication, String clientOptions, String appId, String[] zoneIds) {
         this.androidApplication = androidApplication;
-        this.adColonyListener = adColonyListener;
         this.internalAdColonyAdListener = new AndroidAdColonyAdListener();
+        this.adLoadingListener = new AdColonyAdLoadingListener() {
+            @Override
+            public void behaveOnStatus(String status) {
+
+            }
+        };
         configure(clientOptions, appId, zoneIds);
     }
 
@@ -54,6 +60,7 @@ public class AndroidAdColonyNetwork implements AdColonyNetwork {
     @Override
     public void showV4VCAd(String zoneId) {
         AdColonyV4VCAd ad = new AdColonyV4VCAd(zoneId);
+        adLoadingListener.behaveOnStatus(AdColony.statusForZone(zoneId));
         ad.show();
     }
 
@@ -62,6 +69,7 @@ public class AndroidAdColonyNetwork implements AdColonyNetwork {
         AdColonyV4VCAd ad = new AdColonyV4VCAd(zoneId);
         internalAdColonyAdListener.adColonyAdListener = adColonyAdListener;
         ad.withListener(internalAdColonyAdListener);
+        adLoadingListener.behaveOnStatus(AdColony.statusForZone(zoneId));
         ad.show();
     }
 
@@ -74,6 +82,7 @@ public class AndroidAdColonyNetwork implements AdColonyNetwork {
         if (showPostPopup) {
             ad.withResultsDialog();
         }
+        adLoadingListener.behaveOnStatus(AdColony.statusForZone(zoneId));
         ad.show();
     }
 
@@ -88,6 +97,7 @@ public class AndroidAdColonyNetwork implements AdColonyNetwork {
         }
         internalAdColonyAdListener.adColonyAdListener = adColonyAdListener;
         ad.withListener(internalAdColonyAdListener);
+        adLoadingListener.behaveOnStatus(AdColony.statusForZone(zoneId));
         ad.show();
     }
 
@@ -97,6 +107,7 @@ public class AndroidAdColonyNetwork implements AdColonyNetwork {
         if (showPrePopup) {
             ad.withConfirmationDialog();
         }
+        adLoadingListener.behaveOnStatus(AdColony.statusForZone(zoneId));
         ad.show();
     }
 
@@ -108,13 +119,25 @@ public class AndroidAdColonyNetwork implements AdColonyNetwork {
         }
         internalAdColonyAdListener.adColonyAdListener = adColonyAdListener;
         ad.withListener(internalAdColonyAdListener);
+        adLoadingListener.behaveOnStatus(AdColony.statusForZone(zoneId));
         ad.show();
     }
+
+    @Override
+    public void setAdColonyRewardListener(AdColonyRewardListener adColonyRewardListener) {
+        this.adColonyRewardListener = adColonyRewardListener;
+    }
+
+    @Override
+    public void setAdColonyLoadingListener(AdColonyAdLoadingListener adColonyAdLoadingListener) {
+        this.adLoadingListener = adColonyAdLoadingListener;
+    }
+
 
     private class AndroidAdColonyV4VCListener implements AdColonyV4VCListener {
         @Override
         public void onAdColonyV4VCReward(AdColonyV4VCReward adColonyV4VCReward) {
-            adColonyListener.reward(adColonyV4VCReward.success(), adColonyV4VCReward.name(), adColonyV4VCReward.amount());
+            adColonyRewardListener.reward(adColonyV4VCReward.success(), adColonyV4VCReward.name(), adColonyV4VCReward.amount());
         }
     }
 

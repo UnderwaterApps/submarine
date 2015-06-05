@@ -1,5 +1,9 @@
 package com.submarine.gameservices;
 
+import com.submarine.gameservices.events.LoadedEventListener;
+import com.submarine.gameservices.quests.LoadedQuestListener;
+import com.submarine.gameservices.quests.QuestRewardListener;
+
 public interface GameServices {
     void login();
 
@@ -20,6 +24,20 @@ public interface GameServices {
     void incrementAchievement(String achievementId, int incrementAmount);
 
     void showAchievements();
+
+    void submitEvent(String eventId, int incrementAmount);
+
+    void loadEvents(LoadedEventListener listener);
+
+    void loadEventsByIds(LoadedEventListener listener, String... eventIds);
+
+    void showQuests();
+
+    void loadQuests(LoadedQuestListener listener);
+
+    void loadQuestsByIds(LoadedQuestListener listener, String... questIds);
+
+    void registerQuestUpdate(QuestRewardListener listener);
 
     boolean isSignedIn();
 

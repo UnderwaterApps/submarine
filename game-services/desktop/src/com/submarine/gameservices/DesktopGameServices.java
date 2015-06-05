@@ -1,6 +1,9 @@
 package com.submarine.gameservices;
 
 import com.badlogic.gdx.math.MathUtils;
+import com.submarine.gameservices.events.LoadedEventListener;
+import com.submarine.gameservices.quests.LoadedQuestListener;
+import com.submarine.gameservices.quests.QuestRewardListener;
 
 /**
  * Created by sargis on 2/25/15.
@@ -70,6 +73,41 @@ public class DesktopGameServices implements GameServices {
 
     @Override
     public void showAchievements() {
+
+    }
+
+    @Override
+    public void submitEvent(String eventId, int incrementAmount) {
+
+    }
+
+    @Override
+    public void loadEvents(LoadedEventListener listener) {
+
+    }
+
+    @Override
+    public void loadEventsByIds(LoadedEventListener listener, String... eventIds) {
+
+    }
+
+    @Override
+    public void showQuests() {
+
+    }
+
+    @Override
+    public void loadQuests(LoadedQuestListener listener) {
+
+    }
+
+    @Override
+    public void loadQuestsByIds(LoadedQuestListener listener, String... questIds) {
+
+    }
+
+    @Override
+    public void registerQuestUpdate(QuestRewardListener listener) {
 
     }
 

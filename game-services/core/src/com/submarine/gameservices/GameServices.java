@@ -25,8 +25,6 @@ public interface GameServices {
 
     void showAchievements();
 
-    void submitEvent(String eventId, int incrementAmount);
-
     void loadEvents(LoadedEventListener listener);
 
     void loadEventsByIds(LoadedEventListener listener, String... eventIds);

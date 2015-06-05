@@ -11,9 +11,6 @@ import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.games.Games;
 import com.google.android.gms.games.GamesStatusCodes;
 import com.google.android.gms.games.event.Events;
-import com.google.android.gms.games.event.Event;
-import com.google.android.gms.games.event.EventBuffer;
-import com.google.android.gms.games.event.Events;
 import com.google.android.gms.games.quest.Quest;
 import com.google.android.gms.games.quest.QuestBuffer;
 import com.google.android.gms.games.quest.QuestUpdateListener;
@@ -189,11 +186,12 @@ public class AndroidGameServices implements GameHelper.GameHelperListener, GameS
 
             for (int i=0; i < eb.getCount(); i++) {
                 // do something with the events retrieved
-                System.out.println(">>>>>>>>>>>>>>>>>"+eb.get(i).getValue());
+                System.out.println(">>>>>>>>>>>>>>>>>" + eb.get(i).getValue());
             }
             eb.close();
         }
     }
+
     @Override
     public void showLeaderBoard(final String leaderBoardId) {
         Gdx.app.log(TAG, "Show Leaderboard : " + isSignedIn());
@@ -420,18 +418,6 @@ public class AndroidGameServices implements GameHelper.GameHelperListener, GameS
     }
 
     @Override
-    public void submitEvent(final String eventId, final int incrementAmount) {
-        if (isSignedIn()) {
-            activity.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    Games.Events.increment(gameHelper.getApiClient(), eventId, incrementAmount);
-                }
-            });
-        }
-    }
-
-    @Override
     public void loadEvents(LoadedEventListener listener) {
         this.eventListener = listener;
 
@@ -591,21 +577,6 @@ public class AndroidGameServices implements GameHelper.GameHelperListener, GameS
         } else {
             waitingToUpdateQuests = true;
             gameHelper.beginUserInitiatedSignIn();
-        }
-    }
-
-    private class EventCallback implements ResultCallback {
-
-        // Handle the results from the events load call
-        public void onResult(Result result) {
-            Events.LoadEventsResult r = (Events.LoadEventsResult) result;
-            EventBuffer eb = r.getEvents();
-
-            for (int i = 0; i < eb.getCount(); i++) {
-                Event event = eb.get(i);
-                eventListener.info(event.getName(), event.getDescription());
-            }
-            eb.close();
         }
     }
 

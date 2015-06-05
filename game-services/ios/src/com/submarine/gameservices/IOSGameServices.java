@@ -79,6 +79,11 @@ public class IOSGameServices implements GameServices, GameCenterListener {
     }
 
     @Override
+    public void showEvents() {
+
+    }
+
+    @Override
     public void loadEvents(LoadedEventListener listener) {
 
     }

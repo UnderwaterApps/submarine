@@ -81,6 +81,8 @@ public abstract class StatsReporter<U extends StatsRequestVO, V extends StatsRes
         responseVO = json.fromJson(responseType, resultAsString);
     }
 
+    public abstract void showApp(String packageName);
+
 
     public static interface StatsReporterResponseListener<T extends StatsResponseVO> {
         public void succeed(T statsResponseVO);

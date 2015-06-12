@@ -4,11 +4,13 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Net;
 import com.badlogic.gdx.net.HttpParametersUtils;
 import com.badlogic.gdx.utils.Json;
+import com.badlogic.gdx.utils.SerializationException;
 import com.badlogic.gdx.utils.async.AsyncExecutor;
 import com.badlogic.gdx.utils.async.AsyncTask;
 import com.submarine.statsreporter.vo.StatsRequestVO;
 import com.submarine.statsreporter.vo.StatsResponseVO;
 
+import java.text.ParseException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -76,9 +78,10 @@ public abstract class StatsReporter<U extends StatsRequestVO, V extends StatsRes
         }
     }
 
-    protected void handleResponse(String resultAsString) {
+    protected void handleResponse (String resultAsString) throws SerializationException{
         Json json = new Json();
         responseVO = json.fromJson(responseType, resultAsString);
+
     }
 
     public abstract void showApp(String packageName);
@@ -87,7 +90,7 @@ public abstract class StatsReporter<U extends StatsRequestVO, V extends StatsRes
     public static interface StatsReporterResponseListener<T extends StatsResponseVO> {
         public void succeed(T statsResponseVO);
 
-        public void failed(Throwable t);
+        public void  failed(Throwable t);
 
         public void cancelled();
     }
@@ -106,6 +109,11 @@ public abstract class StatsReporter<U extends StatsRequestVO, V extends StatsRes
                 Gdx.app.error(TAG, error.getMessage());
                 if (statsReporterResponseListener != null) {
                     statsReporterResponseListener.failed(error);
+                }
+            } catch (SerializationException e) {
+                e.printStackTrace();
+                if (statsReporterResponseListener != null) {
+                    statsReporterResponseListener.failed(e);
                 }
             }
 

@@ -22,4 +22,9 @@ public class DesktopStatsReporter<U extends StatsRequestVO, V extends StatsRespo
     protected StatsRequestVO crateStatsRequestVO() throws IllegalAccessException, InstantiationException {
         return (U) requestType.newInstance();
     }
+
+    @Override
+    public void showApp(String packageName) {
+
+    }
 }

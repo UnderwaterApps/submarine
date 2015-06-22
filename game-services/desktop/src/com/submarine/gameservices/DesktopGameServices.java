@@ -148,4 +148,9 @@ public class DesktopGameServices implements GameServices {
     public void loadUserInfo() {
 
     }
+
+    @Override
+    public void onSignInSucceeded() {
+
+    }
 }

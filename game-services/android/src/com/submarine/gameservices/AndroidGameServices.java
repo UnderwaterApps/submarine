@@ -129,6 +129,7 @@ public class AndroidGameServices implements GameHelper.GameHelperListener, GameS
         if (waitingToUpdateQuests) {
             registerQuestUpdate(questRewardListener);
         }
+
     }
 
     // // ************** END GOOGLE PART ***************\\\\\\\
@@ -186,7 +187,7 @@ public class AndroidGameServices implements GameHelper.GameHelperListener, GameS
 
             for (int i=0; i < eb.getCount(); i++) {
                 // do something with the events retrieved
-                System.out.println(">>>>>>>>>>>>>>>>>" + eb.get(i).getValue());
+                System.out.println(">>>>>>>>>>>>>>>>>SHOW" + eb.get(i).getValue());
             }
             eb.close();
         }

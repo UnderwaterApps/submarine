@@ -48,4 +48,6 @@ public interface GameServices {
     boolean isSavedGamesLoadDone();
 
     void loadUserInfo();
+
+    void onSignInSucceeded();
 }

@@ -100,6 +100,9 @@ public class IOSStore implements Store {
     }
 
     private void hideAlert() {
+        if (uiAlertView == null) {
+            return;
+        }
         uiAlertView.dismiss(0, true);
     }
 

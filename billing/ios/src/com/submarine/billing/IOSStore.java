@@ -120,6 +120,7 @@ public class IOSStore implements Store {
                 product.price = skProduct.getPrice().floatValue();
                 product.id = skProduct.getProductIdentifier();
                 product.currency = skProduct.getPriceLocale().getLocaleIdentifier().split("=")[1];
+                Gdx.app.log(TAG, "[" + product.id + "] : " + product);
                 products.put(product.id, product);
             }
             for (StoreListener storeListener : storeListeners) {

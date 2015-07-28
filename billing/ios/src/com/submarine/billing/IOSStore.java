@@ -3,14 +3,14 @@ package com.submarine.billing;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.Array;
 import com.submarine.billing.product.Product;
-import org.robovm.apple.foundation.NSError;
-import org.robovm.apple.foundation.NSErrorUserInfo;
+import org.robovm.apple.foundation.*;
 import org.robovm.apple.storekit.SKPaymentTransaction;
 import org.robovm.apple.storekit.SKProduct;
 import org.robovm.apple.storekit.SKRequest;
 import org.robovm.apple.uikit.UIAlertView;
 import org.robovm.bindings.inapppurchase.AppStoreListener;
 import org.robovm.bindings.inapppurchase.AppStoreManager;
+import org.robovm.objc.Selector;
 
 import java.util.HashMap;
 import java.util.List;
@@ -34,6 +34,33 @@ public class IOSStore implements Store {
         appStoreManager = new AppStoreManager(iOSAppStoreListener);
         products = new HashMap<>();
         storeListeners = new CopyOnWriteArrayList<>();
+    }
+
+    private static NSData getTransactionReceipt(SKPaymentTransaction skPaymentTransaction) {
+        NSData receipt;
+        if (FoundationVersionNumber.getVersion() <= FoundationVersionNumber.Version_iOS_6_1) {
+            // iOS 6.1 or earlier.
+            // Use SKPaymentTransaction's transactionReceipt.
+            receipt = skPaymentTransaction.getTransactionReceipt();
+        } else {
+            // iOS 7 or later.
+            NSURL receiptFileURL;
+            NSBundle bundle = NSBundle.getMainBundle();
+            if (bundle.respondsToSelector(Selector.register("appStoreReceiptURL"))) {
+                // Get the transaction receipt file path location in the app bundle.
+                receiptFileURL = bundle.getAppStoreReceiptURL();
+                receipt = NSData.read(receiptFileURL);
+
+            } else {
+                // Fall back to deprecated transaction receipt,
+                // which is still available in iOS 7.
+
+                // Use SKPaymentTransaction's transactionReceipt.
+                receipt = skPaymentTransaction.getTransactionReceipt();
+            }
+
+        }
+        return receipt;
     }
 
     @Override
@@ -143,9 +170,13 @@ public class IOSStore implements Store {
             // Purchase successfully completed.
             // Get the product identifier and award the product to the user.
             String productId = skPaymentTransaction.getPayment().getProductIdentifier();
+            NSData receipt = getTransactionReceipt(skPaymentTransaction);
+            String receiptAsString = receipt.toBase64EncodedString(NSDataBase64EncodingOptions.None);
+            Gdx.app.log(TAG, "transactionCompleted : receipt " + receiptAsString);
             for (StoreListener storeListener : storeListeners) {
-                storeListener.transactionCompleted(productId);
+                storeListener.transactionCompleted(productId, receiptAsString);
             }
+
         }
 
         @Override

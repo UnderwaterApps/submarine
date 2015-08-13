@@ -3,16 +3,17 @@ package com.submarine.billing;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.Array;
 import com.submarine.billing.product.Product;
-import org.robovm.apple.foundation.NSArray;
-import org.robovm.apple.foundation.NSError;
-import org.robovm.apple.foundation.NSErrorUserInfo;
+import org.robovm.apple.foundation.*;
 import org.robovm.apple.storekit.SKPaymentTransaction;
 import org.robovm.apple.storekit.SKProduct;
 import org.robovm.apple.storekit.SKRequest;
-import org.robovm.bindings.inapppurchase.InAppPurchaseListener;
-import org.robovm.bindings.inapppurchase.InAppPurchaseManager;
+import org.robovm.apple.uikit.UIAlertView;
+import org.robovm.bindings.inapppurchase.AppStoreListener;
+import org.robovm.bindings.inapppurchase.AppStoreManager;
+import org.robovm.objc.Selector;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -21,22 +22,50 @@ import java.util.concurrent.CopyOnWriteArrayList;
  */
 public class IOSStore implements Store {
     private static final String TAG = "com.underwater.clickers.store.IOSStore";
-    private final InAppPurchaseManager inAppPurchaseManager;
-    private final IOSInAppPurchaseListener iOSInAppPurchaseListener;
+    private final AppStoreManager appStoreManager;
+    private final IOSAppStoreListener iOSAppStoreListener;
     private CopyOnWriteArrayList<StoreListener> storeListeners;
     private Map<String, SKProduct> appStoreProducts;
     private Map<String, Product> products;
+    private UIAlertView uiAlertView;
 
     public IOSStore() {
-        iOSInAppPurchaseListener = new IOSInAppPurchaseListener();
-        inAppPurchaseManager = new InAppPurchaseManager(iOSInAppPurchaseListener);
+        iOSAppStoreListener = new IOSAppStoreListener();
+        appStoreManager = new AppStoreManager(iOSAppStoreListener);
         products = new HashMap<>();
         storeListeners = new CopyOnWriteArrayList<>();
     }
 
+    private static NSData getTransactionReceipt(SKPaymentTransaction skPaymentTransaction) {
+        NSData receipt;
+        if (FoundationVersionNumber.getVersion() <= FoundationVersionNumber.Version_iOS_6_1) {
+            // iOS 6.1 or earlier.
+            // Use SKPaymentTransaction's transactionReceipt.
+            receipt = skPaymentTransaction.getTransactionReceipt();
+        } else {
+            // iOS 7 or later.
+            NSURL receiptFileURL;
+            NSBundle bundle = NSBundle.getMainBundle();
+            if (bundle.respondsToSelector(Selector.register("appStoreReceiptURL"))) {
+                // Get the transaction receipt file path location in the app bundle.
+                receiptFileURL = bundle.getAppStoreReceiptURL();
+                receipt = NSData.read(receiptFileURL);
+
+            } else {
+                // Fall back to deprecated transaction receipt,
+                // which is still available in iOS 7.
+
+                // Use SKPaymentTransaction's transactionReceipt.
+                receipt = skPaymentTransaction.getTransactionReceipt();
+            }
+
+        }
+        return receipt;
+    }
+
     @Override
     public void requestProducts(String[] productIds) {
-        inAppPurchaseManager.requestProducts(productIds);
+        appStoreManager.requestProducts(productIds);
         Gdx.app.log(TAG, "requestProducts");
     }
 
@@ -50,16 +79,18 @@ public class IOSStore implements Store {
 
     @Override
     public void restoreTransactions() {
-        inAppPurchaseManager.restoreTransactions();
+        appStoreManager.restoreTransactions();
+        showAlert("Processing...", "Cancel");
     }
 
     @Override
     public void purchaseProduct(String id) {
         if (appStoreProducts == null || !appStoreProducts.containsKey(id)) {
-            iOSInAppPurchaseListener.transactionFailed(new SKPaymentTransaction(), new NSError("item not available", 0, new NSErrorUserInfo()));
+            iOSAppStoreListener.transactionFailed(new SKPaymentTransaction(), new NSError("item not available", 0, new NSErrorUserInfo()));
             return;
         }
-        inAppPurchaseManager.purchaseProduct(appStoreProducts.get(id));
+        appStoreManager.purchaseProduct(appStoreProducts.get(id));
+        showAlert("Processing...", "Cancel");
     }
 
     @Override
@@ -86,11 +117,28 @@ public class IOSStore implements Store {
         storeListeners.remove(storeListener);
     }
 
-    private class IOSInAppPurchaseListener implements InAppPurchaseListener {
-        private static final String TAG = "com.underwater.clickers.store.IOSStore.IOSInAppPurchaseListener";
+    private void showAlert(String title, String cancelButtonTitle) {
+        uiAlertView = new UIAlertView(title, null, null, cancelButtonTitle);
+        uiAlertView.show();
+    }
+
+    private void showAlert(String title) {
+        showAlert(title, "OK");
+    }
+
+    private void hideAlert() {
+        if (uiAlertView == null) {
+            return;
+        }
+        uiAlertView.dismiss(0, true);
+    }
+
+    private class IOSAppStoreListener implements AppStoreListener {
+        private static final String TAG = "com.underwater.clickers.store.IOSStore.IOSAppStoreListener";
+
 
         @Override
-        public void productsReceived(SKProduct[] skProducts) {
+        public void productsReceived(List<SKProduct> skProducts) {
             Gdx.app.log(TAG, "productsReceived : " + skProducts);
             appStoreProducts = new HashMap<String, SKProduct>();
             for (SKProduct skProduct : skProducts) {
@@ -99,6 +147,7 @@ public class IOSStore implements Store {
                 product.price = skProduct.getPrice().floatValue();
                 product.id = skProduct.getProductIdentifier();
                 product.currency = skProduct.getPriceLocale().getLocaleIdentifier().split("=")[1];
+                Gdx.app.log(TAG, "[" + product.id + "] : " + product);
                 products.put(product.id, product);
             }
             for (StoreListener storeListener : storeListeners) {
@@ -117,20 +166,27 @@ public class IOSStore implements Store {
         @Override
         public void transactionCompleted(SKPaymentTransaction skPaymentTransaction) {
             Gdx.app.log(TAG, "transactionCompleted : " + skPaymentTransaction);
+            hideAlert();
             // Purchase successfully completed.
             // Get the product identifier and award the product to the user.
             String productId = skPaymentTransaction.getPayment().getProductIdentifier();
+            NSData receipt = getTransactionReceipt(skPaymentTransaction);
+            String receiptAsString = receipt.toBase64EncodedString(NSDataBase64EncodingOptions.None);
+            Gdx.app.log(TAG, "transactionCompleted : receipt " + receiptAsString);
             for (StoreListener storeListener : storeListeners) {
-                storeListener.transactionCompleted(productId);
+                storeListener.transactionCompleted(productId, receiptAsString);
             }
+
         }
 
         @Override
         public void transactionFailed(SKPaymentTransaction skPaymentTransaction, NSError nsError) {
             Gdx.app.log(TAG, "transactionFailed : " + nsError);
+            hideAlert();
             for (StoreListener storeListener : storeListeners) {
                 storeListener.transactionFailed(new Error(nsError.getLocalizedFailureReason()));
             }
+            showAlert("Can not connect to App Store.");
         }
 
         @Override
@@ -145,11 +201,29 @@ public class IOSStore implements Store {
         }
 
         @Override
-        public void transactionRestoreFailed(NSArray<SKPaymentTransaction> skPaymentTransactions, NSError nsError) {
+        public void transactionDeferred(SKPaymentTransaction skPaymentTransaction) {
+            Gdx.app.log(TAG, "transactionDeferred : " + skPaymentTransaction);
+        }
+
+        @Override
+        public void transactionRestoreCompleted(List<SKPaymentTransaction> list) {
+            Gdx.app.log(TAG, "transactionRestoreCompleted : " + list.size());
+            hideAlert();
+            String title = "There are no items available to restore at this time.";
+            if (list.size() > 0) {
+                title = "All purchases successfully restored.";
+            }
+            showAlert(title);
+        }
+
+        @Override
+        public void transactionRestoreFailed(List<SKPaymentTransaction> list, NSError nsError) {
             Gdx.app.log(TAG, "transactionRestoreFailed : " + nsError);
+            hideAlert();
             for (StoreListener storeListener : storeListeners) {
                 storeListener.transactionRestoreFailed(new Error(nsError.getLocalizedFailureReason()));
             }
+            showAlert("Can not connect to App Store.");
         }
     }
 }

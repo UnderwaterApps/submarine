@@ -57,7 +57,7 @@ public class DesktopStore implements Store {
                 }
                 if (Math.random() > .3f) {
                     for (StoreListener storeListener : storeListeners) {
-                        storeListener.transactionCompleted(id);
+                        storeListener.transactionCompleted(id, "");
                     }
                 } else {
                     for (StoreListener storeListener : storeListeners) {

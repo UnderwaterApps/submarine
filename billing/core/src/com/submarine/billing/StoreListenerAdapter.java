@@ -15,7 +15,7 @@ public class StoreListenerAdapter implements StoreListener {
     }
 
     @Override
-    public void transactionCompleted(String productId) {
+    public void transactionCompleted(String productId, String receiptAsString) {
 
     }
 

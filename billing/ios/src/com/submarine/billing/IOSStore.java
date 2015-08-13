@@ -21,7 +21,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
  * Created by sargis on 10/27/14.
  */
 public class IOSStore implements Store {
-    private static final String TAG = "com.underwater.clickers.store.IOSStore";
+    private static final String TAG = "com.underwater.submarine.store.IOSStore";
     private final AppStoreManager appStoreManager;
     private final IOSAppStoreListener iOSAppStoreListener;
     private CopyOnWriteArrayList<StoreListener> storeListeners;

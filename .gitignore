@@ -63,4 +63,4 @@ build/
 ## OS Specific
 .DS_Store
 
-game-services/android-basic-samples
+#game-services/android-basic-samples

@@ -30,4 +30,9 @@ public class IOSStatsReporter<U extends StatsRequestVO, V extends StatsResponseV
         System.out.println(statsReporterVO);
         return statsReporterVO;
     }
+
+    @Override
+    public void showApp(String packageName) {
+
+    }
 }

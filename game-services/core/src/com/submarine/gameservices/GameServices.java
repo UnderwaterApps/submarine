@@ -1,9 +1,17 @@
 package com.submarine.gameservices;
 
+import com.submarine.gameservices.events.LoadedEventListener;
+import com.submarine.gameservices.quests.LoadedQuestListener;
+import com.submarine.gameservices.quests.QuestRewardListener;
+
 public interface GameServices {
     void login();
 
     void logout();
+
+    void submitEvent(String eventId, int count);
+
+    void showEvents();
 
     void submitScore(String leaderBoardId, long score);
 
@@ -17,6 +25,18 @@ public interface GameServices {
 
     void showAchievements();
 
+    void loadEvents(LoadedEventListener listener);
+
+    void loadEventsByIds(LoadedEventListener listener, String... eventIds);
+
+    void showQuests();
+
+    void loadQuests(LoadedQuestListener listener);
+
+    void loadQuestsByIds(LoadedQuestListener listener, String... questIds);
+
+    void registerQuestUpdate(QuestRewardListener listener);
+
     boolean isSignedIn();
 
     void savedGamesLoad(String snapshotName, boolean createIfMissing);
@@ -28,4 +48,6 @@ public interface GameServices {
     boolean isSavedGamesLoadDone();
 
     void loadUserInfo();
+
+    void onSignInSucceeded();
 }

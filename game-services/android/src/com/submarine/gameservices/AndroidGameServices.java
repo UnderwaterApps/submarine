@@ -260,6 +260,7 @@ public class AndroidGameServices implements GameHelper.GameHelperListener, GameS
             pendingResult.setResultCallback(callback);
         } else {
             isSavedGamesLoadDone = true;
+            gameServicesListener.savedGamesLoadDone();
         }
 
     }

@@ -50,4 +50,6 @@ public interface GameServices {
     void loadUserInfo();
 
     void onSignInSucceeded();
+
+    void onSignInFailed();
 }

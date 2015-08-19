@@ -116,6 +116,9 @@ public class AndroidStore implements Store {
                     }
                 }
             }
+            for (StoreListener storeListener : storeListeners) {
+                storeListener.transactionRestoreCompleted();
+            }
         }
 
         @Override

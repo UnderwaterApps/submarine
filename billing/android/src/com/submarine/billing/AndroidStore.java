@@ -52,6 +52,20 @@ public class AndroidStore implements Store {
     }
 
     @Override
+    public boolean isInitialized() {
+        if (billingProcessor!=null) {
+            return billingProcessor.isInitialized();
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public boolean isPurchased(String id) {
+        return billingProcessor.isPurchased(id);
+    }
+
+    @Override
     public void restoreTransactions() {
 
     }

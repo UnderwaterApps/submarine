@@ -30,6 +30,11 @@ public class StoreListenerAdapter implements StoreListener {
     }
 
     @Override
+    public void transactionRestoreCompleted() {
+
+    }
+
+    @Override
     public void transactionRestoreFailed(Error error) {
 
     }

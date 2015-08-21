@@ -1,7 +1,10 @@
 package com.submarine.gameservices;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import com.badlogic.gdx.Gdx;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -242,18 +245,24 @@ public class AndroidGameServices implements GameHelper.GameHelperListener, GameS
      */
     @Override
     public void savedGamesLoad(String snapshotName, boolean createIfMissing) {
-        final int retryCount = 0;
-        PendingResult<Snapshots.OpenSnapshotResult> pendingResult = Games.Snapshots.open(
-                gameHelper.getApiClient(), snapshotName, createIfMissing);
+        if (isOnline()) {
+            final int retryCount = 0;
+            PendingResult<Snapshots.OpenSnapshotResult> pendingResult = Games.Snapshots.open(
+                    gameHelper.getApiClient(), snapshotName, createIfMissing);
             isSavedGamesLoadDone = false;
-        ResultCallback<Snapshots.OpenSnapshotResult> callback =
-                new ResultCallback<Snapshots.OpenSnapshotResult>() {
-                    @Override
-                    public void onResult(Snapshots.OpenSnapshotResult openSnapshotResult) {
-                        processSnapshotOpenResult(openSnapshotResult, retryCount);
-                    }
-                };
-        pendingResult.setResultCallback(callback);
+            ResultCallback<Snapshots.OpenSnapshotResult> callback =
+                    new ResultCallback<Snapshots.OpenSnapshotResult>() {
+                        @Override
+                        public void onResult(Snapshots.OpenSnapshotResult openSnapshotResult) {
+                            processSnapshotOpenResult(openSnapshotResult, retryCount);
+                        }
+                    };
+            pendingResult.setResultCallback(callback);
+        } else {
+            isSavedGamesLoadDone = true;
+            gameServicesListener.savedGamesLoadDone();
+        }
+
     }
 
     private void processSnapshotOpenResult(Snapshots.OpenSnapshotResult openSnapshotResult, int retryCount) {
@@ -294,36 +303,38 @@ public class AndroidGameServices implements GameHelper.GameHelperListener, GameS
      */
     @Override
     public void savedGamesUpdate(final String snapshotName, final byte[] data, final boolean createIfMissing) {
-        AsyncTask<Void, Void, Boolean> updateTask = new AsyncTask<Void, Void, Boolean>() {
-            @Override
-            protected Boolean doInBackground(Void... params) {
-                Snapshots.OpenSnapshotResult open = Games.Snapshots.open(gameHelper.getApiClient(), snapshotName, createIfMissing).await();
+        if (isOnline()) {
+            AsyncTask<Void, Void, Boolean> updateTask = new AsyncTask<Void, Void, Boolean>() {
+                @Override
+                protected Boolean doInBackground(Void... params) {
+                    Snapshots.OpenSnapshotResult open = Games.Snapshots.open(gameHelper.getApiClient(), snapshotName, createIfMissing).await();
 
-                if (!open.getStatus().isSuccess()) {
-                    Gdx.app.log(TAG, "Could not open Snapshot for update.");
-                    gameServicesListener.savedGamesUpdateFailed();
-                    return false;
+                    if (!open.getStatus().isSuccess()) {
+                        Gdx.app.log(TAG, "Could not open Snapshot for update.");
+                        gameServicesListener.savedGamesUpdateFailed();
+                        return false;
+                    }
+
+                    // Change data but leave existing metadata
+                    Snapshot snapshot = open.getSnapshot();
+                    snapshot.getSnapshotContents().writeBytes(data);
+
+                    Snapshots.CommitSnapshotResult commit = Games.Snapshots.commitAndClose(
+                            gameHelper.getApiClient(), snapshot, SnapshotMetadataChange.EMPTY_CHANGE).await();
+
+                    if (!commit.getStatus().isSuccess()) {
+                        Gdx.app.log(TAG, "Failed to commit Snapshot.");
+                        gameServicesListener.savedGamesUpdateFailed();
+                        return false;
+                    }
+                    // No failures
+                    Gdx.app.log(TAG, "No failures for Snapshot update.");
+                    gameServicesListener.savedGamesUpdateSucceeded();
+                    return true;
                 }
-
-                // Change data but leave existing metadata
-                Snapshot snapshot = open.getSnapshot();
-                snapshot.getSnapshotContents().writeBytes(data);
-
-                Snapshots.CommitSnapshotResult commit = Games.Snapshots.commitAndClose(
-                        gameHelper.getApiClient(), snapshot, SnapshotMetadataChange.EMPTY_CHANGE).await();
-
-                if (!commit.getStatus().isSuccess()) {
-                    Gdx.app.log(TAG, "Failed to commit Snapshot.");
-                    gameServicesListener.savedGamesUpdateFailed();
-                    return false;
-                }
-                // No failures
-                Gdx.app.log(TAG, "No failures for Snapshot update.");
-                gameServicesListener.savedGamesUpdateSucceeded();
-                return true;
-            }
-        };
-        updateTask.execute();
+            };
+            updateTask.execute();
+        }
     }
 
     public void resolveSavedGamesConflict(Snapshots.OpenSnapshotResult openResult, final Snapshot resolvedSnapshot, final int retryCount, final int maxSnapshotResolveRetries) {
@@ -594,5 +605,13 @@ public class AndroidGameServices implements GameHelper.GameHelperListener, GameS
             }
             qb.close();
         }
+    }
+
+    // checks for internet connection
+    public boolean isOnline() {
+        ConnectivityManager cm =
+                (ConnectivityManager) activity.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+        return netInfo != null && netInfo.isConnectedOrConnecting();
     }
 }

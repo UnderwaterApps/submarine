@@ -153,4 +153,9 @@ public class DesktopGameServices implements GameServices {
     public void onSignInSucceeded() {
 
     }
+
+    @Override
+    public void onSignInFailed() {
+
+    }
 }

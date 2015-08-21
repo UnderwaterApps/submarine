@@ -49,6 +49,16 @@ public class IOSStore implements Store {
     }
 
     @Override
+    public boolean isInitialized() {
+        return false;
+    }
+
+    @Override
+    public boolean isPurchased(String id) {
+        return false;
+    }
+
+    @Override
     public void restoreTransactions() {
         inAppPurchaseManager.restoreTransactions();
     }

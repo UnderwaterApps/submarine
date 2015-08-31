@@ -133,10 +133,10 @@ public class IOSGameServices implements GameServices, GameCenterListener {
         this.gameServicesListener = gameServicesListener;
     }
 
-    @Override
+    /*@Override
     public boolean isSavedGamesLoadDone() {
         return false;
-    }
+    }*/
 
     @Override
     public void loadUserInfo() {
@@ -150,6 +150,11 @@ public class IOSGameServices implements GameServices, GameCenterListener {
 
     @Override
     public void onSignInFailed() {
+
+    }
+
+    @Override
+    public void showSavedGamesUI() {
 
     }
 

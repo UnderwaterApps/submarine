@@ -18,5 +18,7 @@ public interface GameServicesListener<T> {
 
     void savedGamesUpdateFailed();
 
-    void savedGamesLoadDone();
+//    void savedGamesLoadDone();
+
+    void savedGamesLoadContentsUnavailable(T result);
 }

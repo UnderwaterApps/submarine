@@ -46,7 +46,7 @@ public class AndroidGameServices implements GameHelper.GameHelperListener, GameS
     private Activity activity;
     private GameHelper gameHelper;
     private GameServicesListener<Snapshots.OpenSnapshotResult> gameServicesListener;
-    private boolean isSavedGamesLoadDone;
+//    private boolean isSavedGamesLoadDone;
     private boolean waitingToShowAchievements;
     private boolean waitingToShowLeaderboard;
     private boolean waitingToShowLeaderboards;
@@ -60,6 +60,10 @@ public class AndroidGameServices implements GameHelper.GameHelperListener, GameS
     private LoadedQuestListener questListener;
     private QuestRewardListener questRewardListener;
     private boolean waitingToGetPlayerInfo;
+    private boolean waitingToCloudUpdate;
+    private boolean waitingToCloudLoad;
+    private CloudUpdateBundle waitingCloudUpdateBundle;
+    private CloudLoadBundle waitingCloudLoadBundle;
 
 
     public AndroidGameServices(Activity activity, int clientsToUse) {
@@ -67,7 +71,7 @@ public class AndroidGameServices implements GameHelper.GameHelperListener, GameS
         gameHelper = new GameHelper(this.activity, clientsToUse);
         gameHelper.setup(this);
         gameHelper.enableDebugLog(true);
-        isSavedGamesLoadDone = false;
+//        isSavedGamesLoadDone = false;
     }
 
     public GoogleApiClient getApiClient() {
@@ -131,6 +135,12 @@ public class AndroidGameServices implements GameHelper.GameHelperListener, GameS
         }
         if (waitingToUpdateQuests) {
             registerQuestUpdate(questRewardListener);
+        }
+        if (waitingToCloudLoad) {
+            savedGamesLoad(waitingCloudLoadBundle.snapshotName, waitingCloudLoadBundle.createIfMissing);
+        }
+        if (waitingToCloudUpdate) {
+            savedGamesUpdate(waitingCloudUpdateBundle.snapshotName, waitingCloudUpdateBundle.data, waitingCloudUpdateBundle.createIfMissing);
         }
 
     }
@@ -245,11 +255,12 @@ public class AndroidGameServices implements GameHelper.GameHelperListener, GameS
      */
     @Override
     public void savedGamesLoad(String snapshotName, boolean createIfMissing) {
-        if (isOnline()) {
+        if (isSignedIn()) {
+            waitingToCloudLoad = false;
             final int retryCount = 0;
             PendingResult<Snapshots.OpenSnapshotResult> pendingResult = Games.Snapshots.open(
                     gameHelper.getApiClient(), snapshotName, createIfMissing);
-            isSavedGamesLoadDone = false;
+//            isSavedGamesLoadDone = false;
             ResultCallback<Snapshots.OpenSnapshotResult> callback =
                     new ResultCallback<Snapshots.OpenSnapshotResult>() {
                         @Override
@@ -259,8 +270,13 @@ public class AndroidGameServices implements GameHelper.GameHelperListener, GameS
                     };
             pendingResult.setResultCallback(callback);
         } else {
-            isSavedGamesLoadDone = true;
-            gameServicesListener.savedGamesLoadDone();
+            gameHelper.beginUserInitiatedSignIn();
+
+            waitingToCloudLoad = true;
+
+            waitingCloudLoadBundle = new CloudLoadBundle();
+            waitingCloudLoadBundle.snapshotName = snapshotName;
+            waitingCloudLoadBundle.createIfMissing = createIfMissing;
         }
 
     }
@@ -270,8 +286,10 @@ public class AndroidGameServices implements GameHelper.GameHelperListener, GameS
         int status = openSnapshotResult.getStatus().getStatusCode();
         switch (status) {
             case GamesStatusCodes.STATUS_OK:
-            case GamesStatusCodes.STATUS_SNAPSHOT_CONTENTS_UNAVAILABLE:
                 gameServicesListener.savedGamesLoadSucceeded(openSnapshotResult);
+                break;
+            case GamesStatusCodes.STATUS_SNAPSHOT_CONTENTS_UNAVAILABLE:
+                gameServicesListener.savedGamesLoadContentsUnavailable(openSnapshotResult);
                 break;
             case GamesStatusCodes.STATUS_SNAPSHOT_CONFLICT:
                 gameServicesListener.savedGamesLoadConflicted(openSnapshotResult, retryCount);
@@ -280,14 +298,14 @@ public class AndroidGameServices implements GameHelper.GameHelperListener, GameS
                 gameServicesListener.savedGamesLoadFailed(openSnapshotResult);
                 break;
         }
-        if (status == GamesStatusCodes.STATUS_OK || status == GamesStatusCodes.STATUS_SNAPSHOT_CONTENTS_UNAVAILABLE) {
+        /*if (status == GamesStatusCodes.STATUS_OK*//* || status == GamesStatusCodes.STATUS_SNAPSHOT_CONTENTS_UNAVAILABLE*//*) {
             gameServicesListener.savedGamesLoadDone();
             isSavedGamesLoadDone = true;
-
-        }
+        }*/
     }
 
-    private void showSavedGamesUI() {
+    @Override
+    public void showSavedGamesUI() {
         int maxNumberOfSavedGamesToShow = 5;
         Intent savedGamesIntent = Games.Snapshots.getSelectSnapshotIntent(gameHelper.getApiClient(),
                 "See My Saves", true, true, maxNumberOfSavedGamesToShow);
@@ -303,7 +321,8 @@ public class AndroidGameServices implements GameHelper.GameHelperListener, GameS
      */
     @Override
     public void savedGamesUpdate(final String snapshotName, final byte[] data, final boolean createIfMissing) {
-        if (isOnline()) {
+        if (isSignedIn()) {
+            waitingToCloudUpdate = false;
             AsyncTask<Void, Void, Boolean> updateTask = new AsyncTask<Void, Void, Boolean>() {
                 @Override
                 protected Boolean doInBackground(Void... params) {
@@ -334,7 +353,29 @@ public class AndroidGameServices implements GameHelper.GameHelperListener, GameS
                 }
             };
             updateTask.execute();
+        } else {
+            gameHelper.beginUserInitiatedSignIn();
+
+            waitingToCloudUpdate = true;
+
+            waitingCloudUpdateBundle = new CloudUpdateBundle();
+            waitingCloudUpdateBundle.snapshotName = snapshotName;
+            waitingCloudUpdateBundle.data = data;
+            waitingCloudUpdateBundle.createIfMissing = createIfMissing;
+
+
         }
+    }
+
+    private class CloudUpdateBundle {
+        public String snapshotName;
+        public byte[] data;
+        public boolean createIfMissing;
+    }
+
+    private class CloudLoadBundle {
+        public String snapshotName;
+        public boolean createIfMissing;
     }
 
     public void resolveSavedGamesConflict(Snapshots.OpenSnapshotResult openResult, final Snapshot resolvedSnapshot, final int retryCount, final int maxSnapshotResolveRetries) {
@@ -368,10 +409,10 @@ public class AndroidGameServices implements GameHelper.GameHelperListener, GameS
         this.gameServicesListener = gameServicesListener;
     }
 
-    @Override
+    /*@Override
     public boolean isSavedGamesLoadDone() {
         return isSavedGamesLoadDone;
-    }
+    }*/
 
     @Override
     public void loadUserInfo() {

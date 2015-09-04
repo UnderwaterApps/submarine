@@ -113,7 +113,7 @@ public class AndroidStore implements Store {
 
         @Override
         public void onProductPurchased(String s, TransactionDetails transactionDetails) {
-            Gdx.app.log(TAG, "onProductPurchased : " + transactionDetails.orderId);
+            //Gdx.app.log(TAG, "onProductPurchased : " + transactionDetails.orderId);
             for (StoreListener storeListener : storeListeners) {
                 storeListener.transactionCompleted(transactionDetails.productId);
             }
@@ -121,7 +121,7 @@ public class AndroidStore implements Store {
 
         @Override
         public void onPurchaseHistoryRestored() {
-            Gdx.app.log(TAG, "onPurchaseHistoryRestored");
+            //Gdx.app.log(TAG, "onPurchaseHistoryRestored");
             for (String productId : productIds) {
                 TransactionDetails transactionDetails = billingProcessor.getPurchaseTransactionDetails(productId);
                 if (transactionDetails != null) {
@@ -137,7 +137,7 @@ public class AndroidStore implements Store {
 
         @Override
         public void onBillingError(int i, Throwable throwable) {
-            Gdx.app.log(TAG, "onBillingError : " + i);
+            //Gdx.app.log(TAG, "onBillingError : " + i);
             for (StoreListener storeListener : storeListeners) {
                 storeListener.transactionFailed(new Error(String.valueOf(i)));
             }
@@ -145,7 +145,7 @@ public class AndroidStore implements Store {
 
         @Override
         public void onBillingInitialized() {
-            Gdx.app.log(TAG, "onBillingInitialized");
+            //Gdx.app.log(TAG, "onBillingInitialized");
             if (billingProcessor == null) {
                 return;
             }

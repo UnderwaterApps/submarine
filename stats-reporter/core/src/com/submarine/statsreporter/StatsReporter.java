@@ -126,7 +126,7 @@ public abstract class StatsReporter<U extends StatsRequestVO, V extends StatsRes
         }
         @Override
         public void cancelled() {
-            Gdx.app.log(TAG, "cancelled");
+            //Gdx.app.log(TAG, "cancelled");
             if (statsReporterResponseListener != null) {
                 statsReporterResponseListener.cancelled();
             }

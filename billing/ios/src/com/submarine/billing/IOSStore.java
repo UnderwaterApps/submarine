@@ -37,7 +37,7 @@ public class IOSStore implements Store {
     @Override
     public void requestProducts(String[] productIds) {
         inAppPurchaseManager.requestProducts(productIds);
-        Gdx.app.log(TAG, "requestProducts");
+        //Gdx.app.log(TAG, "requestProducts");
     }
 
     @Override
@@ -101,7 +101,7 @@ public class IOSStore implements Store {
 
         @Override
         public void productsReceived(SKProduct[] skProducts) {
-            Gdx.app.log(TAG, "productsReceived : " + skProducts);
+            //Gdx.app.log(TAG, "productsReceived : " + skProducts);
             appStoreProducts = new HashMap<String, SKProduct>();
             for (SKProduct skProduct : skProducts) {
                 appStoreProducts.put(skProduct.getProductIdentifier(), skProduct);
@@ -118,7 +118,7 @@ public class IOSStore implements Store {
 
         @Override
         public void productsRequestFailed(SKRequest skRequest, NSError nsError) {
-            Gdx.app.log(TAG, "productsRequestFailed : " + nsError);
+            //Gdx.app.log(TAG, "productsRequestFailed : " + nsError);
             for (StoreListener storeListener : storeListeners) {
                 storeListener.productsRequestFailed(new Error(nsError.getLocalizedFailureReason()));
             }
@@ -126,7 +126,7 @@ public class IOSStore implements Store {
 
         @Override
         public void transactionCompleted(SKPaymentTransaction skPaymentTransaction) {
-            Gdx.app.log(TAG, "transactionCompleted : " + skPaymentTransaction);
+            //Gdx.app.log(TAG, "transactionCompleted : " + skPaymentTransaction);
             // Purchase successfully completed.
             // Get the product identifier and award the product to the user.
             String productId = skPaymentTransaction.getPayment().getProductIdentifier();
@@ -137,7 +137,7 @@ public class IOSStore implements Store {
 
         @Override
         public void transactionFailed(SKPaymentTransaction skPaymentTransaction, NSError nsError) {
-            Gdx.app.log(TAG, "transactionFailed : " + nsError);
+            //Gdx.app.log(TAG, "transactionFailed : " + nsError);
             for (StoreListener storeListener : storeListeners) {
                 storeListener.transactionFailed(new Error(nsError.getLocalizedFailureReason()));
             }
@@ -145,7 +145,7 @@ public class IOSStore implements Store {
 
         @Override
         public void transactionRestored(SKPaymentTransaction skPaymentTransaction) {
-            Gdx.app.log(TAG, "transactionRestored : " + skPaymentTransaction);
+            //Gdx.app.log(TAG, "transactionRestored : " + skPaymentTransaction);
             // Purchase successfully restored.
             // Get the product identifier and award the product to the user. This is only useful for non-consumable products.
             String productId = skPaymentTransaction.getPayment().getProductIdentifier();
@@ -156,7 +156,7 @@ public class IOSStore implements Store {
 
         @Override
         public void transactionRestoreFailed(NSArray<SKPaymentTransaction> skPaymentTransactions, NSError nsError) {
-            Gdx.app.log(TAG, "transactionRestoreFailed : " + nsError);
+            //Gdx.app.log(TAG, "transactionRestoreFailed : " + nsError);
             for (StoreListener storeListener : storeListeners) {
                 storeListener.transactionRestoreFailed(new Error(nsError.getLocalizedFailureReason()));
             }

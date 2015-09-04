@@ -160,7 +160,7 @@ public class IOSGameServices implements GameServices, GameCenterListener {
 
     @Override
     public void playerLoginCompleted() {
-        Gdx.app.log(TAG, "Sing in success");
+        //Gdx.app.log(TAG, "Sing in success");
         isSignedIn = true;
         if (gameServicesListener != null) {
             gameServicesListener.onSignInSucceeded();
@@ -169,7 +169,7 @@ public class IOSGameServices implements GameServices, GameCenterListener {
 
     @Override
     public void playerLoginFailed(NSError nsError) {
-        Gdx.app.log(TAG, "Sing in Fail");
+        //Gdx.app.log(TAG, "Sing in Fail");
         isSignedIn = false;
         if (gameServicesListener != null) {
             gameServicesListener.onSignInFailed();

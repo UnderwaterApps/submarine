@@ -420,7 +420,14 @@ public class AndroidGameServices implements GameHelper.GameHelperListener, GameS
         if (isSignedIn()) {
             waitingToGetPlayerInfo = false;
             Person person = Plus.PeopleApi.getCurrentPerson(gameHelper.getApiClient());
-            CurrentUser.getInstance().init(person.getDisplayName(), person.getImage().getUrl());
+            if(person != null){
+                try {
+                    CurrentUser.getInstance().init(person.getDisplayName(), person.getImage().getUrl());
+                }catch (Exception e){
+                    System.out.println(e.getStackTrace());
+                }
+            }
+
         } else {
             waitingToGetPlayerInfo = true;
             gameHelper.beginUserInitiatedSignIn();
@@ -629,7 +636,12 @@ public class AndroidGameServices implements GameHelper.GameHelperListener, GameS
             });
         } else {
             waitingToUpdateQuests = true;
-            gameHelper.beginUserInitiatedSignIn();
+            activity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    gameHelper.beginUserInitiatedSignIn();
+                }
+            });
         }
     }
 

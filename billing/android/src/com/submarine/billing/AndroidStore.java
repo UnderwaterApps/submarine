@@ -101,14 +101,14 @@ public class AndroidStore implements Store {
 
 
     public boolean handleActivityResult(int requestCode, int resultCode, Intent data) {
-        if (billingProcessor != null) {
+        if (billingProcessor == null) {
             return false;
         }
         return billingProcessor.handleActivityResult(requestCode, resultCode, data);
     }
 
     public void release() {
-        if (billingProcessor != null) {
+        if (billingProcessor == null) {
             return;
         }
         billingProcessor.release();

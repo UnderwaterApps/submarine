@@ -8,9 +8,9 @@ import org.robovm.apple.storekit.SKPaymentTransaction;
 import org.robovm.apple.storekit.SKProduct;
 import org.robovm.apple.storekit.SKRequest;
 import org.robovm.apple.uikit.UIAlertView;
-import org.robovm.bindings.inapppurchase.AppStoreListener;
-import org.robovm.bindings.inapppurchase.AppStoreManager;
 import org.robovm.objc.Selector;
+import org.robovm.pods.billing.AppStoreListener;
+import org.robovm.pods.billing.AppStoreManager;
 
 import java.util.HashMap;
 import java.util.List;
@@ -75,6 +75,16 @@ public class IOSStore implements Store {
             products.put(product.id, product);
         }
         requestProducts(products.keySet().toArray(new String[products.size()]));
+    }
+
+    @Override
+    public boolean isInitialized() {
+        return false;
+    }
+
+    @Override
+    public boolean isPurchased(String id) {
+        return false;
     }
 
     @Override
@@ -157,7 +167,7 @@ public class IOSStore implements Store {
 
         @Override
         public void productsRequestFailed(SKRequest skRequest, NSError nsError) {
-            Gdx.app.log(TAG, "productsRequestFailed : " + nsError);
+            //Gdx.app.log(TAG, "productsRequestFailed : " + nsError);
             for (StoreListener storeListener : storeListeners) {
                 storeListener.productsRequestFailed(new Error(nsError.getLocalizedFailureReason()));
             }
@@ -191,7 +201,7 @@ public class IOSStore implements Store {
 
         @Override
         public void transactionRestored(SKPaymentTransaction skPaymentTransaction) {
-            Gdx.app.log(TAG, "transactionRestored : " + skPaymentTransaction);
+            //Gdx.app.log(TAG, "transactionRestored : " + skPaymentTransaction);
             // Purchase successfully restored.
             // Get the product identifier and award the product to the user. This is only useful for non-consumable products.
             String productId = skPaymentTransaction.getPayment().getProductIdentifier();

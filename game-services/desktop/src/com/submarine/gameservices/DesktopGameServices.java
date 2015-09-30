@@ -139,10 +139,10 @@ public class DesktopGameServices implements GameServices {
         this.gameServicesListener = gameServicesListener;
     }
 
-    @Override
+    /*@Override
     public boolean isSavedGamesLoadDone() {
         return isSavedGamesLoadDone;
-    }
+    }*/
 
     @Override
     public void loadUserInfo() {
@@ -151,6 +151,16 @@ public class DesktopGameServices implements GameServices {
 
     @Override
     public void onSignInSucceeded() {
+
+    }
+
+    @Override
+    public void onSignInFailed() {
+
+    }
+
+    @Override
+    public void showSavedGamesUI() {
 
     }
 }

@@ -201,7 +201,7 @@ public class IOSStore implements Store {
 
         @Override
         public void transactionRestored(SKPaymentTransaction skPaymentTransaction) {
-            //Gdx.app.log(TAG, "transactionRestored : " + skPaymentTransaction);
+            Gdx.app.log(TAG, "transactionRestored : " + skPaymentTransaction);
             // Purchase successfully restored.
             // Get the product identifier and award the product to the user. This is only useful for non-consumable products.
             String productId = skPaymentTransaction.getPayment().getProductIdentifier();
@@ -222,6 +222,9 @@ public class IOSStore implements Store {
             String title = "There are no items available to restore at this time.";
             if (list.size() > 0) {
                 title = "All purchases successfully restored.";
+            }
+            for (StoreListener storeListener : storeListeners) {
+                storeListener.transactionRestoreCompleted();
             }
             showAlert(title);
         }

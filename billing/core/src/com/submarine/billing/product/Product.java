@@ -16,4 +16,9 @@ public class Product {
 
     public Product() {
     }
+
+    @Override
+    public String toString() {
+        return "id : " + id + ", price : " + price + ", currency : " + currency;
+    }
 }

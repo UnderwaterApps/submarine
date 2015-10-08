@@ -1,5 +1,7 @@
 package com.submarine.adMob;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.view.View;
 import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.google.android.gms.ads.*;
@@ -100,6 +102,12 @@ public class AndroidAdMobNetwork implements AdNetwork {
                 interstitial.loadAd(adRequest);
             }
         });
+    }
+
+    @Override
+    public void takeToApp(String packageName) {
+        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + packageName));
+        androidApplication.startActivity(browserIntent);
     }
 
     private AdRequest getInterstitialAdRequest() {

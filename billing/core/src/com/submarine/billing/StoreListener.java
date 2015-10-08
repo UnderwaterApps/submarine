@@ -8,7 +8,7 @@ public interface StoreListener {
 
     void productsRequestFailed(Error error);
 
-    void transactionCompleted(String productId);
+    void transactionCompleted(String productId, String receiptAsString);
 
     void transactionFailed(Error error);
 

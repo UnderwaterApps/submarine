@@ -119,9 +119,11 @@ public class AndroidStore implements Store {
 
         @Override
         public void onProductPurchased(String s, TransactionDetails transactionDetails) {
-            //Gdx.app.log(TAG, "onProductPurchased : " + transactionDetails.orderId);
+
+            Gdx.app.log(TAG, "onProductPurchased : " + transactionDetails.orderId + ", " + transactionDetails.purchaseInfo.responseData);
+
             for (StoreListener storeListener : storeListeners) {
-                storeListener.transactionCompleted(transactionDetails.productId);
+                storeListener.transactionCompleted(transactionDetails.productId, transactionDetails.purchaseInfo.responseData);
             }
         }
 

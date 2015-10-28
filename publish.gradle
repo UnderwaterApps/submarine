@@ -78,12 +78,12 @@ uploadArchives {
                 pom.project {
                    name 'subamrine'
                    description 'Subamrine provides functionality for gooleplay service,android billing, admob and adcolony for Libgdx'
-                   url 'https://github.com/UnderwaterApps/overlap2d-runtime-libgdx'
+                   url 'https://github.com/UnderwaterApps/submarine'
 
                    scm {
-                       url 'scm:git@github.com:UnderwaterApps/overlap2d-runtime-libgdx.git'
-                       connection 'scm:git@github.UnderwaterApps/overlap2d-runtime-libgdx.git'
-                       developerConnection 'scm:git@github.com:UnderwaterApps/overlap2d-runtime-libgdx.git'
+                       url 'scm:git@github.com:UnderwaterApps/submarine.git'
+                       connection 'scm:git@github.UnderwaterApps/submarine.git'
+                       developerConnection 'scm:git@github.com:UnderwaterApps/submarine.git'
                    }
 
                    licenses {

@@ -1,4 +1,4 @@
-package com.submarine.adMob;
+package com.submarine.admob;
 
 import android.view.View;
 import com.badlogic.gdx.backends.android.AndroidApplication;

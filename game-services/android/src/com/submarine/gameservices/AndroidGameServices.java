@@ -32,10 +32,8 @@ public class AndroidGameServices implements GameHelper.GameHelperListener, GameS
     public final static int CLIENT_NONE = GameHelper.CLIENT_NONE;
     public final static int CLIENT_GAMES = GameHelper.CLIENT_GAMES;
     public final static int CLIENT_PLUS = GameHelper.CLIENT_PLUS;
-    public final static int CLIENT_APPSTATE = GameHelper.CLIENT_APPSTATE;
     public final static int CLIENT_SNAPSHOT = GameHelper.CLIENT_SNAPSHOT;
-    public final static int CLIENT_ALL = CLIENT_GAMES | CLIENT_PLUS
-            | CLIENT_APPSTATE | CLIENT_SNAPSHOT;
+    public final static int CLIENT_ALL = CLIENT_GAMES | CLIENT_PLUS | CLIENT_SNAPSHOT;
     // The AppState slot we are editing.  For simplicity this sample only manipulates a single
     // Cloud Save slot and a corresponding Snapshot entry,  This could be changed to any integer
     // 0-3 without changing functionality (Cloud Save has four slots, numbered 0-3).

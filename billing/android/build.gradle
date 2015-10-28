@@ -1,4 +1,4 @@
-apply plugin: "android-library"
+apply plugin: 'com.android.library'
 
 configurations { natives }
 
@@ -12,8 +12,8 @@ dependencies {
 }
 
 android {
-    buildToolsVersion "21.1.0"
-    compileSdkVersion 21
+    buildToolsVersion android_version
+    compileSdkVersion android_compile_version
     sourceSets {
         main {
             manifest.srcFile 'AndroidManifest.xml'

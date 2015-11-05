@@ -1,113 +1,107 @@
 apply plugin: 'maven'
 apply plugin: 'signing'
 
-group = 'com.underwaterapps.submarine'
 
-version = '0.1.2'
-ext.packaging = 'jar'
 
-def isDevBuild
-def isCiBuild
-def isReleaseBuild
+def isReleaseBuild() {
+    return hasProperty('IS_RELEASE')
+}
 
-def sonatypeRepositoryUrl
+def getRepositoryUrl(){
+    if(isReleaseBuild()){
+        return hasProperty('RELEASE_REPOSITORY_URL') ? RELEASE_REPOSITORY_URL
+                : "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
+    }else{
+        return hasProperty('SNAPSHOT_REPOSITORY_URL') ? SNAPSHOT_REPOSITORY_URL
+                : "https://oss.sonatype.org/content/repositories/snapshots/"
+    }
+}
 
-//set build variables based on build type (release, continuous integration, development)
-if(hasProperty("release")) {
-    isReleaseBuild = true
-    sonatypeRepositoryUrl = "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
-    println "Performing release build"
-} else if (hasProperty("snapshot")) {
-    isCiBuild = true
-    version += "-SNAPSHOT"
-    sonatypeRepositoryUrl = "https://oss.sonatype.org/content/repositories/snapshots/"
-    println "Performing snapshot build"
-} else {
-    isDevBuild = true
-    println "Performing local build"
+def getRepositoryUsername() {
+    return hasProperty('NEXUS_USERNAME') ? NEXUS_USERNAME : ""
+}
+
+def getRepositoryPassword() {
+    return hasProperty('NEXUS_PASSWORD') ? NEXUS_PASSWORD : ""
 }
 
 repositories {
     mavenCentral()
 }
 
-task artifactDocs(type: Jar, dependsOn: javadoc) {
-    classifier = 'javadoc'
-    from 'build/docs/javadoc'
-}
-
-task artifactSources(type: Jar) {
-    from sourceSets.main.allSource
-    classifier = 'sources'
-}
-
-artifacts {
-    archives jar
-    archives artifactDocs
-    archives artifactSources
-}
-
-if(isReleaseBuild) {
-    signing {
-        sign configurations.archives
-    }
-} else {
-    task signArchives {
-        // do nothing
-    }
-}
-
-uploadArchives {
-    repositories {
-        if (isDevBuild) {
-            mavenLocal()
-        }
-        else {
+afterEvaluate { project ->
+    uploadArchives {
+        repositories {
             mavenDeployer {
-                if(isReleaseBuild) {
+                if(isReleaseBuild()) {
                     beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+                }else{
+                    VERSION_NAME+="-SNAPSHOT"
                 }
 
-                repository(url: sonatypeRepositoryUrl) {
-                  authentication(userName: sonatypeUsername, password: sonatypePassword)
-                }
+                pom.groupId = GROUP
+                pom.artifactId = POM_ARTIFACT_ID
+                pom.version = VERSION_NAME
 
-                pom.version = version
-                pom.packaging = 'jar'
+                repository(url: getRepositoryUrl()) {
+                    authentication(userName: getRepositoryUsername(), password: getRepositoryPassword())
+                }
 
                 pom.project {
-                   name 'subamrine'
-                   description 'Subamrine provides functionality for gooleplay service,android billing, admob and adcolony for Libgdx'
-                   url 'https://github.com/UnderwaterApps/submarine'
+                    name POM_NAME
+                    packaging POM_PACKAGING
+                    description POM_DESCRIPTION
+                    url POM_URL
 
-                   scm {
-                       url 'scm:git@github.com:UnderwaterApps/submarine.git'
-                       connection 'scm:git@github.UnderwaterApps/submarine.git'
-                       developerConnection 'scm:git@github.com:UnderwaterApps/submarine.git'
-                   }
+                    scm {
+                        url POM_SCM_URL
+                        connection POM_SCM_CONNECTION
+                        developerConnection POM_SCM_DEV_CONNECTION
+                    }
 
-                   licenses {
-                       license {
-                           name 'The Apache Software License, Version 2.0'
-                           url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
-                           distribution 'repo'
-                       }
-                   }
+                    licenses {
+                        license {
+                            name 'The Apache Software License, Version 2.0'
+                            url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                            distribution 'repo'
+                        }
+                    }
 
-                   developers {
-                       developer {
-                           id 'gevorg.kopalyan'
-                           name 'Gevorg Kopalyan'
-						               email 'gevorg.kopalyan@gmail.com'
-                       }
-                       developer {
-                           id 'azakhary'
-                           name 'Avetis Zakharyan'
-                           email 'avetis.zakharyan@gmail.com'
-                       }
-                   }
-               }
+                    developers {
+                        developer {
+                            id 'gevorg-kopalyan'
+                            name 'Gevorg Kopalyan'
+                            email 'gevorg.kopalyan@gmail.com'
+                        }
+                        developer {
+                            id 'azakhary'
+                            name 'Avetis Zakharyan'
+                            email 'avetis.zakharyan@gmail.com'
+                        }
+                    }
+                }
             }
         }
+    }
+
+    signing {
+        required { isReleaseBuild() && gradle.taskGraph.hasTask("uploadArchives") }
+        sign configurations.archives
+    }
+
+    task artifactDocs(type: Jar, dependsOn: Javadoc) {
+        classifier = 'javadoc'
+        from 'build/docs/javadoc'
+    }
+
+    task artifactSources(type: Jar) {
+        from sourceSets.main.allSource
+        classifier = 'sources'
+    }
+
+    artifacts {
+        archives jar
+        archives artifactDocs
+        archives artifactSources
     }
 }

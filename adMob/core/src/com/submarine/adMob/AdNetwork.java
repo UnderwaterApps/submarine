@@ -9,4 +9,8 @@ public interface AdNetwork {
     void hideBanner();
 
     void showInterstitial();
+
+    void setInterstitialAdUnitId(String interstitialAdUnitId);
+
+    void setAdViewUnitId(String adViewUnitId);
 }

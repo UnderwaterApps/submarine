@@ -4,7 +4,7 @@ configurations { natives }
 
 dependencies {
     compile fileTree(dir: 'libs', include: '*.jar')
-    compile project(":submarine-adColony-core")
+    compile project(":submarine-adcolony-core")
     compile "com.badlogicgames.gdx:gdx-backend-android:$gdxVersion"
     natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-armeabi"
     natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-armeabi-v7a"

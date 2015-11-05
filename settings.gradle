@@ -1,16 +1,16 @@
-include 'submarine-adMob-android', 'submarine-adMob-ios', 'submarine-adMob-desktop', 'submarine-adMob-core'
+include 'submarine-admob-android', 'submarine-admob-ios', 'submarine-admob-desktop', 'submarine-admob-core'
 
-project(':submarine-adMob-android').projectDir = new File(settingsDir, 'adMob/android')
-project(':submarine-adMob-ios').projectDir = new File(settingsDir, 'adMob/ios')
-project(':submarine-adMob-desktop').projectDir = new File(settingsDir, 'adMob/desktop')
-project(':submarine-adMob-core').projectDir = new File(settingsDir, 'adMob/core')
+project(':submarine-admob-android').projectDir = new File(settingsDir, 'admob/android')
+project(':submarine-admob-ios').projectDir = new File(settingsDir, 'admob/ios')
+project(':submarine-admob-desktop').projectDir = new File(settingsDir, 'admob/desktop')
+project(':submarine-admob-core').projectDir = new File(settingsDir, 'admob/core')
 
-include 'submarine-adColony-android', 'submarine-adColony-ios', 'submarine-adColony-desktop', 'submarine-adColony-core'
+include 'submarine-adcolony-android', 'submarine-adcolony-ios', 'submarine-adcolony-desktop', 'submarine-adcolony-core'
 
-project(':submarine-adColony-android').projectDir = new File(settingsDir, 'adColony/android')
-project(':submarine-adColony-ios').projectDir = new File(settingsDir, 'adColony/ios')
-project(':submarine-adColony-desktop').projectDir = new File(settingsDir, 'adColony/desktop')
-project(':submarine-adColony-core').projectDir = new File(settingsDir, 'adColony/core')
+project(':submarine-adcolony-android').projectDir = new File(settingsDir, 'adcolony/android')
+project(':submarine-adcolony-ios').projectDir = new File(settingsDir, 'adcolony/ios')
+project(':submarine-adcolony-desktop').projectDir = new File(settingsDir, 'adcolony/desktop')
+project(':submarine-adcolony-core').projectDir = new File(settingsDir, 'adcolony/core')
 
 include 'submarine-stats-reporter-android', 'submarine-stats-reporter-ios', 'submarine-stats-reporter-desktop', 'submarine-stats-reporter-core'
 

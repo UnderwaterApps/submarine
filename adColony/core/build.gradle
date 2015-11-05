@@ -11,5 +11,5 @@ sourceSets.main.java.srcDirs = ["src/"]
 
 
 eclipse.project {
-    name = "submarine-adColony-core"
+    name = "submarine-adcolony-core"
 }

@@ -18,4 +18,14 @@ public class DesktopAdNetwork implements AdNetwork {
     public void showInterstitial() {
 
     }
+
+    @Override
+    public void setInterstitialAdUnitId(String interstitialAdUnitId) {
+
+    }
+
+    @Override
+    public void setAdViewUnitId(String adViewUnitId) {
+
+    }
 }

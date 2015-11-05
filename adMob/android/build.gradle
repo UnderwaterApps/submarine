@@ -3,7 +3,7 @@ apply plugin: "android-library"
 configurations { natives }
 
 dependencies {
-    compile project(":submarine-adMob-core")
+    compile project(":submarine-admob-core")
 	compile "com.google.android.gms:play-services-ads:${gms_library_version}"
     compile "com.badlogicgames.gdx:gdx-backend-android:$gdxVersion"
     natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-armeabi"
@@ -49,7 +49,7 @@ eclipse {
     }
 
     project {
-        name = "submarine-stats-reporter-android"
+        name = "submarine-admob-android"
         natures 'com.android.ide.eclipse.adt.AndroidNature'
         buildCommands.clear();
         buildCommand "com.android.ide.eclipse.adt.ResourceManagerBuilder"

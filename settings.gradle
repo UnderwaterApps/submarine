@@ -1,16 +1,16 @@
-include 'submarine-admob-android', 'submarine-admob-ios', 'submarine-admob-desktop', 'submarine-admob-core'
+include 'submarine-admob-android', 'submarine-admob-ios', 'submarine-admob-desktop' //, 'submarine-admob-core'
 
 project(':submarine-admob-android').projectDir = new File(settingsDir, 'admob/android')
 project(':submarine-admob-ios').projectDir = new File(settingsDir, 'admob/ios')
 project(':submarine-admob-desktop').projectDir = new File(settingsDir, 'admob/desktop')
-project(':submarine-admob-core').projectDir = new File(settingsDir, 'admob/core')
+//project(':submarine-admob-core').projectDir = new File(settingsDir, 'admob/core')
 
-include 'submarine-adcolony-android', 'submarine-adcolony-ios', 'submarine-adcolony-desktop', 'submarine-adcolony-core'
+include 'submarine-adcolony-android', 'submarine-adcolony-ios', 'submarine-adcolony-desktop' //, 'submarine-adcolony-core'
 
 project(':submarine-adcolony-android').projectDir = new File(settingsDir, 'adcolony/android')
 project(':submarine-adcolony-ios').projectDir = new File(settingsDir, 'adcolony/ios')
 project(':submarine-adcolony-desktop').projectDir = new File(settingsDir, 'adcolony/desktop')
-project(':submarine-adcolony-core').projectDir = new File(settingsDir, 'adcolony/core')
+//project(':submarine-adcolony-core').projectDir = new File(settingsDir, 'adcolony/core')
 
 include 'submarine-stats-reporter-android', 'submarine-stats-reporter-ios', 'submarine-stats-reporter-desktop', 'submarine-stats-reporter-core'
 
@@ -19,18 +19,22 @@ project(':submarine-stats-reporter-ios').projectDir = new File(settingsDir, 'sta
 project(':submarine-stats-reporter-desktop').projectDir = new File(settingsDir, 'stats-reporter/desktop')
 project(':submarine-stats-reporter-core').projectDir = new File(settingsDir, 'stats-reporter/core')
 
-include 'submarine-billing-android', 'submarine-billing-ios', 'submarine-billing-desktop', 'submarine-billing-core'
+include 'submarine-billing-android', 'submarine-billing-ios', 'submarine-billing-desktop' //, 'submarine-billing-core'
 
 project(':submarine-billing-android').projectDir = new File(settingsDir, 'billing/android')
 project(':submarine-billing-ios').projectDir = new File(settingsDir, 'billing/ios')
 project(':submarine-billing-desktop').projectDir = new File(settingsDir, 'billing/desktop')
-project(':submarine-billing-core').projectDir = new File(settingsDir, 'billing/core')
+//project(':submarine-billing-core').projectDir = new File(settingsDir, 'billing/core')
 
 
-include 'submarine-game-services-android', 'submarine-game-services-ios', 'submarine-game-services-desktop', 'submarine-game-services-core', 'BaseGameUtils'
+include 'submarine-game-services-android', 'submarine-game-services-ios', 'submarine-game-services-desktop', 'BaseGameUtils' //, 'submarine-game-services-core'
 
 project(':BaseGameUtils').projectDir = new File(settingsDir, 'game-services/android-basic-samples/BasicSamples/libraries/BaseGameUtils')
 project(':submarine-game-services-android').projectDir = new File(settingsDir, 'game-services/android')
 project(':submarine-game-services-ios').projectDir = new File(settingsDir, 'game-services/ios')
 project(':submarine-game-services-desktop').projectDir = new File(settingsDir, 'game-services/desktop')
-project(':submarine-game-services-core').projectDir = new File(settingsDir, 'game-services/core')
+//project(':submarine-game-services-core').projectDir = new File(settingsDir, 'game-services/core')
+
+include 'submarine-core'
+
+project(':submarine-core').projectDir = new File(settingsDir, 'core')

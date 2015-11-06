@@ -3,7 +3,7 @@ apply plugin: "android-library"
 configurations { natives }
 
 dependencies {
-    compile project(":submarine-stats-reporter-core")
+    compile project(":submarine-core")
     compile "com.badlogicgames.gdx:gdx-backend-android:$gdxVersion"
     natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-armeabi"
     natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-armeabi-v7a"

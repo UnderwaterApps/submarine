@@ -69,6 +69,7 @@ public class AndroidGameServices implements GameHelper.GameHelperListener, GameS
     public AndroidGameServices(Activity activity, int clientsToUse) {
         this.activity = activity;
         gameHelper = new GameHelper(this.activity, clientsToUse);
+        gameHelper.setMaxAutoSignInAttempts(1);
         gameHelper.setup(this);
         gameHelper.enableDebugLog(true);
 //        isSavedGamesLoadDone = false;

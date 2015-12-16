@@ -69,9 +69,10 @@ public class AndroidGameServices implements GameHelper.GameHelperListener, GameS
     public AndroidGameServices(Activity activity, int clientsToUse) {
         this.activity = activity;
         gameHelper = new GameHelper(this.activity, clientsToUse);
+        gameHelper.setMaxAutoSignInAttempts(1);
         gameHelper.setup(this);
         gameHelper.enableDebugLog(true);
-//        isSavedGamesLoadDone = false;
+//      isSavedGamesLoadDone = false;
     }
 
     public GoogleApiClient getApiClient() {
@@ -241,8 +242,8 @@ public class AndroidGameServices implements GameHelper.GameHelperListener, GameS
                 }
             });
         } else {
-            gameHelper.beginUserInitiatedSignIn();
-            waitingToShowLeaderboards = true;
+//            gameHelper.beginUserInitiatedSignIn();
+//            waitingToShowLeaderboards = true;
         }
     }
 
@@ -430,7 +431,7 @@ public class AndroidGameServices implements GameHelper.GameHelperListener, GameS
 
         } else {
             waitingToGetPlayerInfo = true;
-            gameHelper.beginUserInitiatedSignIn();
+            //gameHelper.beginUserInitiatedSignIn();
         }
     }
 
@@ -635,13 +636,13 @@ public class AndroidGameServices implements GameHelper.GameHelperListener, GameS
                 }
             });
         } else {
-            waitingToUpdateQuests = true;
-            activity.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    gameHelper.beginUserInitiatedSignIn();
-                }
-            });
+//            waitingToUpdateQuests = true;
+//            activity.runOnUiThread(new Runnable() {
+//                @Override
+//                public void run() {
+//                    gameHelper.beginUserInitiatedSignIn();
+//                }
+//            });
         }
     }
 

@@ -241,8 +241,8 @@ public class AndroidGameServices implements GameHelper.GameHelperListener, GameS
                 }
             });
         } else {
-            gameHelper.beginUserInitiatedSignIn();
-            waitingToShowLeaderboards = true;
+//            gameHelper.beginUserInitiatedSignIn();
+//            waitingToShowLeaderboards = true;
         }
     }
 
@@ -430,7 +430,7 @@ public class AndroidGameServices implements GameHelper.GameHelperListener, GameS
 
         } else {
             waitingToGetPlayerInfo = true;
-            gameHelper.beginUserInitiatedSignIn();
+            //gameHelper.beginUserInitiatedSignIn();
         }
     }
 
@@ -635,13 +635,13 @@ public class AndroidGameServices implements GameHelper.GameHelperListener, GameS
                 }
             });
         } else {
-            waitingToUpdateQuests = true;
-            activity.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    gameHelper.beginUserInitiatedSignIn();
-                }
-            });
+//            waitingToUpdateQuests = true;
+//            activity.runOnUiThread(new Runnable() {
+//                @Override
+//                public void run() {
+//                    gameHelper.beginUserInitiatedSignIn();
+//                }
+//            });
         }
     }
 

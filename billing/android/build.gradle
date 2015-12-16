@@ -4,7 +4,7 @@ configurations { natives }
 
 dependencies {
     compile project(":submarine-billing-core")
-    compile 'com.anjlab.android.iab.v3:library:1.0.+@aar'
+    compile 'com.anjlab.android.iab.v3:library:1.0.28@aar'
     compile "com.badlogicgames.gdx:gdx-backend-android:$gdxVersion"
     natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-armeabi"
     natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-armeabi-v7a"

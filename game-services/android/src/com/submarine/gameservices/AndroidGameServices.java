@@ -72,7 +72,7 @@ public class AndroidGameServices implements GameHelper.GameHelperListener, GameS
         gameHelper.setMaxAutoSignInAttempts(1);
         gameHelper.setup(this);
         gameHelper.enableDebugLog(true);
-//        isSavedGamesLoadDone = false;
+//      isSavedGamesLoadDone = false;
     }
 
     public GoogleApiClient getApiClient() {

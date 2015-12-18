@@ -3,6 +3,7 @@ package com.submarine.gameservices;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
@@ -65,11 +66,13 @@ public class AndroidGameServices implements GameHelper.GameHelperListener, GameS
     private CloudUpdateBundle waitingCloudUpdateBundle;
     private CloudLoadBundle waitingCloudLoadBundle;
 
+    public final int MAX_AUTO_SIGN_IN_ATTEMPTS = 1;
+
 
     public AndroidGameServices(Activity activity, int clientsToUse) {
         this.activity = activity;
         gameHelper = new GameHelper(this.activity, clientsToUse);
-        gameHelper.setMaxAutoSignInAttempts(1);
+        gameHelper.setMaxAutoSignInAttempts(MAX_AUTO_SIGN_IN_ATTEMPTS);
         gameHelper.setup(this);
         gameHelper.enableDebugLog(true);
 //      isSavedGamesLoadDone = false;
@@ -83,8 +86,19 @@ public class AndroidGameServices implements GameHelper.GameHelperListener, GameS
         gameHelper.onActivityResult(request, response, data);
         if (response == 10001) {
             gameHelper.disconnect();
+            setSignInCancelationssToMax();
         }
 
+    }
+
+    private final String GAMEHELPER_SHARED_PREFS = "GAMEHELPER_SHARED_PREFS";
+    private final String KEY_SIGN_IN_CANCELLATIONS = "KEY_SIGN_IN_CANCELLATIONS";
+
+    public void setSignInCancelationssToMax(){
+        SharedPreferences.Editor editor = activity.getApplicationContext().getSharedPreferences(
+                GAMEHELPER_SHARED_PREFS, Context.MODE_PRIVATE).edit();
+        editor.putInt(KEY_SIGN_IN_CANCELLATIONS, MAX_AUTO_SIGN_IN_ATTEMPTS);
+        editor.commit();
     }
 
 

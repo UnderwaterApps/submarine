@@ -11,5 +11,5 @@ sourceSets.main.java.srcDirs = ["src/"]
 
 
 eclipse.project {
-    name = "submarine-adMob-core"
+    name = "submarine-ad-core"
 }

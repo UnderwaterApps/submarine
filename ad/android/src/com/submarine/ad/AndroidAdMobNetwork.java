@@ -1,8 +1,7 @@
-package com.submarine.adMob;
+package com.submarine.ad;
 
 import android.view.View;
 import com.badlogic.gdx.backends.android.AndroidApplication;
-import com.google.android.gms.ads.*;
 
 /**
  * Created by sargis on 1/30/15.

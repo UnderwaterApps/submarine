@@ -1,6 +1,7 @@
 package com.submarine.chartboost;
 
 import android.app.Activity;
+import com.chartboost.sdk.CBLocation;
 import com.chartboost.sdk.Chartboost;
 import com.chartboost.sdk.ChartboostDelegate;
 
@@ -59,11 +60,22 @@ public class AndroidChartBoost implements ChartBoostListener {
 
     @Override
     public void showInterstisial(String locationName) {
+        System.out.println("before");
         Chartboost.showInterstitial(locationName);
+        System.out.println("after");
     }
 
     @Override
     public void cacheInterstisial(String locationName) {
         Chartboost.cacheInterstitial(locationName);
+    }
+
+    public void cacheHomeScreen() {
+        Chartboost.cacheInterstitial(CBLocation.LOCATION_HOME_SCREEN);
+    }
+
+    @Override
+    public void showHomeScreen() {
+        Chartboost.showInterstitial(CBLocation.LOCATION_HOME_SCREEN);
     }
 }

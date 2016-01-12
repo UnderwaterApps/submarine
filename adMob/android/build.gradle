@@ -3,8 +3,8 @@ apply plugin: "android-library"
 configurations { natives }
 
 dependencies {
-    compile project(":submarine-chartboost-core")
-    compile fileTree(dir: 'libs', include: '*.jar')
+    compile android_gms_library
+    compile project(":submarine-adMob-core")
     compile "com.badlogicgames.gdx:gdx-backend-android:$gdxVersion"
     natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-armeabi"
     natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-armeabi-v7a"
@@ -49,7 +49,7 @@ eclipse {
     }
 
     project {
-        name = "submarine-chartboost-android"
+        name = "submarine-adMob-android"
         natures 'com.android.ide.eclipse.adt.AndroidNature'
         buildCommands.clear();
         buildCommand "com.android.ide.eclipse.adt.ResourceManagerBuilder"

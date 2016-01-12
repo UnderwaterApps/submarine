@@ -12,12 +12,13 @@
     <uses-sdk
             android:minSdkVersion="9"/>
 
+    <application>
     <activity android:name="com.chartboost.sdk.CBImpressionActivity"
               android:excludeFromRecents="true"
               android:hardwareAccelerated="true"
               android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen"
               android:configChanges="keyboardHidden|orientation|screenSize" />
 
-    <application/>
+    </application>
 </manifest>
 

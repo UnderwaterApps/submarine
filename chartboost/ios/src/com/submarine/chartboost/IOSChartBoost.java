@@ -48,4 +48,14 @@ public class IOSChartBoost implements ChartBoostListener {
     public void cacheInterstisial(String locationName) {
 
     }
+
+    @Override
+    public void cacheHomeScreen() {
+
+    }
+
+    @Override
+    public void showHomeScreen() {
+
+    }
 }

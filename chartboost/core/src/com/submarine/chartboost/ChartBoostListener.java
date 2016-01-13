@@ -1,11 +1,13 @@
 package com.submarine.chartboost;
 
+import java.util.ArrayList;
+
 /**
  * Created by mariam on 1/8/16.
  */
 public interface ChartBoostListener {
 
-    public void onCreate(String appId, String appSignature);
+    public void onCreate(String appId, String appSignature, ArrayList<String> locations);
 
     public void onStart();
 
@@ -22,8 +24,4 @@ public interface ChartBoostListener {
     public void showInterstisial(String locationName);
 
     public void cacheInterstisial(String locationName);
-
-    public void cacheHomeScreen();
-
-    public void showHomeScreen();
 }

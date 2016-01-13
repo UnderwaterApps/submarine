@@ -1,11 +1,14 @@
 package com.submarine.chartboost;
 
+import java.util.ArrayList;
+
 /**
  * Created by mariam on 1/11/16.
  */
 public class DesktopChartBoost implements ChartBoostListener {
+
     @Override
-    public void onCreate(String appId, String appSignature) {
+    public void onCreate(String appId, String appSignature, ArrayList<String> locations) {
 
     }
 
@@ -46,16 +49,6 @@ public class DesktopChartBoost implements ChartBoostListener {
 
     @Override
     public void cacheInterstisial(String locationName) {
-
-    }
-
-    @Override
-    public void cacheHomeScreen() {
-
-    }
-
-    @Override
-    public void showHomeScreen() {
 
     }
 }

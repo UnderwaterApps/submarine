@@ -44,11 +44,21 @@ public class DesktopChartBoost implements ChartBoostListener {
 
     @Override
     public void showInterstisial(String locationName) {
-
+        System.out.println("Location name = "+locationName);
     }
 
     @Override
     public void cacheInterstisial(String locationName) {
+
+    }
+
+    @Override
+    public void showMoreApps() {
+        System.out.println("show more apps");
+    }
+
+    @Override
+    public void cacheMoreApps() {
 
     }
 }

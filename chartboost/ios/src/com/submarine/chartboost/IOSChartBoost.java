@@ -51,4 +51,14 @@ public class IOSChartBoost implements ChartBoostListener {
     public void cacheInterstisial(String locationName) {
 
     }
+
+    @Override
+    public void showMoreApps() {
+
+    }
+
+    @Override
+    public void cacheMoreApps() {
+
+    }
 }

@@ -24,4 +24,8 @@ public interface ChartBoostListener {
     public void showInterstisial(String locationName);
 
     public void cacheInterstisial(String locationName);
+
+    public void showMoreApps();
+
+    public void cacheMoreApps();
 }

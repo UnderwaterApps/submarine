@@ -1,6 +1,7 @@
 package com.submarine.chartboost;
 
 import android.app.Activity;
+import com.chartboost.sdk.CBLocation;
 import com.chartboost.sdk.Chartboost;
 import com.chartboost.sdk.ChartboostDelegate;
 import com.chartboost.sdk.Libraries.CBLogging;
@@ -62,6 +63,7 @@ public class AndroidChartBoost implements ChartBoostListener {
         for (String location : locations) {
             Chartboost.cacheInterstitial(location);
         }
+        cacheMoreApps();
     }
 
     @Override
@@ -103,5 +105,15 @@ public class AndroidChartBoost implements ChartBoostListener {
     public void cacheInterstisial(String locationName) {
 //        beforeTime = TimeUtils.millis();
         Chartboost.cacheInterstitial(locationName);
+    }
+
+    @Override
+    public void showMoreApps() {
+        Chartboost.showMoreApps(CBLocation.LOCATION_DEFAULT);
+    }
+
+    @Override
+    public void cacheMoreApps() {
+        Chartboost.cacheMoreApps(CBLocation.LOCATION_DEFAULT);
     }
 }

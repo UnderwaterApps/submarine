@@ -15,13 +15,14 @@ public class AndroidChartBoost implements ChartBoostListener {
 
     private Activity activity;
     private ChartboostDelegate delegate;
+//    private long beforeTime;
 
 
-    public AndroidChartBoost(Activity activity) {
+    public AndroidChartBoost(final Activity activity) {
         this.activity = activity;
 
         delegate = new ChartboostDelegate() {
-            //Override the Chartboost delegate callbacks you wish to track and control
+            //Override the Chartboost delegate callbacks you wi.sh to track and control
 
             @Override
             public void didFailToLoadInterstitial(String location, CBError.CBImpressionError error) {
@@ -29,6 +30,22 @@ public class AndroidChartBoost implements ChartBoostListener {
 
                 System.out.println("Failed to load interstitial: "+location+" "+error.toString());
             }
+
+//            @Override
+//            public void didDisplayInterstitial(String location) {
+//                super.didDisplayInterstitial(location);
+//
+//                long after = TimeUtils.millis();
+//                System.out.println("Display interstitial on location: "+location+" "+ "Time: "+(after - beforeTime));
+//            }
+//
+//            @Override
+//            public void didCacheInterstitial(String location) {
+//                super.didCacheInterstitial(location);
+//
+//                long after = TimeUtils.millis();
+//                System.out.println("Cache interstitial on location: "+location+" "+ "Time: "+(after - beforeTime));
+//            }
         };
     }
 
@@ -41,6 +58,7 @@ public class AndroidChartBoost implements ChartBoostListener {
 
         Chartboost.onCreate(activity);
 
+//        beforeTime = TimeUtils.millis();
         for (String location : locations) {
             Chartboost.cacheInterstitial(location);
         }
@@ -83,6 +101,7 @@ public class AndroidChartBoost implements ChartBoostListener {
 
     @Override
     public void cacheInterstisial(String locationName) {
+//        beforeTime = TimeUtils.millis();
         Chartboost.cacheInterstitial(locationName);
     }
 }

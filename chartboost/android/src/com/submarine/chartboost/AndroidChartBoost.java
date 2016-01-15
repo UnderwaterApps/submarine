@@ -97,6 +97,11 @@ public class AndroidChartBoost implements ChartBoostListener {
     }
 
     @Override
+    public boolean hasInterstitial(String locationName) {
+        return Chartboost.hasInterstitial(locationName);
+    }
+
+    @Override
     public void showInterstisial(String locationName) {
         Chartboost.showInterstitial(locationName);
     }

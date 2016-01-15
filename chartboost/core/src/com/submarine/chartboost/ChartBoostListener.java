@@ -21,6 +21,8 @@ public interface ChartBoostListener {
 
     public boolean onBackPressed();
 
+    public boolean hasInterstitial(String locationName);
+
     public void showInterstisial(String locationName);
 
     public void cacheInterstisial(String locationName);

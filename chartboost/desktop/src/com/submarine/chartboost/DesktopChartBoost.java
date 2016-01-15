@@ -43,6 +43,11 @@ public class DesktopChartBoost implements ChartBoostListener {
     }
 
     @Override
+    public boolean hasInterstitial(String locationName) {
+        return false;
+    }
+
+    @Override
     public void showInterstisial(String locationName) {
         System.out.println("Location name = "+locationName);
     }

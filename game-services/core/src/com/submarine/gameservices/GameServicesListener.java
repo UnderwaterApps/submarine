@@ -22,5 +22,5 @@ public interface GameServicesListener<T> {
 
     void savedGamesLoadContentsUnavailable(T result);
 
-    void playerStatsReceived(int numberOfPurchases);
+    void playerStatsReceived(int numberOfPurchases, float spendProbability);
 }

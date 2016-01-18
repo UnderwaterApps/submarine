@@ -89,8 +89,9 @@ public class AndroidGameServices implements GameHelper.GameHelperListener, GameS
                                                  if (status.isSuccess()) {
                                                      PlayerStats stats = result.getPlayerStats();
                                                      if (stats != null) {
-                                                         gameServicesListener.playerStatsReceived(stats.getNumberOfPurchases());
+                                                         gameServicesListener.playerStatsReceived(stats.getNumberOfPurchases(),stats.getSpendPercentile());
                                                      }
+
                                                  } else {
                                                      System.out.println(TAG +  " Failed to fetch Stats Data status: "
                                                              + status.getStatusMessage());

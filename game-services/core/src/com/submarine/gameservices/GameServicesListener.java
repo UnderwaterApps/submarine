@@ -21,4 +21,6 @@ public interface GameServicesListener<T> {
 //    void savedGamesLoadDone();
 
     void savedGamesLoadContentsUnavailable(T result);
+
+    void playerStatsReceived(int numberOfPurchases);
 }

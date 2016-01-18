@@ -8,10 +8,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import com.badlogic.gdx.Gdx;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.PendingResult;
-import com.google.android.gms.common.api.Result;
-import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.*;
 import com.google.android.gms.games.Games;
 import com.google.android.gms.games.GamesStatusCodes;
 import com.google.android.gms.games.event.Events;
@@ -22,6 +19,8 @@ import com.google.android.gms.games.quest.Quests;
 import com.google.android.gms.games.snapshot.Snapshot;
 import com.google.android.gms.games.snapshot.SnapshotMetadataChange;
 import com.google.android.gms.games.snapshot.Snapshots;
+import com.google.android.gms.games.stats.PlayerStats;
+import com.google.android.gms.games.stats.Stats;
 import com.google.android.gms.plus.Plus;
 import com.google.android.gms.plus.model.people.Person;
 import com.google.example.games.basegameutils.GameHelper;
@@ -78,6 +77,27 @@ public class AndroidGameServices implements GameHelper.GameHelperListener, GameS
 //      isSavedGamesLoadDone = false;
     }
 
+    @Override
+    public void checkPlayerStats() {
+        PendingResult<Stats.LoadPlayerStatsResult> result =
+                Games.Stats.loadPlayerStats(
+                        gameHelper.getApiClient(), false /* forceReload */);
+        result.setResultCallback(new
+                                         ResultCallback<Stats.LoadPlayerStatsResult>() {
+                                             public void onResult(Stats.LoadPlayerStatsResult result) {
+                                                 Status status = result.getStatus();
+                                                 if (status.isSuccess()) {
+                                                     PlayerStats stats = result.getPlayerStats();
+                                                     if (stats != null) {
+                                                         gameServicesListener.playerStatsReceived(stats.getNumberOfPurchases());
+                                                     }
+                                                 } else {
+                                                     System.out.println(TAG +  " Failed to fetch Stats Data status: "
+                                                             + status.getStatusMessage());
+                                                 }
+                                             }
+                                         });
+    }
     public GoogleApiClient getApiClient() {
         return gameHelper.getApiClient();
     }

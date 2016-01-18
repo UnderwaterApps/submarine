@@ -24,8 +24,10 @@ public class IOSChartBoost implements ChartBoostListener {
         Chartboost.setShouldRequestInterstitialsInFirstSession(false);
 
         for (String location : locations) {
+            System.out.println("name: "+location);
             Chartboost.cacheInterstitial(location);
         }
+        System.out.println("cache more apps!");
         Chartboost.cacheMoreApps(CBLocation.Default);
     }
 
@@ -36,6 +38,7 @@ public class IOSChartBoost implements ChartBoostListener {
 
     @Override
     public void showInterstisial(String locationName) {
+        System.out.println("show "+locationName+" interstitial");
         Chartboost.showInterstitial(locationName);
     }
 
@@ -46,6 +49,7 @@ public class IOSChartBoost implements ChartBoostListener {
 
     @Override
     public void showMoreApps() {
+        System.out.println("show more apps");
         Chartboost.showMoreApps(CBLocation.Default);
     }
 

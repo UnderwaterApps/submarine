@@ -21,7 +21,7 @@ public class IOSChartBoost implements ChartBoostListener {
     public void onCreate(String appId, String appSignature, ArrayList<String> locations) {
 
         Chartboost.start(appId, appSignature, delegate);
-        Chartboost.setShouldRequestInterstitialsInFirstSession(false);
+//        Chartboost.setShouldRequestInterstitialsInFirstSession(false);
 
         for (String location : locations) {
             System.out.println("name: "+location);

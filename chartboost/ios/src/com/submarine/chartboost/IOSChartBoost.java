@@ -31,6 +31,8 @@ public class IOSChartBoost implements ChartBoostListener {
         }
         System.out.println("cache more apps!");
         Chartboost.cacheMoreApps(CBLocation.Default);
+
+        Chartboost.setShouldPauseClickForConfirmation(true);
     }
 
     @Override
@@ -58,6 +60,11 @@ public class IOSChartBoost implements ChartBoostListener {
     @Override
     public void cacheMoreApps() {
         Chartboost.cacheMoreApps(CBLocation.Default);
+    }
+
+    @Override
+    public void didPassAgeGate(boolean pass) {
+        Chartboost.didPassAgeGate(pass);
     }
 
     @Override
@@ -114,7 +121,6 @@ public class IOSChartBoost implements ChartBoostListener {
                 return true;
             }
 
-
             @Override
             public boolean shouldDisplayMoreApps(String location) {
                 return true;
@@ -128,6 +134,20 @@ public class IOSChartBoost implements ChartBoostListener {
             @Override
             public boolean shouldRequestInterstitial(String location) {
                 return true;
+            }
+
+            @Override
+            public void didClickInterstitial(String location) {
+                super.didClickInterstitial(location);
+
+                System.out.println("Clicked interstitial on " + location);
+            }
+
+            @Override
+            public void didPauseClickForConfirmation() {
+                super.didPauseClickForConfirmation();
+
+                System.out.println("did pause click for confirm");
             }
 
             /**

@@ -66,4 +66,9 @@ public class DesktopChartBoost implements ChartBoostListener {
     public void cacheMoreApps() {
 
     }
+
+    @Override
+    public void didPassAgeGate(boolean pass) {
+
+    }
 }

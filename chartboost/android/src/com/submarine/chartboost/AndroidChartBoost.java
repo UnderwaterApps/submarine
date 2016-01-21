@@ -121,4 +121,9 @@ public class AndroidChartBoost implements ChartBoostListener {
     public void cacheMoreApps() {
         Chartboost.cacheMoreApps(CBLocation.LOCATION_DEFAULT);
     }
+
+    @Override
+    public void didPassAgeGate(boolean pass) {
+        Chartboost.didPassAgeGate(pass);
+    }
 }

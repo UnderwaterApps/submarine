@@ -30,4 +30,6 @@ public interface ChartBoostListener {
     public void showMoreApps();
 
     public void cacheMoreApps();
+
+    public void didPassAgeGate(boolean pass);
 }

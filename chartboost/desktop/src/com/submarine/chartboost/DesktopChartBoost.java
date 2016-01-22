@@ -13,36 +13,6 @@ public class DesktopChartBoost extends ChartBoostManager {
     }
 
     @Override
-    public void onStart() {
-
-    }
-
-    @Override
-    public void onResume() {
-
-    }
-
-    @Override
-    public void onPause() {
-
-    }
-
-    @Override
-    public void onStop() {
-
-    }
-
-    @Override
-    public void onDestroy() {
-
-    }
-
-    @Override
-    public boolean onBackPressed() {
-        return false;
-    }
-
-    @Override
     public boolean hasInterstitial(String locationName) {
         return false;
     }
@@ -55,6 +25,11 @@ public class DesktopChartBoost extends ChartBoostManager {
     @Override
     public void cacheInterstisial(String locationName) {
 
+    }
+
+    @Override
+    public boolean hasMoreApps() {
+        return false;
     }
 
     @Override

@@ -15,23 +15,13 @@ public abstract class ChartBoostManager {
 
     public abstract void onCreate(String appId, String appSignature, ArrayList<String> locations);
 
-    public abstract void onStart();
-
-    public abstract void onResume();
-
-    public abstract void onPause();
-
-    public abstract void onStop();
-
-    public abstract void onDestroy();
-
-    public abstract boolean onBackPressed();
-
     public abstract boolean hasInterstitial(String locationName);
 
     public abstract void showInterstisial(String locationName);
 
     public abstract void cacheInterstisial(String locationName);
+
+    public abstract boolean hasMoreApps();
 
     public abstract void showMoreApps();
 
@@ -41,7 +31,6 @@ public abstract class ChartBoostManager {
 
     public void addCustomListener(AgeGateListener listener) {
         customListeners.add(listener);
-        System.out.println("Size: "+ customListeners.size());
     }
 
     public void removeCustomListener(AgeGateListener listener) {

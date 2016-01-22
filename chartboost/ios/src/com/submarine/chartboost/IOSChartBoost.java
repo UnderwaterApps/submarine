@@ -51,6 +51,11 @@ public class IOSChartBoost extends ChartBoostManager {
     }
 
     @Override
+    public boolean hasMoreApps() {
+        return Chartboost.hasMoreApps(CBLocation.Default);
+    }
+
+    @Override
     public void showMoreApps() {
         System.out.println("show more apps");
         Chartboost.showMoreApps(CBLocation.Default);
@@ -64,36 +69,6 @@ public class IOSChartBoost extends ChartBoostManager {
     @Override
     public void didPassAgeGate(boolean pass) {
         Chartboost.didPassAgeGate(pass);
-    }
-
-    @Override
-    public void onStart() {
-
-    }
-
-    @Override
-    public void onResume() {
-
-    }
-
-    @Override
-    public void onPause() {
-
-    }
-
-    @Override
-    public void onStop() {
-
-    }
-
-    @Override
-    public void onDestroy() {
-
-    }
-
-    @Override
-    public boolean onBackPressed() {
-        return false;
     }
 
     private void initDelegate(final IOSApplication.Delegate applicationDelegate) {

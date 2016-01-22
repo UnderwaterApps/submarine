@@ -66,32 +66,26 @@ public class AndroidChartBoost extends ChartBoostManager {
         cacheMoreApps();
     }
 
-    @Override
     public void onStart() {
         Chartboost.onStart(activity);
     }
 
-    @Override
     public void onResume() {
         Chartboost.onResume(activity);
     }
 
-    @Override
     public void onPause() {
         Chartboost.onPause(activity);
     }
 
-    @Override
     public void onStop() {
         Chartboost.onStop(activity);
     }
 
-    @Override
     public void onDestroy() {
         Chartboost.onDestroy(activity);
     }
 
-    @Override
     public boolean onBackPressed() {
         return Chartboost.onBackPressed();
     }
@@ -110,6 +104,11 @@ public class AndroidChartBoost extends ChartBoostManager {
     public void cacheInterstisial(String locationName) {
 //        beforeTime = TimeUtils.millis();
         Chartboost.cacheInterstitial(locationName);
+    }
+
+    @Override
+    public boolean hasMoreApps() {
+        return Chartboost.hasMoreApps(CBLocation.LOCATION_DEFAULT);
     }
 
     @Override

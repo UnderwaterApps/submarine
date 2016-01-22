@@ -147,7 +147,7 @@ public class IOSChartBoost extends ChartBoostManager {
                 super.didPauseClickForConfirmation();
 
                 System.out.println("did pause click for confirm");
-                for (AgeGateListener listener : listeners) {
+                for (AgeGateListener listener : customListeners) {
                     listener.startCheck();
                 }
             }

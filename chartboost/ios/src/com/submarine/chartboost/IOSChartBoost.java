@@ -9,13 +9,12 @@ import java.util.ArrayList;
 /**
  * Created by mariam on 1/11/16.
  */
-public class IOSChartBoost implements ChartBoostListener {
+public class IOSChartBoost extends ChartBoostManager {
 
     private ChartboostDelegate chartboostDelegate;
 
     public IOSChartBoost(final IOSApplication.Delegate appDelegate) {
         initDelegate(appDelegate);
-
     }
 
     @Override
@@ -148,6 +147,9 @@ public class IOSChartBoost implements ChartBoostListener {
                 super.didPauseClickForConfirmation();
 
                 System.out.println("did pause click for confirm");
+                for (AgeGateListener listener : listeners) {
+                    listener.startCheck();
+                }
             }
 
             /**

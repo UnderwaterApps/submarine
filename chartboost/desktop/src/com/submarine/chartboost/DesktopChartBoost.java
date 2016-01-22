@@ -5,7 +5,7 @@ import java.util.ArrayList;
 /**
  * Created by mariam on 1/11/16.
  */
-public class DesktopChartBoost implements ChartBoostListener {
+public class DesktopChartBoost extends ChartBoostManager {
 
     @Override
     public void onCreate(String appId, String appSignature, ArrayList<String> locations) {

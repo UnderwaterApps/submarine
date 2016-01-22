@@ -12,7 +12,7 @@ import java.util.ArrayList;
 /**
  * Created by mariam on 1/11/16.
  */
-public class AndroidChartBoost implements ChartBoostListener {
+public class AndroidChartBoost extends ChartBoostManager {
 
     private Activity activity;
     private ChartboostDelegate delegate;

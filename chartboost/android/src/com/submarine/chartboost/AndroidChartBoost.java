@@ -32,7 +32,18 @@ public class AndroidChartBoost extends ChartBoostManager {
                 System.out.println("Failed to load interstitial: "+location+" "+error.toString());
             }
 
-//            @Override
+            @Override
+            public void didPauseClickForConfirmation(Activity activity) {
+                super.didPauseClickForConfirmation(activity);
+
+//                System.out.println("did pause click for confirm");
+                for (AgeGateListener listener : customListeners) {
+                    listener.startCheck();
+                }
+                Chartboost.closeImpression();
+            }
+
+            //            @Override
 //            public void didDisplayInterstitial(String location) {
 //                super.didDisplayInterstitial(location);
 //
@@ -56,6 +67,7 @@ public class AndroidChartBoost extends ChartBoostManager {
 
         Chartboost.setLoggingLevel(CBLogging.Level.ALL);
         Chartboost.setDelegate(delegate);
+        Chartboost.setShouldPauseClickForConfirmation(true);
 
         Chartboost.onCreate(activity);
 

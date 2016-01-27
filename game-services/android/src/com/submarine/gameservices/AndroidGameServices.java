@@ -3,14 +3,12 @@ package com.submarine.gameservices;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import com.badlogic.gdx.Gdx;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.PendingResult;
-import com.google.android.gms.common.api.Result;
-import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.*;
 import com.google.android.gms.games.Games;
 import com.google.android.gms.games.GamesStatusCodes;
 import com.google.android.gms.games.event.Events;
@@ -21,6 +19,8 @@ import com.google.android.gms.games.quest.Quests;
 import com.google.android.gms.games.snapshot.Snapshot;
 import com.google.android.gms.games.snapshot.SnapshotMetadataChange;
 import com.google.android.gms.games.snapshot.Snapshots;
+import com.google.android.gms.games.stats.PlayerStats;
+import com.google.android.gms.games.stats.Stats;
 import com.google.android.gms.plus.Plus;
 import com.google.android.gms.plus.model.people.Person;
 import com.google.example.games.basegameutils.GameHelper;
@@ -65,15 +65,40 @@ public class AndroidGameServices implements GameHelper.GameHelperListener, GameS
     private CloudUpdateBundle waitingCloudUpdateBundle;
     private CloudLoadBundle waitingCloudLoadBundle;
 
+    public final int MAX_AUTO_SIGN_IN_ATTEMPTS = 1;
+
 
     public AndroidGameServices(Activity activity, int clientsToUse) {
         this.activity = activity;
         gameHelper = new GameHelper(this.activity, clientsToUse);
+        gameHelper.setMaxAutoSignInAttempts(MAX_AUTO_SIGN_IN_ATTEMPTS);
         gameHelper.setup(this);
         gameHelper.enableDebugLog(true);
-//        isSavedGamesLoadDone = false;
+//      isSavedGamesLoadDone = false;
     }
 
+    @Override
+    public void checkPlayerStats() {
+        PendingResult<Stats.LoadPlayerStatsResult> result =
+                Games.Stats.loadPlayerStats(
+                        gameHelper.getApiClient(), false /* forceReload */);
+        result.setResultCallback(new
+                                         ResultCallback<Stats.LoadPlayerStatsResult>() {
+                                             public void onResult(Stats.LoadPlayerStatsResult result) {
+                                                 Status status = result.getStatus();
+                                                 if (status.isSuccess()) {
+                                                     PlayerStats stats = result.getPlayerStats();
+                                                     if (stats != null) {
+                                                         gameServicesListener.playerStatsReceived(stats.getNumberOfPurchases(),stats.getSpendProbability());
+                                                     }
+
+                                                 } else {
+                                                     System.out.println(TAG +  " Failed to fetch Stats Data status: "
+                                                             + status.getStatusMessage());
+                                                 }
+                                             }
+                                         });
+    }
     public GoogleApiClient getApiClient() {
         return gameHelper.getApiClient();
     }
@@ -82,8 +107,19 @@ public class AndroidGameServices implements GameHelper.GameHelperListener, GameS
         gameHelper.onActivityResult(request, response, data);
         if (response == 10001) {
             gameHelper.disconnect();
+            setSignInCancelationssToMax();
         }
 
+    }
+
+    private final String GAMEHELPER_SHARED_PREFS = "GAMEHELPER_SHARED_PREFS";
+    private final String KEY_SIGN_IN_CANCELLATIONS = "KEY_SIGN_IN_CANCELLATIONS";
+
+    public void setSignInCancelationssToMax(){
+        SharedPreferences.Editor editor = activity.getApplicationContext().getSharedPreferences(
+                GAMEHELPER_SHARED_PREFS, Context.MODE_PRIVATE).edit();
+        editor.putInt(KEY_SIGN_IN_CANCELLATIONS, MAX_AUTO_SIGN_IN_ATTEMPTS);
+        editor.commit();
     }
 
 
@@ -241,8 +277,8 @@ public class AndroidGameServices implements GameHelper.GameHelperListener, GameS
                 }
             });
         } else {
-            gameHelper.beginUserInitiatedSignIn();
-            waitingToShowLeaderboards = true;
+//            gameHelper.beginUserInitiatedSignIn();
+//            waitingToShowLeaderboards = true;
         }
     }
 
@@ -430,7 +466,7 @@ public class AndroidGameServices implements GameHelper.GameHelperListener, GameS
 
         } else {
             waitingToGetPlayerInfo = true;
-            gameHelper.beginUserInitiatedSignIn();
+            //gameHelper.beginUserInitiatedSignIn();
         }
     }
 
@@ -635,13 +671,13 @@ public class AndroidGameServices implements GameHelper.GameHelperListener, GameS
                 }
             });
         } else {
-            waitingToUpdateQuests = true;
-            activity.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    gameHelper.beginUserInitiatedSignIn();
-                }
-            });
+//            waitingToUpdateQuests = true;
+//            activity.runOnUiThread(new Runnable() {
+//                @Override
+//                public void run() {
+//                    gameHelper.beginUserInitiatedSignIn();
+//                }
+//            });
         }
     }
 

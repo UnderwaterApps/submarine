@@ -54,4 +54,6 @@ public interface GameServices {
     void onSignInFailed();
 
     void showSavedGamesUI();
+
+    void checkPlayerStats();
 }

@@ -163,4 +163,9 @@ public class DesktopGameServices implements GameServices {
     public void showSavedGamesUI() {
 
     }
+
+    @Override
+    public void checkPlayerStats() {
+
+    }
 }

@@ -3,7 +3,7 @@ apply plugin: "android-library"
 configurations { natives }
 
 dependencies {
-    compile project(":submarine-game-services-core")
+    compile project(":submarine-core")
     compile project(":BaseGameUtils")
     compile "com.badlogicgames.gdx:gdx-backend-android:$gdxVersion"
     natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-armeabi"
@@ -12,8 +12,8 @@ dependencies {
 }
 
 android {
-    buildToolsVersion "21.1.0"
-    compileSdkVersion 21
+    buildToolsVersion android_version
+    compileSdkVersion android_compile_version
     sourceSets {
         main {
             manifest.srcFile 'AndroidManifest.xml'

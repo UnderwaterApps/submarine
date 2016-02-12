@@ -1,10 +1,10 @@
-apply plugin: "android-library"
+apply plugin: 'com.android.library'
 
 configurations { natives }
 
 dependencies {
-    compile project(":submarine-billing-core")
-    compile 'com.anjlab.android.iab.v3:library:1.0.28@aar'
+    compile project(":submarine-core")
+    compile 'com.anjlab.android.iab.v3:library:1.0.31@aar'
     compile "com.badlogicgames.gdx:gdx-backend-android:$gdxVersion"
     natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-armeabi"
     natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-armeabi-v7a"
@@ -12,8 +12,8 @@ dependencies {
 }
 
 android {
-    buildToolsVersion "23.0.0"
-    compileSdkVersion 23
+    buildToolsVersion android_version
+    compileSdkVersion android_compile_version
     sourceSets {
         main {
             manifest.srcFile 'AndroidManifest.xml'
@@ -80,4 +80,12 @@ idea {
             }
         }
     }
+}
+ext {
+    VERSION_NAME = BILLING_VERSION
+    POM_ARTIFACT_ID = 'billing-android'
+
+    POM_NAME = 'billing-android'
+    POM_PACKAGING = 'aar'
+    POM_DESCRIPTION = 'Core functionality for android billing'
 }

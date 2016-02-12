@@ -7,11 +7,19 @@ sourceSets.main.java.srcDirs = [ "src/" ]
 
 
 dependencies {
-    compile project(":submarine-billing-core")
+    compile project(":submarine-core")
     compile "com.badlogicgames.gdx:gdx-backend-lwjgl:$gdxVersion"
     compile "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
 }
 
 eclipse.project {
     name = "submarine-billing-desktop"
+}
+ext {
+    VERSION_NAME = BILLING_VERSION
+    POM_ARTIFACT_ID = 'billing-desktop'
+
+    POM_NAME = 'billing-desktop'
+    POM_PACKAGING = 'jar'
+    POM_DESCRIPTION = 'Core functionality for desktop billing'
 }

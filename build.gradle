@@ -16,10 +16,18 @@ allprojects {
     apply plugin: "idea"
     //apply from : 'publish.gradle'
 
-    version = '1.0'
     ext {
-        gdxVersion = '1.7.0'
-        roboVMVersion = '1.8.0'
+
+        //------Libgdx configs-------//
+        gdxVersion = '1.8.0'
+        roboVMVersion = '1.12.0'
+        box2DLightsVersion = '1.4'
+        ashleyVersion = '1.7.0'
+        aiVersion = '1.7.0'
+        //------Libgdx configs end-------//
+
+        overlapRuntimeVersion = '0.1.2-SNAPSHOT'
+
         //-------BasicSamples----------//
         android_compile_version = 23
         android_version = '23.0.1'
@@ -35,6 +43,30 @@ allprojects {
             gms_library_version = '8.1.0'
         }
         //-------End BasicSamples----------//
+
+        //-----All sub project versions----//
+        ADCOLONY_VERSION = '1.0.0'
+        ADMOB_VERSION = '1.0.0'
+        BILLING_VERSION = '1.0.0'
+        CORE_VERSION = '1.0.0'
+        GAME_SERVICES_VERSION = '1.0.0'
+        STATS_REPORTER_VERSION = '1.0.0'
+        //-----All sub project versions end----//
+
+        //------Maven Configs------//
+        GROUP_ID = 'com.underwaterapps.submarine'
+
+        NEXUS_USERNAME = 'gevorg.kopalyan'
+        NEXUS_PASSWORD = '34KGSAplgok'
+
+        IS_RELEASE = false
+
+        POM_URL = 'https://github.com/UnderwaterApps/submarine'
+
+        POM_SCM_URL = 'scm:git@github.com:UnderwaterApps/submarine.git'
+        POM_SCM_CONNECTION = 'scm:git@github.com:UnderwaterApps/submarine.git'
+        POM_SCM_DEV_CONNECTION = 'scm:git@github.com:UnderwaterApps/submarine.git'
+        //------Maven Configs END------//
     }
 
     repositories {
@@ -42,6 +74,13 @@ allprojects {
         maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
         maven { url "https://oss.sonatype.org/content/repositories/releases/" }
     }
+}
+configure(subprojects.findAll {(it.name != 'BaseGameUtils' && (it.name == 'submarine-billing-android' || it.name == 'submarine-billing-desktop' || it.name == 'submarine-billing-ios'))}) {
+    apply from : (rootProject.getRootDir().path+'/publish.gradle')
+}
+
+task uploadArchivesBilling(dependsOn: [':submarine-billing-android:uploadArchives', ':submarine-billing-desktop:uploadArchives', ':submarine-billing-ios:uploadArchives']){
+    println "Uploading Billing Archives."
 }
 
 tasks.eclipse.doLast {

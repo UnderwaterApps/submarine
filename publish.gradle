@@ -1,10 +1,8 @@
 apply plugin: 'maven'
 apply plugin: 'signing'
 
-
-
 def isReleaseBuild() {
-    return hasProperty('IS_RELEASE')
+    return hasProperty('IS_RELEASE')? IS_RELEASE : false
 }
 
 def getRepositoryUrl(){
@@ -39,7 +37,7 @@ afterEvaluate { project ->
                     VERSION_NAME+="-SNAPSHOT"
                 }
 
-                pom.groupId = GROUP
+                pom.groupId = GROUP_ID
                 pom.artifactId = POM_ARTIFACT_ID
                 pom.version = VERSION_NAME
 
@@ -89,7 +87,11 @@ afterEvaluate { project ->
         sign configurations.archives
     }
 
-    task artifactDocs(type: Jar, dependsOn: Javadoc) {
+    task myjavaDocs(type: Javadoc){
+        source = source = 'src/main/java'
+    }
+
+    task artifactDocs(type: Jar, dependsOn: myjavaDocs) {
         classifier = 'javadoc'
         from 'build/docs/javadoc'
     }
@@ -100,8 +102,13 @@ afterEvaluate { project ->
     }
 
     artifacts {
-        archives jar
+        if(POM_PACKAGING == 'jar'){
+            archives jar
+        }
         archives artifactDocs
         archives artifactSources
     }
 }
+
+
+

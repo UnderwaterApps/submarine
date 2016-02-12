@@ -1,5 +1,7 @@
 apply plugin: "java"
 
+//apply from : '../publish.gradle'
+
 sourceCompatibility = 1.7
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
 
@@ -12,3 +14,13 @@ sourceSets.main.java.srcDirs = [ "src/" ]
 eclipse.project {
     name = "submarine-core"
 }
+
+ext {
+    VERSION_NAME = CORE_VERSION
+    POM_ARTIFACT_ID = 'core'
+
+    POM_NAME = 'core'
+    POM_PACKAGING = 'jar'
+    POM_DESCRIPTION = 'Core functionality for desktop billing'
+}
+

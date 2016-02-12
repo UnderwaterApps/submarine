@@ -38,3 +38,12 @@ project(':submarine-game-services-desktop').projectDir = new File(settingsDir, '
 include 'submarine-core'
 
 project(':submarine-core').projectDir = new File(settingsDir, 'core')
+
+
+// Test Application for Submarine
+include 'submarine-testapp-desktop', 'submarine-testapp-android', 'submarine-testapp-ios', 'submarine-testapp-core'
+
+project(':submarine-testapp-android').projectDir = new File(settingsDir, 'test-app/android')
+project(':submarine-testapp-ios').projectDir = new File(settingsDir, 'test-app/ios')
+project(':submarine-testapp-desktop').projectDir = new File(settingsDir, 'test-app/desktop')
+project(':submarine-testapp-core').projectDir = new File(settingsDir, 'test-app/core')

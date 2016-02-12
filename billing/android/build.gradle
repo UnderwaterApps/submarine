@@ -81,3 +81,11 @@ idea {
         }
     }
 }
+ext {
+    VERSION_NAME = BILLING_VERSION
+    POM_ARTIFACT_ID = 'billing-android'
+
+    POM_NAME = 'billing-android'
+    POM_PACKAGING = 'aar'
+    POM_DESCRIPTION = 'Core functionality for android billing'
+}

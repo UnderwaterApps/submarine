@@ -8,6 +8,8 @@ import java.util.HashMap;
  */
 public class DesktopFlurry implements FlurryManager {
 
+    private String LOG = "Flurry: ";
+
     public DesktopFlurry() {
     }
 
@@ -18,17 +20,17 @@ public class DesktopFlurry implements FlurryManager {
 
     @Override
     public void logEvent(String eventName) {
-
+        System.out.println(LOG+eventName);
     }
 
     @Override
     public void logEvent(String eventName, HashMap<String, String> parameters) {
-
+        System.out.println(LOG+eventName+" "+parameters.toString());
     }
 
     @Override
     public void logEvent(String eventName, HashMap<String, String> parameters, boolean isTimedEvent) {
-
+        System.out.println(LOG+eventName+" "+parameters.toString());
     }
 
     @Override

@@ -92,6 +92,15 @@ public class IOSChartBoost extends ChartBoostManager {
             }
 
             @Override
+            public void didClickMoreApps(String location) {
+                super.didClickMoreApps(location);
+
+                Chartboost.closeImpression();
+
+                System.out.println("clicked 'more apps' ");
+            }
+
+            @Override
             public boolean shouldDisplayMoreApps(String location) {
                 return true;
             }

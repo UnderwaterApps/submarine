@@ -3,8 +3,9 @@ apply plugin: "android-library"
 configurations { natives }
 
 dependencies {
-    compile project(":submarine-billing-core")
-    compile 'com.anjlab.android.iab.v3:library:1.0.28@aar'
+    compile project(":submarine-flurry-core")
+    compile fileTree(dir: 'libs', include: '*.jar')
+    compile "com.google.android.gms:play-services:8.4.0"
     compile "com.badlogicgames.gdx:gdx-backend-android:$gdxVersion"
     natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-armeabi"
     natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-armeabi-v7a"
@@ -49,7 +50,7 @@ eclipse {
     }
 
     project {
-        name = "submarine-billing-android"
+        name = "submarine-flurry-android"
         natures 'com.android.ide.eclipse.adt.AndroidNature'
         buildCommands.clear();
         buildCommand "com.android.ide.eclipse.adt.ResourceManagerBuilder"

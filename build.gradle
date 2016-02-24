@@ -40,18 +40,9 @@ allprojects {
             support_library_version = '20.0.+'
         }
         if (!project.hasProperty('gms_library_version')) {
-            gms_library_version = '8.1.0'
+            gms_library_version = '8.4.0'
         }
         //-------End BasicSamples----------//
-
-        //-----All sub project versions----//
-        ADCOLONY_VERSION = '1.0.0'
-        ADMOB_VERSION = '1.0.0'
-        BILLING_VERSION = '1.0.0'
-        CORE_VERSION = '1.0.0'
-        GAME_SERVICES_VERSION = '1.0.0'
-        STATS_REPORTER_VERSION = '1.0.0'
-        //-----All sub project versions end----//
 
         //------Maven Configs------//
         GROUP_ID = 'com.underwaterapps.submarine'
@@ -67,6 +58,24 @@ allprojects {
         POM_SCM_CONNECTION = 'scm:git@github.com:UnderwaterApps/submarine.git'
         POM_SCM_DEV_CONNECTION = 'scm:git@github.com:UnderwaterApps/submarine.git'
         //------Maven Configs END------//
+
+        //-----All sub project versions----//
+        ADCOLONY_VERSION = '1.0.0'
+        ADMOB_VERSION = '1.0.0'
+        BILLING_VERSION = '1.0.0'
+        CORE_VERSION = '1.0.0'
+        GAME_SERVICES_VERSION = '1.0.0'
+        STATS_REPORTER_VERSION = '1.0.0'
+
+        if(!IS_RELEASE){
+            ADCOLONY_VERSION += "-SNAPSHOT"
+            ADMOB_VERSION += "-SNAPSHOT"
+            BILLING_VERSION += "-SNAPSHOT"
+            CORE_VERSION += "-SNAPSHOT"
+            GAME_SERVICES_VERSION += "-SNAPSHOT"
+            STATS_REPORTER_VERSION += "-SNAPSHOT"
+        }
+        //-----All sub project versions end----//
     }
 
     repositories {
@@ -75,12 +84,29 @@ allprojects {
         maven { url "https://oss.sonatype.org/content/repositories/releases/" }
     }
 }
-configure(subprojects.findAll {(it.name != 'BaseGameUtils' && (it.name == 'submarine-billing-android' || it.name == 'submarine-billing-desktop' || it.name == 'submarine-billing-ios'))}) {
+configure(subprojects.findAll {(it.name != 'BaseGameUtils' &&
+                                (it.name == 'submarine-billing-android' || it.name == 'submarine-billing-desktop' || it.name == 'submarine-billing-ios'
+                                || it.name == 'submarine-game-services-android' || it.name == 'submarine-game-services-desktop' || it.name == 'submarine-game-services-ios'
+                                || it.name == 'submarine-admob-android' || it.name == 'submarine-admob-desktop' || it.name == 'submarine-admob-ios'
+                                || it.name == 'submarine-core'))}) {
+
     apply from : (rootProject.getRootDir().path+'/publish.gradle')
 }
 
-task uploadArchivesBilling(dependsOn: [':submarine-billing-android:uploadArchives', ':submarine-billing-desktop:uploadArchives', ':submarine-billing-ios:uploadArchives']){
-    println "Uploading Billing Archives."
+task uploadCoreArchives(dependsOn: ':submarine-core:uploadArchives'){
+    println "Uploading Submarine Core Archives."
+}
+
+task uploadGameServicesArchives(dependsOn: [':submarine-game-services-android:uploadArchives', ':submarine-game-services-desktop:uploadArchives', ':submarine-game-services-ios:uploadArchives']){
+    println "Uploading Submarine Game Services Archives."
+}
+
+task uploadBillingArchives(dependsOn: [':submarine-billing-android:uploadArchives', ':submarine-billing-desktop:uploadArchives', ':submarine-billing-ios:uploadArchives']){
+    println "Uploading Submarine Billing Archives."
+}
+
+task uploadAdmobArchives(dependsOn: [':submarine-admob-android:uploadArchives', ':submarine-admob-desktop:uploadArchives', ':submarine-admob-ios:uploadArchives']){
+    println "Uploading Submarine Admob Archives."
 }
 
 tasks.eclipse.doLast {

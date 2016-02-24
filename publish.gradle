@@ -33,8 +33,6 @@ afterEvaluate { project ->
             mavenDeployer {
                 if(isReleaseBuild()) {
                     beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
-                }else{
-                    VERSION_NAME+="-SNAPSHOT"
                 }
 
                 pom.groupId = GROUP_ID

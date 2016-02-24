@@ -1,10 +1,11 @@
-apply plugin: 'com.android.library'
+apply plugin: "android-library"
 
 configurations { natives }
 
 dependencies {
-    compile "com.underwaterapps.submarine:core:$CORE_VERSION"
-    compile 'com.anjlab.android.iab.v3:library:1.0.31@aar'
+    compile project(":submarine-flurry-core")
+    compile fileTree(dir: 'libs', include: '*.jar')
+    compile "com.google.android.gms:play-services:8.4.0"
     compile "com.badlogicgames.gdx:gdx-backend-android:$gdxVersion"
     natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-armeabi"
     natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-armeabi-v7a"
@@ -12,8 +13,15 @@ dependencies {
 }
 
 android {
-    buildToolsVersion android_version
+    if (!project.hasProperty('android_compile_version')) {
+        ext.android_compile_version = 23
+    }
+    if (!project.hasProperty('android_version')) {
+        ext.android_version = '23.0.1'
+    }
+
     compileSdkVersion android_compile_version
+    buildToolsVersion android_version
     sourceSets {
         main {
             manifest.srcFile 'AndroidManifest.xml'
@@ -49,7 +57,7 @@ eclipse {
     }
 
     project {
-        name = "submarine-billing-android"
+        name = "submarine-flurry-android"
         natures 'com.android.ide.eclipse.adt.AndroidNature'
         buildCommands.clear();
         buildCommand "com.android.ide.eclipse.adt.ResourceManagerBuilder"
@@ -80,13 +88,4 @@ idea {
             }
         }
     }
-}
-
-ext {
-    VERSION_NAME = BILLING_VERSION
-    POM_ARTIFACT_ID = 'billing-android'
-
-    POM_NAME = 'billing-android'
-    POM_PACKAGING = 'aar'
-    POM_DESCRIPTION = 'Core functionality for android billing'
 }

@@ -18,7 +18,7 @@ public class AndroidAdMobNetwork implements AdNetwork {
     private String testDevice;
     private AdView adView;
     private InterstitialAd interstitial;
-    private AdListener interstitialAdListener;
+    private InterstitialAdListener interstitialAdListener;
 
     public AndroidAdMobNetwork(AndroidApplication androidApplication) {
         this(androidApplication, null, null, true);
@@ -175,8 +175,8 @@ public class AndroidAdMobNetwork implements AdNetwork {
         testDevice = getDeviceID();
     }
 
-    public void setInterstitialAdListener(){
-
+    public void setInterstitialAdListener(InterstitialAdListener interstitialAdListener){
+        this.interstitialAdListener = interstitialAdListener;
     }
 
     private String getDeviceID() {

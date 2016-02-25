@@ -55,4 +55,10 @@ public class AdNetworkManager implements AdNetwork {
         if(adNetwork == null) {Gdx.app.log(TAG,"No AdNetwork is set");return;}
         adNetwork.setAdViewUnitId(adViewUnitId);
     }
+
+    @Override
+    public void setInterstitialAdListener(InterstitialAdListener adListener) {
+        if(adNetwork == null) {Gdx.app.log(TAG,"No AdNetwork is set");return;}
+        adNetwork.setInterstitialAdListener(adListener);
+    }
 }

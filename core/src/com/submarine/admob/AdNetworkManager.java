@@ -6,7 +6,7 @@ import com.badlogic.gdx.Gdx;
  * Created by Gev on 2/24/2016.
  */
 public class AdNetworkManager implements AdNetwork {
-    public static final String TAG = AdNetwork.class.getSimpleName();
+    public static final String TAG = AdNetworkManager.class.getSimpleName();
     private static AdNetworkManager instance = null;
 
     protected AdNetworkManager() {

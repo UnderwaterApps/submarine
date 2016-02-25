@@ -7,11 +7,20 @@ sourceSets.main.java.srcDirs = [ "src/" ]
 
 
 dependencies {
-    compile project(":submarine-game-services-core")
+    compile "com.underwaterapps.submarine:core:$CORE_VERSION"
     compile "com.badlogicgames.gdx:gdx-backend-lwjgl:$gdxVersion"
     compile "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
 }
 
 eclipse.project {
     name = "submarine-game-services-desktop"
+}
+
+ext {
+    VERSION_NAME = GAME_SERVICES_VERSION
+    POM_ARTIFACT_ID = 'game-services-desktop'
+
+    POM_NAME = 'game-services-desktop'
+    POM_PACKAGING = 'jar'
+    POM_DESCRIPTION = 'Core functionality for desktop game-services'
 }

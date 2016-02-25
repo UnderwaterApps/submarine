@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">SubmarineTestApp</string>
+    <string name="app_id">677489925325</string> <!--677489925325 - DEBUG, 1084015721931 - LIVE-->
+
+</resources>

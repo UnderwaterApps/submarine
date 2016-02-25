@@ -4,7 +4,7 @@ apply plugin: "robovm"
 configurations { natives }
 
 dependencies {
-    compile project(":submarine-adMob-core")
+    compile "com.underwaterapps.submarine:core:$CORE_VERSION", { changing = true }
     compile fileTree(dir: 'libs', include: '*.jar')
     compile "org.robovm:robovm-rt:${roboVMVersion}"
     compile "org.robovm:robovm-cocoatouch:${roboVMVersion}"
@@ -71,6 +71,15 @@ createIPA.dependsOn build
 
 
 eclipse.project {
-    name = "submarine-adMob-ios"
+    name = "submarine-admob-ios"
     natures 'org.robovm.eclipse.RoboVMNature'
+}
+
+ext {
+    VERSION_NAME = ADMOB_VERSION
+    POM_ARTIFACT_ID = 'admob-ios'
+
+    POM_NAME = 'admob-ios'
+    POM_PACKAGING = 'jar'
+    POM_DESCRIPTION = 'Core functionality for ios admob'
 }

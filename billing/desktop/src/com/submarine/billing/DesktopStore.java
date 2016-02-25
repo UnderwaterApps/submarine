@@ -17,7 +17,7 @@ public class DesktopStore implements Store {
 
     public DesktopStore() {
         products = new HashMap<String, Product>();
-        storeListeners = new CopyOnWriteArrayList<>();
+        storeListeners = new CopyOnWriteArrayList<StoreListener>();
     }
 
     @Override

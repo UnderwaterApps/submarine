@@ -4,7 +4,7 @@ apply plugin: "robovm"
 configurations { natives }
 
 dependencies {
-    compile project(":submarine-billing-core")
+    compile "com.underwaterapps.submarine:core:$CORE_VERSION"
     compile fileTree(dir: 'libs', include: '*.jar')
     compile "org.robovm:robovm-rt:${roboVMVersion}"
     compile "org.robovm:robovm-cocoatouch:${roboVMVersion}"
@@ -73,4 +73,13 @@ createIPA.dependsOn build
 eclipse.project {
     name = "submarine-billing-ios"
     natures 'org.robovm.eclipse.RoboVMNature'
+}
+
+ext {
+    VERSION_NAME = BILLING_VERSION
+    POM_ARTIFACT_ID = 'billing-ios'
+
+    POM_NAME = 'billing-ios'
+    POM_PACKAGING = 'jar'
+    POM_DESCRIPTION = 'Core functionality for ios billing'
 }

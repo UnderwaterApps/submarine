@@ -3,7 +3,7 @@ apply plugin: 'com.android.library'
 configurations { natives }
 
 dependencies {
-    compile "com.underwaterapps.submarine:core:$CORE_VERSION"
+    compile "com.underwaterapps.submarine:core:$CORE_VERSION", { changing = true }
     compile 'com.anjlab.android.iab.v3:library:1.0.31@aar'
     compile "com.badlogicgames.gdx:gdx-backend-android:$gdxVersion"
     natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-armeabi"

@@ -3,8 +3,8 @@ apply plugin: "android-library"
 configurations { natives }
 
 dependencies {
-    compile "com.underwaterapps.submarine:core:$CORE_VERSION"
-	compile "com.google.android.gms:play-services-ads:${gms_library_version}"
+    compile "com.underwaterapps.submarine:core:$CORE_VERSION", { changing = true }
+	compile "com.google.android.gms:play-services-ads:$gms_library_version"
     compile "com.badlogicgames.gdx:gdx-backend-android:$gdxVersion"
     natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-armeabi"
     natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-armeabi-v7a"

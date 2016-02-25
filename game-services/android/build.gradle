@@ -7,7 +7,7 @@ configurations {
 }
 
 dependencies {
-    compile "com.underwaterapps.submarine:core:$CORE_VERSION"
+    compile "com.underwaterapps.submarine:core:$CORE_VERSION", { changing = true }
     provided (project(":BaseGameUtils")) {
         transitive = false
     }

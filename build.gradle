@@ -83,7 +83,13 @@ allprojects {
         maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
         maven { url "https://oss.sonatype.org/content/repositories/releases/" }
     }
+
+    configurations.all {
+        resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
+        resolutionStrategy.cacheDynamicVersionsFor 0, 'seconds'
+    }
 }
+
 configure(subprojects.findAll {(it.name != 'BaseGameUtils' &&
                                 (it.name == 'submarine-billing-android' || it.name == 'submarine-billing-desktop' || it.name == 'submarine-billing-ios'
                                 || it.name == 'submarine-game-services-android' || it.name == 'submarine-game-services-desktop' || it.name == 'submarine-game-services-ios'

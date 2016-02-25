@@ -26,6 +26,7 @@ import com.google.android.gms.plus.model.people.Person;
 import com.google.example.games.basegameutils.GameHelper;
 import com.submarine.gameservices.events.LoadedEventListener;
 import com.submarine.gameservices.quests.LoadedQuestListener;
+import com.submarine.gameservices.quests.QuestConstants;
 import com.submarine.gameservices.quests.QuestRewardListener;
 
 import java.nio.charset.Charset;
@@ -75,6 +76,17 @@ public class AndroidGameServices implements GameHelper.GameHelperListener, GameS
         gameHelper.setup(this);
         gameHelper.enableDebugLog(true);
 //      isSavedGamesLoadDone = false;
+
+        initQuestConstants();
+    }
+
+    private void initQuestConstants() {
+        QuestConstants.STATE_ACCEPTED           = Quest.STATE_ACCEPTED;
+        QuestConstants.STATE_COMPLETED          = Quest.STATE_COMPLETED;
+        QuestConstants.STATE_EXPIRED            = Quest.STATE_EXPIRED;
+        QuestConstants.STATE_FAILED             = Quest.STATE_FAILED;
+        QuestConstants.STATE_OPEN               = Quest.STATE_OPEN;
+        QuestConstants.STATE_UPCOMING           = Quest.STATE_UPCOMING;
     }
 
     @Override
@@ -690,7 +702,10 @@ public class AndroidGameServices implements GameHelper.GameHelperListener, GameS
 
             for (int i = 0; i < qb.getCount(); i++) {
                 Quest quest = qb.get(i);
-                questListener.info(quest.getName(), quest.getDescription());
+
+                questListener.info(quest.getName(),
+                        quest.getDescription(),
+                        quest.getState());
             }
             qb.close();
         }

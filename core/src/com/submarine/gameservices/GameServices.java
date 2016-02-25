@@ -45,7 +45,15 @@ public interface GameServices {
 
     void setListener(GameServicesListener gameServicesListener);
 
-    boolean isSavedGamesLoadDone();
+//    boolean isSavedGamesLoadDone();
 
     void loadUserInfo();
+
+    void onSignInSucceeded();
+
+    void onSignInFailed();
+
+    void showSavedGamesUI();
+
+    void checkPlayerStats();
 }

@@ -52,12 +52,12 @@
 //                adColonyNetwork.showV4VCAd(V4VC_ZONE_ID, new AdColonyAdListener() {
 //                    @Override
 //                    public void onAdStarted(String zoneID) {
-//                        System.out.println("com.submarine.adcolony.sample.Sample : onAdStarted");
+//                        //System.out.println("com.submarine.adcolony.sample.Sample : onAdStarted");
 //                    }
 //
 //                    @Override
 //                    public void onAdAttemptFinished(boolean shown, String zoneID) {
-//                        System.out.println("com.submarine.adcolony.sample.Sample : onAdAttemptFinished");
+//                        //System.out.println("com.submarine.adcolony.sample.Sample : onAdAttemptFinished");
 //                    }
 //                });
 //            }
@@ -77,7 +77,7 @@
 //        adColonyNetwork = new IOSAdColonyNetwork(APP_ID, new String[]{INTERSTITIAL_ZONE_ID, V4VC_ZONE_ID}, new AdColonyRewardListener() {
 //            @Override
 //            public void reward(boolean success, String currencyName, int amount) {
-//                System.out.println("com.submarine.adcolony.sample.Sample : reward");
+//                //System.out.println("com.submarine.adcolony.sample.Sample : reward");
 //            }
 //        });
 //

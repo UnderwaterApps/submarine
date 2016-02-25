@@ -116,9 +116,7 @@ public abstract class StatsReporter<U extends StatsRequestVO, V extends StatsRes
                     statsReporterResponseListener.failed(e);
                 }
             }
-
         }
-
         @Override
         public void failed(Throwable t) {
             Gdx.app.error(TAG, t.getMessage());
@@ -126,10 +124,9 @@ public abstract class StatsReporter<U extends StatsRequestVO, V extends StatsRes
                 statsReporterResponseListener.failed(t);
             }
         }
-
         @Override
         public void cancelled() {
-            Gdx.app.log(TAG, "cancelled");
+            //Gdx.app.log(TAG, "cancelled");
             if (statsReporterResponseListener != null) {
                 statsReporterResponseListener.cancelled();
             }

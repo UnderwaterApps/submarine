@@ -14,6 +14,8 @@ public interface StoreListener {
 
     void transactionRestored(String productId);
 
+    void transactionRestoreCompleted();
+
     void transactionRestoreFailed(Error error);
 
 }

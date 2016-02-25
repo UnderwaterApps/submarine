@@ -13,4 +13,6 @@ public interface AdNetwork {
     void setInterstitialAdUnitId(String interstitialAdUnitId);
 
     void setAdViewUnitId(String adViewUnitId);
+
+    void setInterstitialAdListener(InterstitialAdListener adListener);
 }

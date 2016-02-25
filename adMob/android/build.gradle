@@ -3,8 +3,8 @@ apply plugin: "android-library"
 configurations { natives }
 
 dependencies {
-    compile project(":submarine-core")
-	compile "com.google.android.gms:play-services-ads:${gms_library_version}"
+    compile "com.underwaterapps.submarine:core:$CORE_VERSION", { changing = true }
+	compile "com.google.android.gms:play-services-ads:$gms_library_version"
     compile "com.badlogicgames.gdx:gdx-backend-android:$gdxVersion"
     natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-armeabi"
     natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-armeabi-v7a"
@@ -80,4 +80,13 @@ idea {
             }
         }
     }
+}
+
+ext {
+    VERSION_NAME = ADMOB_VERSION
+    POM_ARTIFACT_ID = 'admob-android'
+
+    POM_NAME = 'admob-android'
+    POM_PACKAGING = 'aar'
+    POM_DESCRIPTION = 'Core functionality for admob billing'
 }

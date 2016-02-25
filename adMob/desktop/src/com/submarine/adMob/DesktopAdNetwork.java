@@ -28,4 +28,9 @@ public class DesktopAdNetwork implements AdNetwork {
     public void setAdViewUnitId(String adViewUnitId) {
 
     }
+
+    @Override
+    public void setInterstitialAdListener(InterstitialAdListener adListener) {
+
+    }
 }

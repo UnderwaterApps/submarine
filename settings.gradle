@@ -35,6 +35,21 @@ project(':submarine-game-services-ios').projectDir = new File(settingsDir, 'game
 project(':submarine-game-services-desktop').projectDir = new File(settingsDir, 'game-services/desktop')
 //project(':submarine-game-services-core').projectDir = new File(settingsDir, 'game-services/core')
 
+include 'submarine-chartboost-android', 'submarine-chartboost-ios', 'submarine-chartboost-desktop', 'submarine-chartboost-core'
+
+project(':submarine-chartboost-android').projectDir = new File(settingsDir, 'chartboost/android')
+project(':submarine-chartboost-ios').projectDir = new File(settingsDir, 'chartboost/ios')
+project(':submarine-chartboost-desktop').projectDir = new File(settingsDir, 'chartboost/desktop')
+project(':submarine-chartboost-core').projectDir = new File(settingsDir, 'chartboost/core')
+
+include 'submarine-flurry-android', 'submarine-flurry-ios', 'submarine-flurry-desktop', 'submarine-flurry-core'
+
+project(':submarine-flurry-android').projectDir = new File(settingsDir, 'flurry/android')
+project(':submarine-flurry-ios').projectDir = new File(settingsDir, 'flurry/ios')
+project(':submarine-flurry-desktop').projectDir = new File(settingsDir, 'flurry/desktop')
+project(':submarine-flurry-core').projectDir = new File(settingsDir, 'flurry/core')
+
+
 include 'submarine-core'
 
 project(':submarine-core').projectDir = new File(settingsDir, 'core')

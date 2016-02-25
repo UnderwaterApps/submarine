@@ -1,14 +1,36 @@
 apply plugin: "android-library"
 
-configurations { natives }
+configurations {
+    natives
+    provided
+    provided.extendsFrom(compile)
+}
 
 dependencies {
-    compile project(":submarine-core")
-    compile project(":BaseGameUtils")
+    compile "com.underwaterapps.submarine:core:$CORE_VERSION", { changing = true }
+    provided (project(":BaseGameUtils")) {
+        transitive = false
+    }
+
     compile "com.badlogicgames.gdx:gdx-backend-android:$gdxVersion"
     natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-armeabi"
     natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-armeabi-v7a"
     natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-x86"
+
+    if (!project.hasProperty('appcompat_library_version')) {
+        ext.appcompat_library_version = '20.0.+'
+    }
+    if (!project.hasProperty('support_library_version')) {
+        ext.support_library_version = '20.0.+'
+    }
+    if (!project.hasProperty('gms_library_version')) {
+        ext.gms_library_version = '8.1.0'
+    }
+
+    compile "com.android.support:appcompat-v7:${appcompat_library_version}"
+    compile "com.android.support:support-v4:${support_library_version}"
+    compile "com.google.android.gms:play-services-games:${gms_library_version}"
+    compile "com.google.android.gms:play-services-plus:${gms_library_version}"
 }
 
 android {
@@ -16,17 +38,25 @@ android {
     compileSdkVersion android_compile_version
     sourceSets {
         main {
+            //compileClasspath += [configurations.provided]
             manifest.srcFile 'AndroidManifest.xml'
             java.srcDirs = ['src']
             aidl.srcDirs = ['src']
             renderscript.srcDirs = ['src']
             res.srcDirs = ['res']
             assets.srcDirs = ['assets']
+            //compileClasspath += [configurations.provided]
         }
 
-        instrumentTest.setRoot('tests')
     }
 }
+sourceSets {
+    main { compileClasspath += [configurations.provided] }
+}
+//idea.module.scopes.PROVIDED.plus += configurations.provided
+//eclipse.classpath.plusConfigurations += configurations.provided
+
+//project.sourceSets.main.compileClasspath += project.configurations.provided
 
 // sets up the Android Eclipse project, using the old Ant based build.
 eclipse {
@@ -35,6 +65,7 @@ eclipse {
     sourceSets {
         main {
             java.srcDirs "src", 'gen'
+            compileClasspath += configurations.provided
         }
     }
 
@@ -45,6 +76,7 @@ eclipse {
 
     classpath {
         plusConfigurations += [project.configurations.compile]
+        plusConfigurations += [configurations.provided]
         containers 'com.android.ide.eclipse.adt.ANDROID_FRAMEWORK', 'com.android.ide.eclipse.adt.LIBRARIES'
     }
 
@@ -64,7 +96,10 @@ idea {
     module {
         sourceDirs += file("src");
         scopes = [COMPILE: [plus: [project.configurations.compile]]]
-
+        scopes += [PROVIDED: [plus: [configurations.provided]]]
+        //scopes.PROVIDED.plus += [ configurations.provided ]
+        println(scopes)
+        //compileClasspath += project.configurations.provided
         iml {
             withXml {
                 def node = it.asNode()
@@ -81,3 +116,14 @@ idea {
         }
     }
 }
+
+ext {
+    VERSION_NAME = GAME_SERVICES_VERSION
+    POM_ARTIFACT_ID = 'game-services-android'
+
+    POM_NAME = 'game-services-android'
+    POM_PACKAGING = 'aar'
+    POM_DESCRIPTION = 'Core functionality for android game-services'
+}
+
+

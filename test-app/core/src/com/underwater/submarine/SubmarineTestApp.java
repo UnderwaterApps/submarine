@@ -5,6 +5,7 @@ import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.submarine.gameservices.GameServices;
 import com.underwater.submarine.screen.BillingScreen;
 import com.underwater.submarine.screen.ScreenManager;
 import com.uwsoft.editor.renderer.SceneLoader;
@@ -18,6 +19,8 @@ public class SubmarineTestApp extends ApplicationAdapter {
 	public SceneLoader sceneLoader;
 	public Engine engine;
 	private ScreenManager screenManager;
+
+	public GameServices gameServices;
 
 	@Override
 	public void create () {
@@ -49,6 +52,7 @@ public class SubmarineTestApp extends ApplicationAdapter {
 				// Do something
 			}
 		});
+		//gameServices.login();
 	}
 
 	@Override

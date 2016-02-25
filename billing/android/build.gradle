@@ -3,8 +3,8 @@ apply plugin: 'com.android.library'
 configurations { natives }
 
 dependencies {
-    compile project(":submarine-core")
-    compile 'com.anjlab.android.iab.v3:library:1.0.+@aar'
+    compile "com.underwaterapps.submarine:core:$CORE_VERSION", { changing = true }
+    compile 'com.anjlab.android.iab.v3:library:1.0.31@aar'
     compile "com.badlogicgames.gdx:gdx-backend-android:$gdxVersion"
     natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-armeabi"
     natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-armeabi-v7a"
@@ -39,8 +39,8 @@ eclipse {
     }
 
     jdt {
-        sourceCompatibility = 1.6
-        targetCompatibility = 1.6
+        sourceCompatibility = 1.7
+        targetCompatibility = 1.7
     }
 
     classpath {
@@ -81,6 +81,7 @@ idea {
         }
     }
 }
+
 ext {
     VERSION_NAME = BILLING_VERSION
     POM_ARTIFACT_ID = 'billing-android'

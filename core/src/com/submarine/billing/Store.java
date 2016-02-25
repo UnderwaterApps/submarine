@@ -26,4 +26,9 @@ public interface Store {
     void removeListener(StoreListener storeListener);
 
     void requestProducts(Array<Product> productList);
+
+    boolean isInitialized();
+
+    boolean isPurchased(String id);
+
 }

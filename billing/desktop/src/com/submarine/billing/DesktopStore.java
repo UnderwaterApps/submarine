@@ -41,7 +41,41 @@ public class DesktopStore implements Store {
     }
 
     @Override
+    public boolean isInitialized() {
+        return false;
+    }
+
+    @Override
+    public boolean isPurchased(String id) {
+        return false;
+    }
+
+    @Override
     public void restoreTransactions() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Thread.sleep((long) (Math.random() * 2500));
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                if (Math.random() > .3f) {
+                    for (StoreListener storeListener : storeListeners) {
+                        for (Product product : products.values()) {
+                            storeListener.transactionRestored(product.id);
+                        }
+                    }
+                } else {
+                    for (StoreListener storeListener : storeListeners) {
+                        for (Product product : products.values()) {
+                            storeListener.transactionFailed(new Error(product.id));
+                        }
+                    }
+                }
+
+            }
+        }).start();
 
     }
 

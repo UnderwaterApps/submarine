@@ -18,7 +18,7 @@ android {
     }
     defaultConfig {
         applicationId "com.underwater.submarine"
-        minSdkVersion 8
+        minSdkVersion 9
         targetSdkVersion 20
     }
 }
@@ -26,7 +26,10 @@ android {
 configurations { natives }
 
 dependencies {
+    compile project(":BaseGameUtils")
     compile project(":submarine-testapp-core")
+    compile "com.underwaterapps.submarine:game-services-android:$GAME_SERVICES_VERSION", { changing = true }
+    compile "com.underwaterapps.submarine:billing-android:$BILLING_VERSION", { changing = true }
     compile "com.badlogicgames.gdx:gdx-backend-android:$gdxVersion"
 
     natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-armeabi"

@@ -52,6 +52,20 @@ public class AndroidStore implements Store {
     }
 
     @Override
+    public boolean isInitialized() {
+        if (billingProcessor!=null) {
+            return billingProcessor.isInitialized();
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public boolean isPurchased(String id) {
+        return billingProcessor.isPurchased(id);
+    }
+
+    @Override
     public void restoreTransactions() {
 
     }
@@ -87,10 +101,16 @@ public class AndroidStore implements Store {
 
 
     public boolean handleActivityResult(int requestCode, int resultCode, Intent data) {
+        if (billingProcessor == null) {
+            return false;
+        }
         return billingProcessor.handleActivityResult(requestCode, resultCode, data);
     }
 
     public void release() {
+        if (billingProcessor == null) {
+            return;
+        }
         billingProcessor.release();
     }
 
@@ -99,7 +119,9 @@ public class AndroidStore implements Store {
 
         @Override
         public void onProductPurchased(String s, TransactionDetails transactionDetails) {
-            Gdx.app.log(TAG, "onProductPurchased : " + transactionDetails.orderId);
+
+            Gdx.app.log(TAG, "onProductPurchased : " + transactionDetails.orderId + ", " + transactionDetails.purchaseInfo.responseData);
+
             for (StoreListener storeListener : storeListeners) {
                 storeListener.transactionCompleted(transactionDetails.productId);
             }
@@ -107,7 +129,7 @@ public class AndroidStore implements Store {
 
         @Override
         public void onPurchaseHistoryRestored() {
-            Gdx.app.log(TAG, "onPurchaseHistoryRestored");
+            //Gdx.app.log(TAG, "onPurchaseHistoryRestored");
             for (String productId : productIds) {
                 TransactionDetails transactionDetails = billingProcessor.getPurchaseTransactionDetails(productId);
                 if (transactionDetails != null) {
@@ -116,11 +138,14 @@ public class AndroidStore implements Store {
                     }
                 }
             }
+            for (StoreListener storeListener : storeListeners) {
+                storeListener.transactionRestoreCompleted();
+            }
         }
 
         @Override
         public void onBillingError(int i, Throwable throwable) {
-            Gdx.app.log(TAG, "onBillingError : " + i);
+            //Gdx.app.log(TAG, "onBillingError : " + i);
             for (StoreListener storeListener : storeListeners) {
                 storeListener.transactionFailed(new Error(String.valueOf(i)));
             }
@@ -128,7 +153,7 @@ public class AndroidStore implements Store {
 
         @Override
         public void onBillingInitialized() {
-            Gdx.app.log(TAG, "onBillingInitialized");
+            //Gdx.app.log(TAG, "onBillingInitialized");
             if (billingProcessor == null) {
                 return;
             }

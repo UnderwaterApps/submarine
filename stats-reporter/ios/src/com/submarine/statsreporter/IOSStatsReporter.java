@@ -27,7 +27,7 @@ public class IOSStatsReporter<U extends StatsRequestVO, V extends StatsResponseV
         statsReporterVO.udid = UIDevice.getCurrentDevice().getIdentifierForVendor().asString();
         statsReporterVO.model = UIDevice.getCurrentDevice().getModel();
         statsReporterVO.version = String.valueOf(NSBundle.getMainBundle().getInfoDictionary().asStringMap().get("CFBundleVersion"));
-        System.out.println(statsReporterVO);
+        //System.out.println(statsReporterVO);
         return statsReporterVO;
     }
 

@@ -4,7 +4,7 @@ apply plugin: "robovm"
 configurations { natives }
 
 dependencies {
-    compile "com.underwaterapps.submarine:core:$CORE_VERSION"
+    compile "com.underwaterapps.submarine:core:$CORE_VERSION", { changing = true }
     compile fileTree(dir: 'libs', include: '*.jar')
     compile "org.robovm:robovm-rt:${roboVMVersion}"
     compile "org.robovm:robovm-cocoatouch:${roboVMVersion}"

@@ -30,7 +30,7 @@ allprojects {
 
         //-------BasicSamples----------//
         android_compile_version = 23
-        android_version = '23.0.1'
+        android_version = '23.0.2'
         android_min_sdk_version = 9
 
         if (!project.hasProperty('appcompat_library_version')) {

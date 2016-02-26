@@ -47,8 +47,8 @@ allprojects {
         //------Maven Configs------//
         GROUP_ID = 'com.underwaterapps.submarine'
 
-        NEXUS_USERNAME = 'gevorg.kopalyan'
-        NEXUS_PASSWORD = '34KGSAplgok'
+        NEXUS_USERNAME = ''
+        NEXUS_PASSWORD = ''
 
         IS_RELEASE = false
 

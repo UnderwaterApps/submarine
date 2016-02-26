@@ -23,7 +23,7 @@ allprojects {
 
         android_appcompat_library =  'com.android.support:appcompat-v7:20.0.+'
         android_support_library =  'com.android.support:support-v4:20.0.+'
-        android_gms_library =  'com.google.android.gms:play-services:6.5+'
+        android_gms_library =  'com.google.android.gms:play-services:8.4.0'
         //-------End BasicSamples----------//
     }
 

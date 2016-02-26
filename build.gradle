@@ -46,9 +46,14 @@ allprojects {
 
         //------Maven Configs------//
         GROUP_ID = 'com.underwaterapps.submarine'
+        def properties = project.getLocalProperties()
+        if (!project.hasProperty('NEXUS_USERNAME')) {
+            NEXUS_USERNAME = properties.getProperty('NEXUS_USERNAME')
+        }
 
-        NEXUS_USERNAME = ''
-        NEXUS_PASSWORD = ''
+        if (!project.hasProperty('NEXUS_PASSWORD')) {
+            NEXUS_PASSWORD = properties.getProperty('NEXUS_PASSWORD')
+        }
 
         IS_RELEASE = false
 
@@ -117,4 +122,22 @@ task uploadAdmobArchives(dependsOn: [':submarine-admob-android:uploadArchives', 
 
 tasks.eclipse.doLast {
     delete ".project"
+}
+
+def getLocalProperties() {
+    def localProperties = project.file("local.properties")
+    if (localProperties.exists()) {
+        Properties properties = new Properties()
+        localProperties.withInputStream { instr ->
+            properties.load(instr)
+        }
+        return properties
+    } else {
+        assert 'Plase add "local.properties" file into you root project and define \n' +
+                '"sdk.dir",\n' +
+                '"NEXUS_USERNAME",\n' +
+                '"NEXUS_PASSWORD",\n' +
+                'properties.'
+    }
+
 }

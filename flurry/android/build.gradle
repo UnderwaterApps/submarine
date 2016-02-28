@@ -1,11 +1,12 @@
 apply plugin: "android-library"
 
-configurations { natives }
+configurations { natives
+}
 
 dependencies {
     compile project(":submarine-flurry-core")
-    compile fileTree(dir: 'libs', include: '*.jar')
-    compile "com.google.android.gms:play-services:8.4.0"
+    compile "com.flurry.android:analytics:$flurryVersion"
+    compile "com.google.android.gms:play-services:$gms_library_version"
     compile "com.badlogicgames.gdx:gdx-backend-android:$gdxVersion"
     natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-armeabi"
     natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-armeabi-v7a"

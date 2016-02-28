@@ -45,7 +45,7 @@ allprojects {
         //-------End BasicSamples----------//
 
         //------Maven Configs------//
-        GROUP_ID = 'com.underwaterapps.submarine'
+        GROUP_ID = 'com.underwaterapps.submarine' 
         def properties = project.getLocalProperties()
         if (!project.hasProperty('NEXUS_USERNAME')) {
             NEXUS_USERNAME = properties.getProperty('NEXUS_USERNAME')

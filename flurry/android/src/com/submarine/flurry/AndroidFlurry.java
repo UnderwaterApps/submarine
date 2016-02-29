@@ -50,4 +50,15 @@ public class AndroidFlurry implements FlurryManager {
     public void endTimedEvent(String eventName, HashMap<String, String> parameters) {
         FlurryAgent.endTimedEvent(eventName, parameters);
     }
+
+    //This is needed for android versions that ar less 14
+    @Override
+    public void onStart() {
+        FlurryAgent.onStartSession(activity);
+    }
+
+    @Override
+    public void onStop() {
+        FlurryAgent.onEndSession(activity);
+    }
 }

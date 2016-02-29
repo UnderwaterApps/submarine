@@ -22,5 +22,5 @@ ext {
 
     POM_NAME = 'admob-desktop'
     POM_PACKAGING = 'jar'
-    POM_DESCRIPTION = 'Core functionality for desktop admob'
+    POM_DESCRIPTION = 'Core functionality for admob desktop'
 }

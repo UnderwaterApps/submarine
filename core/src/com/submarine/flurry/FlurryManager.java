@@ -18,4 +18,9 @@ public interface FlurryManager {
     public void endTimedEvent(String eventName);
 
     public void endTimedEvent(String eventName, HashMap<String, String> parameters);
+
+    //This is needed for android versions that ar less 14
+    public void onStart();
+
+    public void onStop();
 }

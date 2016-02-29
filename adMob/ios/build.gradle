@@ -81,5 +81,5 @@ ext {
 
     POM_NAME = 'admob-ios'
     POM_PACKAGING = 'jar'
-    POM_DESCRIPTION = 'Core functionality for ios admob'
+    POM_DESCRIPTION = 'Core functionality for admob ios'
 }

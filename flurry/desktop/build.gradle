@@ -7,11 +7,20 @@ sourceSets.main.java.srcDirs = [ "src/" ]
 
 
 dependencies {
-    compile project(":submarine-flurry-core")
+    compile "com.underwaterapps.submarine:core:$CORE_VERSION", { changing = true }
     compile "com.badlogicgames.gdx:gdx-backend-lwjgl:$gdxVersion"
     compile "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
 }
 
 eclipse.project {
     name = "submarine-flurry-desktop"
+}
+
+ext {
+    VERSION_NAME = FLURRY_VERSION
+    POM_ARTIFACT_ID = 'flurry-desktop'
+
+    POM_NAME = 'flurry-desktop'
+    POM_PACKAGING = 'jar'
+    POM_DESCRIPTION = 'Core functionality for flurry desktop'
 }

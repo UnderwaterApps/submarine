@@ -1,11 +1,12 @@
 apply plugin: "android-library"
 
-configurations { natives }
+configurations { natives
+}
 
 dependencies {
-    compile project(":submarine-flurry-core")
-    compile fileTree(dir: 'libs', include: '*.jar')
-    compile "com.google.android.gms:play-services:8.4.0"
+    compile "com.underwaterapps.submarine:core:$CORE_VERSION", { changing = true }
+    compile "com.flurry.android:analytics:$flurryVersion"
+    compile "com.google.android.gms:play-services:$gms_library_version"
     compile "com.badlogicgames.gdx:gdx-backend-android:$gdxVersion"
     natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-armeabi"
     natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-armeabi-v7a"
@@ -88,4 +89,13 @@ idea {
             }
         }
     }
+}
+
+ext {
+    VERSION_NAME = FLURRY_VERSION
+    POM_ARTIFACT_ID = 'flurry-android'
+
+    POM_NAME = 'flurry-android'
+    POM_PACKAGING = 'aar'
+    POM_DESCRIPTION = 'Core functionality for flurry android'
 }

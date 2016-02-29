@@ -43,5 +43,15 @@ public class DesktopFlurry implements FlurryManager {
 
     }
 
+    @Override
+    public void onStart() {
+
+    }
+
+    @Override
+    public void onStop() {
+
+    }
+
 
 }

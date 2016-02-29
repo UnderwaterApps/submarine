@@ -75,3 +75,12 @@ eclipse.project {
     name = "submarine-flurry-ios"
     natures 'org.robovm.eclipse.RoboVMNature'
 }
+
+ext {
+    VERSION_NAME = FLURRY_VERSION
+    POM_ARTIFACT_ID = 'flurry-ios'
+
+    POM_NAME = 'flurry-ios'
+    POM_PACKAGING = 'jar'
+    POM_DESCRIPTION = 'Core functionality for flurry ios'
+}

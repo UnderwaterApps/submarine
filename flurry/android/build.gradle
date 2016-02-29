@@ -90,3 +90,12 @@ idea {
         }
     }
 }
+
+ext {
+    VERSION_NAME = FLURRY_VERSION
+    POM_ARTIFACT_ID = 'flurry-android'
+
+    POM_NAME = 'flurry-android'
+    POM_PACKAGING = 'aar'
+    POM_DESCRIPTION = 'Core functionality for flurry android'
+}

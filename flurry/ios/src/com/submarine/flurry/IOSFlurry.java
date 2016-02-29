@@ -48,4 +48,14 @@ public class IOSFlurry implements FlurryManager {
     public void endTimedEvent(String eventName, HashMap<String, String> parameters) {
         Flurry.endTimedEvent(eventName, parameters);
     }
+
+    @Override
+    public void onStart() {
+
+    }
+
+    @Override
+    public void onStop() {
+
+    }
 }

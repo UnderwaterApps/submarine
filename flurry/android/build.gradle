@@ -4,7 +4,7 @@ configurations { natives
 }
 
 dependencies {
-    compile project(":submarine-flurry-core")
+    compile "com.underwaterapps.submarine:core:$CORE_VERSION", { changing = true }
     compile "com.flurry.android:analytics:$flurryVersion"
     compile "com.google.android.gms:play-services:$gms_library_version"
     compile "com.badlogicgames.gdx:gdx-backend-android:$gdxVersion"

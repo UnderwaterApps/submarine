@@ -47,7 +47,6 @@ include 'submarine-flurry-android', 'submarine-flurry-ios', 'submarine-flurry-de
 project(':submarine-flurry-android').projectDir = new File(settingsDir, 'flurry/android')
 project(':submarine-flurry-ios').projectDir = new File(settingsDir, 'flurry/ios')
 project(':submarine-flurry-desktop').projectDir = new File(settingsDir, 'flurry/desktop')
-project(':submarine-flurry-core').projectDir = new File(settingsDir, 'flurry/core')
 
 
 include 'submarine-core'

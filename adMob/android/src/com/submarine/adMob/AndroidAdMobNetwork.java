@@ -42,7 +42,6 @@ public class AndroidAdMobNetwork implements AdNetwork {
         }
         interstitial = new InterstitialAd(androidApplication);
         interstitial.setAdUnitId(interstitialAdUnitId);
-        requestNewInterstitial();
         interstitial.setAdListener(adListener);
     }
 
@@ -96,7 +95,7 @@ public class AndroidAdMobNetwork implements AdNetwork {
         });
     }
 
-    private void requestNewInterstitial() {
+    public void requestNewInterstitial() {
         AdRequest adRequest = getInterstitialAdRequest();
         // Begin loading your interstitial.
         interstitial.loadAd(adRequest);

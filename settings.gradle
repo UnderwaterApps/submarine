@@ -42,7 +42,7 @@ project(':submarine-chartboost-ios').projectDir = new File(settingsDir, 'chartbo
 project(':submarine-chartboost-desktop').projectDir = new File(settingsDir, 'chartboost/desktop')
 project(':submarine-chartboost-core').projectDir = new File(settingsDir, 'chartboost/core')
 
-include 'submarine-flurry-android', 'submarine-flurry-ios', 'submarine-flurry-desktop', 'submarine-flurry-core'
+include 'submarine-flurry-android', 'submarine-flurry-ios', 'submarine-flurry-desktop'
 
 project(':submarine-flurry-android').projectDir = new File(settingsDir, 'flurry/android')
 project(':submarine-flurry-ios').projectDir = new File(settingsDir, 'flurry/ios')

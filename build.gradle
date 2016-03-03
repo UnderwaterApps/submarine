@@ -73,6 +73,7 @@ allprojects {
         GAME_SERVICES_VERSION = '1.0.0'
         STATS_REPORTER_VERSION = '1.0.0'
         FLURRY_VERSION = '1.0.0'
+        SUPERSONIC_VERSION = '1.0.0'
 
         if(!IS_RELEASE){
             ADCOLONY_VERSION += "-SNAPSHOT"
@@ -82,6 +83,7 @@ allprojects {
             GAME_SERVICES_VERSION += "-SNAPSHOT"
             STATS_REPORTER_VERSION += "-SNAPSHOT"
             FLURRY_VERSION += "-SNAPSHOT"
+            SUPERSONIC_VERSION += "-SNAPSHOT"
         }
         //-----All sub project versions end----//
     }

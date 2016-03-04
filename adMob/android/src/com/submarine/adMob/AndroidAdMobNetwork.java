@@ -42,7 +42,6 @@ public class AndroidAdMobNetwork implements AdNetwork {
         }
         interstitial = new InterstitialAd(androidApplication);
         interstitial.setAdUnitId(interstitialAdUnitId);
-        requestNewInterstitial();
         interstitial.setAdListener(adListener);
     }
 
@@ -96,10 +95,17 @@ public class AndroidAdMobNetwork implements AdNetwork {
         });
     }
 
-    private void requestNewInterstitial() {
-        AdRequest adRequest = getInterstitialAdRequest();
-        // Begin loading your interstitial.
-        interstitial.loadAd(adRequest);
+    @Override
+    public void requestNewInterstitial() {
+        androidApplication.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                AdRequest adRequest = getInterstitialAdRequest();
+                // Begin loading your interstitial.
+                interstitial.loadAd(adRequest);
+            }
+        });
+
     }
 
     private AdRequest getInterstitialAdRequest() {
@@ -149,6 +155,7 @@ public class AndroidAdMobNetwork implements AdNetwork {
             @Override
             public void run() {
                 if (interstitial.isLoaded()) interstitial.show();
+                if (!interstitial.isLoading()) requestNewInterstitial();
             }
         });
     }
@@ -157,11 +164,13 @@ public class AndroidAdMobNetwork implements AdNetwork {
         return adView;
     }
 
+    @Override
     public void setInterstitialAdUnitId(String interstitialAdUnitId){
         this.interstitialAdUnitId = interstitialAdUnitId;
         initInterstitial();
     }
 
+    @Override
     public void setAdViewUnitId(String adViewUnitId){
         this.adViewUnitId = adViewUnitId;
         initBanner();
@@ -175,6 +184,7 @@ public class AndroidAdMobNetwork implements AdNetwork {
         testDevice = getDeviceID();
     }
 
+    @Override
     public void setInterstitialAdListener(InterstitialAdListener interstitialAdListener){
         this.interstitialAdListener = interstitialAdListener;
     }

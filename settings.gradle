@@ -48,11 +48,12 @@ project(':submarine-flurry-android').projectDir = new File(settingsDir, 'flurry/
 project(':submarine-flurry-ios').projectDir = new File(settingsDir, 'flurry/ios')
 project(':submarine-flurry-desktop').projectDir = new File(settingsDir, 'flurry/desktop')
 
-include 'submarine-supersonic-android'
+include 'submarine-supersonic-android', 'submarine-supersonic-desktop', 'submarine-supersonic-ios'
 
 project(':submarine-supersonic-android').projectDir = new File(settingsDir, 'supersonic/android')
-//project(':submarine-supersonic-ios').projectDir = new File(settingsDir, 'supersonic/ios')
-//project(':submarine-supersonic-desktop').projectDir = new File(settingsDir, 'supersonic/desktop')
+project(':submarine-supersonic-desktop').projectDir = new File(settingsDir, 'supersonic/desktop')
+project(':submarine-supersonic-ios').projectDir = new File(settingsDir, 'supersonic/ios')
+
 
 include 'submarine-core'
 

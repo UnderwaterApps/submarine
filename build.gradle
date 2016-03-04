@@ -106,6 +106,7 @@ configure(subprojects.findAll {(it.name != 'BaseGameUtils' &&
                                 || it.name == 'submarine-game-services-android' || it.name == 'submarine-game-services-desktop' || it.name == 'submarine-game-services-ios'
                                 || it.name == 'submarine-admob-android' || it.name == 'submarine-admob-desktop' || it.name == 'submarine-admob-ios'
                                 || it.name == 'submarine-flurry-android' || it.name == 'submarine-flurry-desktop' || it.name == 'submarine-flurry-ios'
+                                || it.name == 'submarine-supersonic-android' || it.name == 'submarine-supersonic-desktop' || it.name == 'submarine-supersonic-ios'
                                 || it.name == 'submarine-core'))}) {
 
     apply from : (rootProject.getRootDir().path+'/publish.gradle')
@@ -129,6 +130,10 @@ task uploadAdmobArchives(dependsOn: [':submarine-admob-android:uploadArchives', 
 
 task uploadFlurryArchives(dependsOn: [':submarine-flurry-android:uploadArchives', ':submarine-flurry-desktop:uploadArchives', ':submarine-flurry-ios:uploadArchives']){
     println "Uploading Submarine Flurry Archives."
+}
+
+task uploadSuperSonicArchives(dependsOn: [':submarine-supersonic-android:uploadArchives', ':submarine-supersonic-desktop:uploadArchives', ':submarine-supersonic-ios:uploadArchives']){
+    println "Uploading Submarine SuperSonic Archives."
 }
 
 

@@ -7,10 +7,9 @@ import java.util.ArrayList;
  */
 public abstract class ChartBoostManager {
 
-    public ArrayList<AgeGateListener> customListeners;
+    public AgeGateListener ageGateListener;
 
     public ChartBoostManager() {
-        customListeners = new ArrayList<AgeGateListener>();
     }
 
     public abstract void onCreate(String appId, String appSignature, ArrayList<String> locations);
@@ -29,11 +28,7 @@ public abstract class ChartBoostManager {
 
     public abstract void didPassAgeGate(boolean pass);
 
-    public void addCustomListener(AgeGateListener listener) {
-        customListeners.add(listener);
-    }
-
-    public void removeCustomListener(AgeGateListener listener) {
-        customListeners.remove(listener);
+    public void setAgeGateListener(AgeGateListener ageGateListener) {
+        this.ageGateListener = ageGateListener;
     }
 }

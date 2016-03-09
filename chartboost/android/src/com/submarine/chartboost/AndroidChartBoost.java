@@ -37,9 +37,8 @@ public class AndroidChartBoost extends ChartBoostManager {
                 super.didPauseClickForConfirmation(activity);
 
 //                System.out.println("did pause click for confirm");
-                for (AgeGateListener listener : customListeners) {
-                    listener.startCheck();
-                }
+                ageGateListener.startCheck();
+
                 Chartboost.closeImpression();
             }
 

@@ -5,5 +5,5 @@ package com.submarine.gameservices.quests;
  */
 public interface LoadedQuestListener {
 
-    public void info(String name, String description);
+    void info(String name, String description, int state);
 }

@@ -56,6 +56,11 @@ public class IOSSuperSonicNetwork implements SuperSonicNetwork {
             public void showRewardedVideo(String placementName) {
 
             }
+
+            @Override
+            public void setRewardedVideoListener(SuperSonicRewardedVideoListener listener) {
+
+            }
         };
     }
 

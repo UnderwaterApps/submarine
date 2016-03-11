@@ -97,9 +97,7 @@ idea {
         sourceDirs += file("src");
         scopes = [COMPILE: [plus: [project.configurations.compile]]]
         scopes += [PROVIDED: [plus: [configurations.provided]]]
-        //scopes.PROVIDED.plus += [ configurations.provided ]
-        println(scopes)
-        //compileClasspath += project.configurations.provided
+
         iml {
             withXml {
                 def node = it.asNode()

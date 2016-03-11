@@ -11,4 +11,5 @@ public interface SuperSonicRewardedVideo {
 
     void showRewardedVideo(String placementName);
 
+    void setRewardedVideoListener(SuperSonicRewardedVideoListener listener);
 }

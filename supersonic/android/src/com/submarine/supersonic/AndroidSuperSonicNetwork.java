@@ -1,26 +1,26 @@
 package com.submarine.supersonic;
 
 import android.app.Activity;
+import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
 import com.badlogic.gdx.Gdx;
-import com.google.android.gms.ads.identifier.AdvertisingIdClient;
-import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
-import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.supersonic.mediationsdk.logger.LogListener;
 import com.supersonic.mediationsdk.logger.SupersonicLogger;
 import com.supersonic.mediationsdk.sdk.Supersonic;
 import com.supersonic.mediationsdk.sdk.SupersonicFactory;
 
-import java.io.IOException;
+import java.util.UUID;
 
 /**
  * Created by Gev on 3/2/2016.
  */
 public class AndroidSuperSonicNetwork implements SuperSonicNetwork {
     public static final String TAG = AndroidSuperSonicNetwork.class.getSimpleName();
+    private final String PREFS_NAME = "SuperSonicPrefs";
+    private final String UUID_KEY =  "UUID";
     //Declare the Supersonic Mediation Agent
     private Supersonic mMediationAgent;
     private Activity activity;
@@ -30,19 +30,13 @@ public class AndroidSuperSonicNetwork implements SuperSonicNetwork {
     private SuperSonicRewardedVideoManager superSonicRewardedVideoManager;
 
     public AndroidSuperSonicNetwork(Activity activity) {
+
         this.activity = activity;
         //Get the mediation publisher instance
         mMediationAgent = SupersonicFactory.getInstance();
 
-        try {
-            this.mUserId = AdvertisingIdClient.getAdvertisingIdInfo(this.activity).getId();
-        } catch (IOException e) {
-            Log.e(TAG, "Failed to load Client Advertising Id, IOException: " + e.getMessage());
-        } catch (GooglePlayServicesNotAvailableException e) {
-            Log.e(TAG, "Failed to load Client Advertising Id, GooglePlayServicesNotAvailableException: " + e.getMessage());
-        } catch (GooglePlayServicesRepairableException e) {
-            Log.e(TAG, "Failed to load Client Advertising Id, GooglePlayServicesRepairableException: " + e.getMessage());
-        }
+        //Load/Save or Generate Universally unique identifier for Super Sonic
+        this.mUserId = getUUID();
 
         try {
             ApplicationInfo ai = activity.getPackageManager().getApplicationInfo(this.activity.getPackageName(), PackageManager.GET_META_DATA);
@@ -72,6 +66,18 @@ public class AndroidSuperSonicNetwork implements SuperSonicNetwork {
     @Override
     public SuperSonicRewardedVideo getRewardedVideoManager() {
         return superSonicRewardedVideoManager;
+    }
+
+    //Universally unique identifier
+    private String getUUID(){
+        SharedPreferences prefs = activity.getSharedPreferences(PREFS_NAME, Activity.MODE_PRIVATE);
+        String uuid = prefs.getString(UUID_KEY, null);
+        if (uuid == null) {
+            uuid = UUID.randomUUID().toString() + Long.toHexString(System.currentTimeMillis());
+            SharedPreferences.Editor editor = prefs.edit();
+            editor.putString(UUID_KEY, uuid);
+        }
+        return uuid;
     }
 
     public void enableLog(){

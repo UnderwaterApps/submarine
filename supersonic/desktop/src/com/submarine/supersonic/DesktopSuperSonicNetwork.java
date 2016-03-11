@@ -56,6 +56,11 @@ public class DesktopSuperSonicNetwork implements SuperSonicNetwork{
       public void showRewardedVideo(String placementName) {
 
       }
+
+         @Override
+         public void setRewardedVideoListener(SuperSonicRewardedVideoListener listener) {
+
+         }
      };
     }
 

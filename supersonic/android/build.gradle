@@ -1,9 +1,14 @@
 apply plugin: "android-library"
 
-configurations { natives }
+configurations {
+    natives
+    provided
+    provided.extendsFrom(compile)
+}
 
 dependencies {
-    compile fileTree(dir: 'libs', include: '*.jar') //TODO make provided the jar
+    //compile fileTree(dir: 'libs', include: '*.jar') //TODO make provided the jar
+    compile files('libs/mediationsdk-6.4.0.jar')
     compile "com.underwaterapps.submarine:core:$CORE_VERSION", { changing = true }
 	compile "com.google.android.gms:play-services-ads:$gms_library_version"
 }
@@ -42,6 +47,7 @@ eclipse {
 
     classpath {
         plusConfigurations += [project.configurations.compile]
+        plusConfigurations += [configurations.provided]
         containers 'com.android.ide.eclipse.adt.ANDROID_FRAMEWORK', 'com.android.ide.eclipse.adt.LIBRARIES'
     }
 
@@ -61,6 +67,7 @@ idea {
     module {
         sourceDirs += file("src");
         scopes = [COMPILE: [plus: [project.configurations.compile]]]
+        scopes += [PROVIDED: [plus: [configurations.provided]]]
 
         iml {
             withXml {

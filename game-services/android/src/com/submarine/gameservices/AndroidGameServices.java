@@ -7,9 +7,12 @@ import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
+import android.util.Log;
+import android.widget.Toast;
 import com.badlogic.gdx.Gdx;
 import com.google.android.gms.common.api.*;
 import com.google.android.gms.games.Games;
+import com.google.android.gms.games.GamesActivityResultCodes;
 import com.google.android.gms.games.GamesStatusCodes;
 import com.google.android.gms.games.event.Events;
 import com.google.android.gms.games.quest.Quest;
@@ -29,6 +32,7 @@ import com.submarine.gameservices.quests.LoadedQuestListener;
 import com.submarine.gameservices.quests.QuestConstants;
 import com.submarine.gameservices.quests.QuestRewardListener;
 
+import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
 
 public class AndroidGameServices implements GameHelper.GameHelperListener, GameServices {
@@ -43,7 +47,7 @@ public class AndroidGameServices implements GameHelper.GameHelperListener, GameS
     // The AppState slot we are editing.  For simplicity this sample only manipulates a single
     // Cloud Save slot and a corresponding Snapshot entry,  This could be changed to any integer
     // 0-3 without changing functionality (Cloud Save has four slots, numbered 0-3).
-    private static final String TAG = "com.submarine.gameservices.AndroidGameServices";
+    private static final String TAG = "com.submarine.services";
     private Activity activity;
     private GameHelper gameHelper;
     private GameServicesListener<Snapshots.OpenSnapshotResult> gameServicesListener;
@@ -60,6 +64,7 @@ public class AndroidGameServices implements GameHelper.GameHelperListener, GameS
     private LoadedEventListener eventListener;
     private LoadedQuestListener questListener;
     private QuestRewardListener questRewardListener;
+    private ResultCallback<Quests.ClaimMilestoneResult> mClaimMilestoneResultCallback;
     private boolean waitingToGetPlayerInfo;
     private boolean waitingToCloudUpdate;
     private boolean waitingToCloudLoad;
@@ -78,6 +83,13 @@ public class AndroidGameServices implements GameHelper.GameHelperListener, GameS
 //      isSavedGamesLoadDone = false;
 
         initQuestConstants();
+
+        mClaimMilestoneResultCallback = new ResultCallback<Quests.ClaimMilestoneResult>() {
+            @Override
+            public void onResult(Quests.ClaimMilestoneResult result) {
+                onMilestoneClaimed(result);
+            }
+        };
     }
 
     private void initQuestConstants() {
@@ -117,7 +129,7 @@ public class AndroidGameServices implements GameHelper.GameHelperListener, GameS
 
     public void onActivityResult(int request, int response, Intent data) {
         gameHelper.onActivityResult(request, response, data);
-        if (response == 10001) {
+        if (response == GamesActivityResultCodes.RESULT_RECONNECT_REQUIRED && gameHelper.isSignedIn()) {
             gameHelper.disconnect();
             setSignInCancelationssToMax();
         }
@@ -669,15 +681,17 @@ public class AndroidGameServices implements GameHelper.GameHelperListener, GameS
                         @Override
                         public void onQuestCompleted(Quest quest) {
                             // Claim the quest reward.
-                            Games.Quests.claim(gameHelper.getApiClient(), quest.getQuestId(),
-                                    quest.getCurrentMilestone().getMilestoneId());
+                            Games.Quests.claim(gameHelper.getApiClient(),
+                                    quest.getQuestId(),
+                                    quest.getCurrentMilestone().getMilestoneId())
+                                    .setResultCallback(mClaimMilestoneResultCallback);
 
                             // Process the RewardData to provision a specific reward.
-                            String reward = new
-                                    String(quest.getCurrentMilestone().getCompletionRewardData(),
-                                    Charset.forName("UTF-8"));
-
-                            questRewardListener.reward(reward);
+//                            String reward = new
+//                                    String(quest.getCurrentMilestone().getCompletionRewardData(),
+//                                    Charset.forName("UTF-8"));
+//
+//                            questRewardListener.reward(reward);
                         }
                     });
                 }
@@ -710,6 +724,26 @@ public class AndroidGameServices implements GameHelper.GameHelperListener, GameS
             qb.close();
         }
     }
+
+    public void onMilestoneClaimed(Quests.ClaimMilestoneResult result) {
+            // Process the RewardData binary array to provide a specific reward and present the
+            // information to the user.
+        try {
+            if (result.getStatus().isSuccess()) {
+                String reward = new String(result.getQuest().getCurrentMilestone().
+                        getCompletionRewardData(),
+                            "UTF-8");
+
+                    questRewardListener.reward(reward);
+                } else {
+                    Log.e(TAG, "Reward was not claimed due to error.");
+                    Toast.makeText(activity, "Reward was not claimed due to error.",
+                            Toast.LENGTH_LONG).show();
+                }
+            } catch (UnsupportedEncodingException uee) {
+                uee.printStackTrace();
+            }
+        }
 
     // checks for internet connection
     public boolean isOnline() {

@@ -33,4 +33,9 @@ public class DesktopAdNetwork implements AdNetwork {
     public void setInterstitialAdListener(InterstitialAdListener adListener) {
 
     }
+
+    @Override
+    public void requestNewInterstitial() {
+
+    }
 }
